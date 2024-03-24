@@ -53,37 +53,23 @@ const Navbar = () => {
       <nav className="flex gap-1 fixed shadow-sm rounded-full bg-white p-2 z-[51] bottom-4 left-1/2 -translate-x-1/2">
         {isMenuActive("camera") && (
           <div className="absolute flex flex-col items-center gap-1 rounded-md p-2 bottom-full left-1/2 -translate-x-1/2 bg-white shadow-sm mb-4">
-            <div onClick={handleToggleCamera} className="w-40 aspect-video">
+            <div
+              onClick={handleToggleCamera}
+              className="w-40 cursor-pointer aspect-video"
+            >
               {isCameraOpen ? (
-                <Webcam
-                  audio={false}
-                  ref={webcamRef}
-                  className="w-full h-full cursor-pointer"
-                  screenshotFormat="image/jpeg"
-                />
-              ) : (
-                <div className="cursor-pointer w-full h-full flex rounded-md justify-center items-center bg-gray-50">
-                  Click for open camera
-                </div>
-              )}
-            </div>
-            {/* {isCameraOpen ? (
-              <div onClick={handleCloseCamera} className="w-40 aspect-video">
                 <Webcam
                   audio={false}
                   ref={webcamRef}
                   className="w-full h-full"
                   screenshotFormat="image/jpeg"
                 />
-              </div>
-            ) : (
-              <div
-                onClick={handleOpenCamera}
-                className="w-40 aspect-video flex rounded-md justify-center items-center bg-gray-50"
-              >
-                Click for open camera
-              </div>
-            )} */}
+              ) : (
+                <div className="w-full h-full flex rounded-md justify-center items-center bg-gray-50">
+                  Click for open camera
+                </div>
+              )}
+            </div>
           </div>
         )}
         {menuList.map((item, index) => (
