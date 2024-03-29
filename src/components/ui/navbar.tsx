@@ -1,36 +1,57 @@
 "use client";
+import Image from "next/image";
 import Webcam from "react-webcam";
+import { useCallback, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { isMobile } from "@/utils/device";
 import { Button } from "@/components/ui/button";
 import { getPositionInArray } from "@/utils/array";
 import { MenuKey, menuList } from "@/constants/navbar";
+import { Skeleton } from "./skeleton";
 
 const Navbar = () => {
   const [menu, setMenu] = useState<MenuKey>("home");
+  const [facingMode, setFacingMode] = useState<"user" | "environment">(
+    "environment"
+  );
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [isCameraActive, setIsCameraActive] = useState(false);
 
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const cameraWrapperRef = useRef<HTMLDivElement>(null);
   const webcamRef = useRef<Webcam>(null);
-
-  const handleOpenCamera = () => {
-    setIsCameraOpen(true);
-  };
-
-  const handleCloseCamera = () => {
-    setIsCameraOpen(false);
-  };
-
-  const handleToggleCamera = () => {
-    setIsCameraOpen((prev) => !prev);
-  };
 
   const handleMenuClick = (key: MenuKey) => {
     setMenu(key);
+    if (menu !== "camera") setIsCameraActive(false);
   };
 
-  const isMenuActive = (key: MenuKey) => menu === key;
+  const isMenuActive = useCallback((key: MenuKey) => menu === key, [menu]);
+
+  const videoConstraints: MediaTrackConstraints = {
+    facingMode,
+    width: 500,
+    height: 500,
+  };
+
+  const toggleFacingMode = () => {
+    setFacingMode((prev) => (prev === "user" ? "environment" : "user"));
+  };
+
+  const handleRetakeClick = () => {
+    setImageSrc(null);
+  };
+
+  const handleCaptureClick = () => {
+    const imageSrc = webcamRef.current?.getScreenshot();
+    setImageSrc(imageSrc!);
+    setIsCameraActive(false);
+  };
+
+  const handleUploadClick = () => {
+    // upload image
+  };
 
   return (
     <>
@@ -52,24 +73,55 @@ const Navbar = () => {
       </AnimatePresence>
       <nav className="flex gap-1 fixed shadow-sm rounded-full bg-white p-2 z-[51] bottom-4 left-1/2 -translate-x-1/2">
         {isMenuActive("camera") && (
-          <div className="absolute flex flex-col items-center gap-1 rounded-md p-2 bottom-full left-1/2 -translate-x-1/2 bg-white shadow-sm mb-4">
+          <div className="absolute flex flex-col gap-4 items-center rounded-md p-4 bottom-full left-1/2 -translate-x-1/2 bg-white shadow-sm mb-4">
             <div
-              onClick={handleToggleCamera}
-              className="w-40 cursor-pointer aspect-video"
+              ref={cameraWrapperRef}
+              className="w-[75dvw] aspect-square rounded-md overflow-hidden relative md:w-[50dvw] max-w-[500px]"
             >
-              {isCameraOpen ? (
-                <Webcam
-                  audio={false}
-                  ref={webcamRef}
-                  className="w-full h-full"
-                  screenshotFormat="image/jpeg"
-                />
+              {!imageSrc ? (
+                <>
+                  {!isCameraActive && <Skeleton className="w-full h-full" />}
+                  <Webcam
+                    onLoadedData={() => setIsCameraActive(true)}
+                    mirrored={facingMode === "user" || !isMobile()}
+                    audio={false}
+                    ref={webcamRef}
+                    className="w-full h-full "
+                    videoConstraints={videoConstraints}
+                    screenshotFormat="image/jpeg"
+                  />
+                </>
               ) : (
-                <div className="w-full h-full flex rounded-md justify-center items-center bg-gray-50">
-                  Click for open camera
-                </div>
+                <Image src={imageSrc} alt="" fill />
               )}
             </div>
+            {!imageSrc ? (
+              <div
+                className={`grid ${isMobile() ? "grid-cols-2" : "grid-cols-1"} gap-4 w-full`}
+              >
+                {isMobile() && (
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={toggleFacingMode}
+                  >
+                    Switch Camera
+                  </Button>
+                )}
+                <Button size="lg" onClick={handleCaptureClick}>
+                  Capture
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <Button size="lg" variant="outline" onClick={handleRetakeClick}>
+                  Retake
+                </Button>
+                <Button size="lg" onClick={handleUploadClick}>
+                  Upload
+                </Button>
+              </div>
+            )}
           </div>
         )}
         {menuList.map((item, index) => (
