@@ -11,7 +11,12 @@ const Map = () => {
         lat: 51.505,
         lng: -0.09,
       }}
-      zoom={15}
+      zoom={2}
+      maxBounds={[
+        [-90, -180],
+        [90, 180],
+      ]}
+      minZoom={2}
       className="z-[49] w-full h-full"
     >
       <TileLayer
@@ -20,7 +25,7 @@ const Map = () => {
       />
       <Marker
         icon={L.divIcon({
-          html: "🐱",
+          html: "<div class='text-4xl absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2'>🐱</div>",
         })}
         position={{
           lat: 51.505,
@@ -36,27 +41,3 @@ const Map = () => {
 };
 
 export default Map;
-
-{
-  /* <Map
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
-        mapLib={import("mapbox-gl")}
-        initialViewState={{
-          zoom: 0,
-        }}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
-        attributionControl={false}
-      >
-        <GeolocateControl
-          fitBoundsOptions={{
-            zoom: 15,
-          }}
-          position="top-right"
-        /> */
-}
-{
-  /* <Marker latitude={37.78} longitude={-122.41}>
-          <div className="text-2xl">🐱</div>
-          </Marker>
-        </Map> */
-}
