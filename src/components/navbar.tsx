@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import { isMobile } from "@/utils/device";
 import { Button } from "@/components/ui/button";
 import { getPositionInArray } from "@/utils/array";
+import { Skeleton } from "@/components/ui/skeleton";
 import { MenuKey, menuList } from "@/constants/navbar";
-import { Skeleton } from "./skeleton";
 
 const Navbar = () => {
   const [menu, setMenu] = useState<MenuKey>("home");

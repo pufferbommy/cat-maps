@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
 });
-import { Navbar } from "@/components/ui/navbar";
+import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   return (
