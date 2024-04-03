@@ -7,8 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Cat Maps",
   description:
-    "CatMaps is a fun and interactive app that allows users to capture and map the locations of cats they encounter. Explore the world through the lens of our feline friends!",
-  keywords: "cats, maps, pet, feline, adventure, location, tracking",
+    "Cat Maps is a fun and interactive app that allows users to capture and map the locations of cats they encounter. Explore the world through the lens of our feline friends!",
+  keywords:
+    "cat mapping, cat locator, feline tracking, interactive cat app, cat sighting, cat encounter, pet mapping, feline location, feline finder, cat spotting, cat tracker, cat explorer, cat discovery, cat adventure",
 };
 
 export default function RootLayout({
