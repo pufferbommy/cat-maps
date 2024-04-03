@@ -24,7 +24,10 @@ const Navbar = () => {
 
   const handleMenuClick = (key: MenuKey) => {
     setMenu(key);
-    if (menu !== "camera") setIsCameraActive(false);
+    if (menu !== "camera") {
+      setIsCameraActive(false);
+      setImageSrc(null);
+    }
   };
 
   const isMenuActive = useCallback((key: MenuKey) => menu === key, [menu]);
