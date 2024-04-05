@@ -44,7 +44,7 @@ const CurrentPositionMarker = () => {
     <>
       <Button
         onClick={handleToggleSearchClick}
-        className="z-[999] fixed top-0 left-0"
+        className="z-[999] fixed top-12 left-0"
         size="icon"
       >
         {isSearchable ? <LocateFixed size={16} /> : <LocateOff size={16} />}

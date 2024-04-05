@@ -18,7 +18,7 @@ const ZoomControl = () => {
   };
 
   return (
-    <div className="z-[999] flex flex-col fixed top-0 right-0">
+    <div className="z-[999] flex flex-col fixed top-12 right-0">
       <Button
         disabled={zoom === map.getMaxZoom()}
         onClick={() => handleZoomClick("in")}
