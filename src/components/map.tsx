@@ -1,16 +1,11 @@
 "use client";
 
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  ZoomControl,
-} from "react-leaflet";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
-import CurrentPositionMarker from "./current-position-marker";
+import ZoomControl from "@/components/zoom-control";
+import CurrentPositionMarker from "@/components/current-position-marker";
 
 const Map = () => {
   return (
@@ -25,6 +20,7 @@ const Map = () => {
         [90, 180],
       ]}
       minZoom={2}
+      maxZoom={16}
       className="z-[49] w-full h-full"
       zoomControl={false}
     >
@@ -45,8 +41,8 @@ const Map = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <ZoomControl position="topright" />
       <CurrentPositionMarker />
+      <ZoomControl />
     </MapContainer>
   );
 };
