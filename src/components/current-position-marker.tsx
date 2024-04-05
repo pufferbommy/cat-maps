@@ -1,12 +1,11 @@
 import * as L from "leaflet";
+import { useState } from "react";
 import { Marker, useMap } from "react-leaflet";
-import { useEffect, useRef, useState } from "react";
-
-import { Button } from "./ui/button";
 import { LocateFixed, LocateOff } from "lucide-react";
 
+import { Button } from "./ui/button";
+
 const CurrentPositionMarker = () => {
-  const fg = useRef(L.featureGroup());
   const [isSearchable, setIsSearchable] = useState(false);
   const [position, setPosition] = useState({
     lat: 0,
@@ -16,26 +15,30 @@ const CurrentPositionMarker = () => {
   const map = useMap();
 
   const handleToggleSearchClick = () => {
-    setIsSearchable((prev) => !prev);
+    const newIsSearchable = !isSearchable;
+    setIsSearchable(newIsSearchable);
+    if (newIsSearchable && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setPosition({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        map.flyTo(
+          {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+          16
+        );
+      });
+    }
   };
 
-  useEffect(() => {
-    if (!isSearchable) {
-      fg.current.clearLayers();
-      return;
-    }
-
-    map.locate().on("locationfound", (e) => {
-      setPosition(e.latlng);
-      map.flyTo(e.latlng, 16);
-      const radius = e.accuracy;
-      const circle = L.circle(e.latlng, radius * 0.5);
-      const outerCircle = L.circle(e.latlng, radius);
-      fg.current.addLayer(circle);
-      fg.current.addLayer(outerCircle);
-      map.addLayer(fg.current);
-    });
-  }, [map, isSearchable]);
+  const markerIcon = L.divIcon({
+    iconSize: [16, 16],
+    className: `rounded-full after:bg-blue-500/25 after:absolute after:h-full after:w-full after:-z-10 after:animate-big-fade after:scale-[2] after:rounded-full`,
+    html: "<div class='bg-blue-500 border-2 rounded-full border-white w-full h-full absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2'></div>",
+  });
 
   return (
     <>
@@ -46,7 +49,7 @@ const CurrentPositionMarker = () => {
       >
         {isSearchable ? <LocateFixed size={16} /> : <LocateOff size={16} />}
       </Button>
-      {isSearchable && <Marker position={position} />}
+      {isSearchable && <Marker position={position} icon={markerIcon} />}
     </>
   );
 };

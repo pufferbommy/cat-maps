@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import Webcam from "react-webcam";
 import { useCallback, useRef, useState } from "react";
