@@ -1,4 +1,4 @@
-import { connectDatabase } from "@/lib/db";
+import { connectDB } from "@/lib/db";
 import { v2 as cloudinary } from "cloudinary";
 import { type NextRequest } from "next/server";
 
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
   const { image } = await request.json();
   // const uploadResponse = await cloudinary.uploader.upload(image);
   // console.log(uploadResponse);
-  await connectDatabase();
+  await connectDB();
 
   return Response.json({
     m: "55",
