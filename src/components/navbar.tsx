@@ -54,7 +54,14 @@ const Navbar = () => {
   };
 
   const handleUploadClick = () => {
-    // upload image
+    fetch("/api/cats", {
+      method: "POST",
+      body: JSON.stringify({
+        image: imageSrc,
+      }),
+    }).then((response) => {
+      console.log(response);
+    });
   };
 
   return (

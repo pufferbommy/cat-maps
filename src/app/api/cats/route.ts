@@ -1,4 +1,15 @@
-export async function GET(request: Request) {
+import { connectDatabase } from "@/lib/db";
+import { v2 as cloudinary } from "cloudinary";
+import { type NextRequest } from "next/server";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
+
+export async function GET(request: NextRequest) {
   return Response.json([
     {
       id: "sad2123",
@@ -43,4 +54,15 @@ export async function GET(request: Request) {
       },
     },
   ]);
+}
+
+export async function POST(request: NextRequest) {
+  const { image } = await request.json();
+  // const uploadResponse = await cloudinary.uploader.upload(image);
+  // console.log(uploadResponse);
+  await connectDatabase();
+
+  return Response.json({
+    m: "55",
+  });
 }

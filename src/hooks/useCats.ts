@@ -14,10 +14,16 @@ const useCats = () => {
   >([]);
 
   useEffect(() => {
-    fetch("/api/cats").then(async (response) => {
+    const abortController = new AbortController();
+
+    fetch("/api/cats", {
+      signal: abortController.signal,
+    }).then(async (response) => {
       const result = await response.json();
       setCats(result);
     });
+
+    return () => abortController.abort();
   }, []);
 
   return {
