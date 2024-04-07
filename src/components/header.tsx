@@ -1,7 +1,13 @@
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+
 const Header = () => {
   return (
-    <header id="header" className="bg-primary p-2 z-[999] left-0 right-0 fixed">
-      {/* j */}
+    <header className="bg-primary flex justify-between p-2">
+      <Avatar>
+        <AvatarFallback>s</AvatarFallback>
+      </Avatar>
+      <Button variant="secondary">Login</Button>
     </header>
   );
 };

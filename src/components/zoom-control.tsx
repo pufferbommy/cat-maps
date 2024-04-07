@@ -1,37 +1,38 @@
 "use client";
 
-import { useState } from "react";
 import { useMap } from "react-leaflet";
+import { useEffect, useState } from "react";
 import { ZoomIn, ZoomOut } from "lucide-react";
 
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 const ZoomControl = () => {
   const map = useMap();
   const [zoom, setZoom] = useState<number>(map.getZoom());
 
-  const handleZoomClick = (type: "in" | "out") => {
-    const oldZoom = map.getZoom();
-    const newZoom = type === "in" ? oldZoom + 1 : oldZoom - 1;
-    map.setZoom(newZoom);
-    setZoom(newZoom);
-  };
+  useEffect(() => {
+    map.on("zoomend", () => {
+      setZoom(map.getZoom());
+    });
+  }, [map]);
 
   return (
-    <div className="z-[999] flex flex-col fixed top-12 right-0">
+    <div className="flex flex-col">
       <Button
+        className="w-8 h-8 rounded-b-none"
         disabled={zoom === map.getMaxZoom()}
-        onClick={() => handleZoomClick("in")}
+        onClick={() => map.zoomIn()}
         size="icon"
       >
-        <ZoomIn />
+        <ZoomIn size={16} />
       </Button>
       <Button
+        className="w-8 h-8 rounded-t-none"
         disabled={zoom === map.getMinZoom()}
-        onClick={() => handleZoomClick("out")}
+        onClick={() => map.zoomOut()}
         size="icon"
       >
-        <ZoomOut />
+        <ZoomOut size={16} />
       </Button>
     </div>
   );

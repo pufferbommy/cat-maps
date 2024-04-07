@@ -4,8 +4,8 @@ import { NextRequest } from "next/server";
 
 import { connectDB } from "@/lib/db";
 import User from "@/models/user.model";
-import { registerSchema } from "@/schema/register.schema";
 import { capitalize } from "@/utils/string";
+import { registerSchema } from "@/schema/register.schema";
 
 export async function POST(request: NextRequest) {
   try {

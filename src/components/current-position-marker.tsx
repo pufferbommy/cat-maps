@@ -1,5 +1,5 @@
 import * as L from "leaflet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Marker, useMap } from "react-leaflet";
 import { LocateFixed, LocateOff } from "lucide-react";
 
@@ -42,11 +42,7 @@ const CurrentPositionMarker = () => {
 
   return (
     <>
-      <Button
-        onClick={handleToggleSearchClick}
-        className="z-[999] fixed top-12 left-0"
-        size="icon"
-      >
+      <Button className="w-8 h-8" onClick={handleToggleSearchClick} size="icon">
         {isSearchable ? <LocateFixed size={16} /> : <LocateOff size={16} />}
       </Button>
       {isSearchable && <Marker position={position} icon={markerIcon} />}

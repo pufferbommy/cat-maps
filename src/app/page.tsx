@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
 
-import Header from "@/components/header";
 import { Navbar } from "@/components/navbar";
 const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
@@ -9,7 +8,6 @@ const Map = dynamic(() => import("@/components/map"), {
 export default function Home() {
   return (
     <main className="h-screen">
-      {/* <Header /> */}
       <Map />
       <Navbar />
     </main>
