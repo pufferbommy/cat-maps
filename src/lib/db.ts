@@ -1,6 +1,8 @@
 import mongoose, { ConnectOptions } from "mongoose";
 
-const DATABASE_URL = process.env.DATABASE_URL;
+import { env } from "@/env";
+
+const DATABASE_URL = env.DATABASE_URL;
 
 const connectDB = async () => {
   if (!DATABASE_URL) {

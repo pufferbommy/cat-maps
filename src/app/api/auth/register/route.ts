@@ -6,6 +6,7 @@ import { connectDB } from "@/lib/db";
 import User from "@/models/user.model";
 import { capitalize } from "@/utils/string";
 import { registerSchema } from "@/schema/register.schema";
+import { env } from "@/env";
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,10 +39,10 @@ export async function POST(request: NextRequest) {
       success: true,
       message: `Registration successful! Meow, you're in, ${capitalize(createdUser.displayName)}! 🐱`,
       data: {
-        accessToken: jwt.sign(payload, process.env.JWT_SECRET!, {
+        accessToken: jwt.sign(payload, env.JWT_SECRET, {
           expiresIn: "15m",
         }),
-        refreshToken: jwt.sign(payload, process.env.JWT_SECRET!, {
+        refreshToken: jwt.sign(payload, env.JWT_SECRET, {
           expiresIn: "15 days",
         }),
       },

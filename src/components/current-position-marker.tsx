@@ -1,9 +1,15 @@
 import * as L from "leaflet";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Marker, useMap } from "react-leaflet";
 import { LocateFixed, LocateOff } from "lucide-react";
 
-import { Button } from "./ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 const CurrentPositionMarker = () => {
   const [isSearchable, setIsSearchable] = useState(false);
@@ -42,9 +48,28 @@ const CurrentPositionMarker = () => {
 
   return (
     <>
-      <Button className="w-8 h-8" onClick={handleToggleSearchClick} size="icon">
-        {isSearchable ? <LocateFixed size={16} /> : <LocateOff size={16} />}
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button
+              className="w-8 h-8"
+              onClick={handleToggleSearchClick}
+              size="icon"
+            >
+              {isSearchable ? (
+                <LocateFixed size={16} />
+              ) : (
+                <LocateOff size={16} />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left">
+            {isSearchable
+              ? "Hide your current location"
+              : "Show your current location"}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       {isSearchable && <Marker position={position} icon={markerIcon} />}
     </>
   );

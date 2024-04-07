@@ -2,6 +2,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
+import { env } from "@/env";
 import { connectDB } from "@/lib/db";
 import User from "@/models/user.model";
 import { capitalize } from "@/utils/string";
@@ -30,10 +31,10 @@ export async function POST(request: NextRequest) {
       success: true,
       message: `Welcome back, ${capitalize(user.displayName)}! Logged in successfully`,
       data: {
-        accessToken: jwt.sign(payload, process.env.JWT_SECRET!, {
+        accessToken: jwt.sign(payload, env.JWT_SECRET, {
           expiresIn: "15m",
         }),
-        refreshToken: jwt.sign(payload, process.env.JWT_SECRET!, {
+        refreshToken: jwt.sign(payload, env.JWT_SECRET, {
           expiresIn: "15 days",
         }),
       },
