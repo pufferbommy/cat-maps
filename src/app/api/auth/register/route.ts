@@ -5,6 +5,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/user.model";
 import { registerSchema } from "@/schema/register.schema";
+import { capitalize } from "@/utils/string";
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,13 +34,9 @@ export async function POST(request: NextRequest) {
       displayName: createdUser.displayName,
     };
 
-    const capitalizeDisplayName =
-      createdUser.displayName[0].toUpperCase() +
-      createdUser.displayName.slice(1);
-
     const response: BaseResponse<AuthResponseData> = {
       success: true,
-      message: `Registration successful! Meow, you're in, ${capitalizeDisplayName}! 🐱`,
+      message: `Registration successful! Meow, you're in, ${capitalize(createdUser.displayName)}! 🐱`,
       data: {
         accessToken: jwt.sign(payload, process.env.JWT_SECRET!, {
           expiresIn: "15m",
