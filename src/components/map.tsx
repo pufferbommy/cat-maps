@@ -32,7 +32,7 @@ const Map = () => {
       />
       <MapControl />
       {cats.map((cat) => (
-        <CatMarker key={cat.id} cat={cat} />
+        <CatMarker key={cat._id} cat={cat} />
       ))}
     </MapContainer>
   );

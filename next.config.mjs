@@ -7,6 +7,14 @@ const jiti = createJiti(fileURLToPath(import.meta.url));
 jiti("./src/env");
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        hostname: "images.unsplash.com",
+      },
+    ],
+  },
+};
 
 export default nextConfig;

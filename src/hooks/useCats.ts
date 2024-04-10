@@ -5,11 +5,18 @@ import { useEffect, useState } from "react";
 const useCats = () => {
   const [cats, setCats] = useState<
     {
-      id: string;
-      position: {
-        lat: number;
-        lng: number;
+      _id: string;
+      nickname: string;
+      description: string;
+      latitude: number;
+      longitude: number;
+      comments: any[];
+      imageUrl: string;
+      createdByUser: {
+        _id: string;
+        displayName: string;
       };
+      createdAt: string;
     }[]
   >([]);
 

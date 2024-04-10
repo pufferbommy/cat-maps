@@ -1,3 +1,5 @@
+"use client";
+
 import * as L from "leaflet";
 import { useState } from "react";
 import { Marker, useMap } from "react-leaflet";
@@ -17,26 +19,24 @@ const CurrentPositionMarker = () => {
     lat: 0,
     lng: 0,
   });
+  const [foundLocation, setFoundLocation] = useState(false);
 
   const map = useMap();
 
   const handleToggleSearchClick = () => {
     const newIsSearchable = !isSearchable;
     setIsSearchable(newIsSearchable);
+    setFoundLocation(false);
     if (newIsSearchable && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setPosition({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
+      map
+        .locate({
+          watch: true,
+        })
+        .on("locationfound", (e) => {
+          setPosition(e.latlng);
+          map.flyTo(e.latlng, 16);
+          setFoundLocation(true);
         });
-        map.flyTo(
-          {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          },
-          16
-        );
-      });
     }
   };
 
@@ -64,13 +64,13 @@ const CurrentPositionMarker = () => {
             </Button>
           </TooltipTrigger>
           <TooltipContent side="left">
-            {isSearchable
-              ? "Hide your current location"
-              : "Show your current location"}
+            {isSearchable ? "Hide current location" : "Show current location"}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      {isSearchable && <Marker position={position} icon={markerIcon} />}
+      {foundLocation && isSearchable && (
+        <Marker position={position} icon={markerIcon} />
+      )}
     </>
   );
 };

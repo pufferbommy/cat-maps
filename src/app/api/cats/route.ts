@@ -3,6 +3,7 @@ import { type NextRequest } from "next/server";
 
 import { env } from "@/env";
 import { connectDB } from "@/lib/db";
+import Cat from "@/models/cat.model";
 
 cloudinary.config({
   cloud_name: env.CLOUDINARY_CLOUD_NAME,
@@ -14,46 +15,64 @@ cloudinary.config({
 export async function GET(request: NextRequest) {
   return Response.json([
     {
-      id: "sad2123",
-      position: {
-        lat: 51.505,
-        lng: -0.09,
+      _id: "sad2123",
+      nickname: "Tom",
+      description: "A cat",
+      latitude: 51.505,
+      longitude: -0.09,
+      comments: [],
+      imageUrl:
+        "https://images.unsplash.com/photo-1615796153287-98eacf0abb13?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      createdByUser: {
+        _id: "123",
+        displayName: "John Doe",
       },
+      createdAt: "2024-11-01T00:00:00.000Z",
     },
     {
-      id: "123124#",
-      position: {
-        lat: 61.505,
-        lng: -0.09,
+      _id: "sad21233",
+      nickname: "Tom",
+      description: "A cat",
+      latitude: 51.505,
+      longitude: -0.09,
+      comments: [],
+      imageUrl:
+        "https://images.unsplash.com/photo-1615796153287-98eacf0abb13?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      createdByUser: {
+        _id: "123",
+        displayName: "John Doe",
       },
+      createdAt: "2024-11-01T00:00:00.000Z",
     },
     {
-      id: "123123124#",
-      position: {
-        lat: 20.505,
-        lng: -0.09,
+      _id: "sad212333",
+      nickname: "Tom",
+      description: "A cat",
+      latitude: 51.505,
+      longitude: -0.09,
+      comments: [],
+      imageUrl:
+        "https://images.unsplash.com/photo-1615796153287-98eacf0abb13?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      createdByUser: {
+        _id: "123",
+        displayName: "John Doe",
       },
+      createdAt: "2024-11-01T00:00:00.000Z",
     },
     {
-      id: "1231sa223124#",
-      position: {
-        lat: 20.505,
-        lng: 40.09,
+      _id: "sad21233443",
+      nickname: "Tom",
+      description: "A cat",
+      latitude: 51.505,
+      longitude: -0.09,
+      comments: [],
+      imageUrl:
+        "https://images.unsplash.com/photo-1615796153287-98eacf0abb13?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      createdByUser: {
+        _id: "123",
+        displayName: "John Doe",
       },
-    },
-    {
-      id: "12311223124#",
-      position: {
-        lat: 15.505,
-        lng: 10.09,
-      },
-    },
-    {
-      id: "12s311223124#",
-      position: {
-        lat: 15.505,
-        lng: 100.09,
-      },
+      createdAt: "2024-11-01T00:00:00.000Z",
     },
   ]);
 }
@@ -61,8 +80,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const { image } = await request.json();
   // const uploadResponse = await cloudinary.uploader.upload(image);
-  // console.log(uploadResponse);
+  // console.log();
   await connectDB();
+  Cat.create({
+    // imageUrl: uploadResponse.secure_url,
+    // createdByUserId
+  });
 
   return Response.json({
     m: "55",

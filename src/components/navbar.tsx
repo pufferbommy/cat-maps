@@ -17,7 +17,7 @@ const Navbar = () => {
   const [facingMode, setFacingMode] = useState<"user" | "environment">(
     "environment"
   );
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
 
   const cameraWrapperRef = useRef<HTMLDivElement>(null);
@@ -27,7 +27,7 @@ const Navbar = () => {
     setMenu(key);
     if (menu !== "camera") {
       setIsCameraActive(false);
-      setImageSrc(null);
+      setImage(null);
     }
   };
 
@@ -44,12 +44,12 @@ const Navbar = () => {
   };
 
   const handleRetakeClick = () => {
-    setImageSrc(null);
+    setImage(null);
   };
 
   const handleCaptureClick = () => {
-    const imageSrc = webcamRef.current?.getScreenshot();
-    setImageSrc(imageSrc!);
+    const image = webcamRef.current?.getScreenshot()!;
+    setImage(image);
     setIsCameraActive(false);
   };
 
@@ -57,7 +57,7 @@ const Navbar = () => {
     fetch("/api/cats", {
       method: "POST",
       body: JSON.stringify({
-        image: imageSrc,
+        image,
       }),
     }).then((response) => {
       console.log(response);
@@ -78,63 +78,66 @@ const Navbar = () => {
               opacity: 0,
               backdropFilter: "blur(0px)",
             }}
-            className="bg-white/50 fixed inset-0 z-[50]"
+            className="bg-primary/25 fixed inset-0 z-[50]"
           />
         )}
       </AnimatePresence>
-      <nav className="flex gap-1 fixed shadow-sm rounded-full bg-white p-2 z-[51] bottom-4 left-1/2 -translate-x-1/2">
-        {isMenuActive("camera") && (
-          <div className="absolute flex flex-col gap-4 items-center rounded-md p-4 bottom-full left-1/2 -translate-x-1/2 bg-white shadow-sm mb-4">
-            <div
-              ref={cameraWrapperRef}
-              className="w-[75dvw] aspect-square rounded-md overflow-hidden relative md:w-[50dvw] max-w-[500px]"
-            >
-              {!imageSrc ? (
-                <>
-                  {!isCameraActive && <Skeleton className="w-full h-full" />}
-                  <Webcam
-                    onLoadedData={() => setIsCameraActive(true)}
-                    mirrored={facingMode === "user" || !isMobile()}
-                    audio={false}
-                    ref={webcamRef}
-                    className="w-full h-full "
-                    videoConstraints={videoConstraints}
-                    screenshotFormat="image/jpeg"
-                  />
-                </>
-              ) : (
-                <Image src={imageSrc} alt="" fill />
-              )}
-            </div>
-            {!imageSrc ? (
-              <div
-                className={`grid ${isMobile() ? "grid-cols-2" : "grid-cols-1"} gap-4 w-full`}
+      <nav className="flex gap-1 fixed backdrop-blur rounded-full bg-primary p-2 z-[51] bottom-4 left-1/2 -translate-x-1/2">
+        <AnimatePresence>
+          {isMenuActive("camera") && (
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2">
+              <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -20, opacity: 0 }}
+                className="flex flex-col rounded-md gap-4 p-4 items-center bg-primary shadow-sm mb-4"
               >
-                {isMobile() && (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={toggleFacingMode}
+                <div
+                  ref={cameraWrapperRef}
+                  className="w-[75dvw] aspect-square rounded-md overflow-hidden relative md:w-[50dvw] max-w-[500px]"
+                >
+                  {!image ? (
+                    <>
+                      {!isCameraActive && (
+                        <Skeleton className="w-full h-full" />
+                      )}
+                      <Webcam
+                        onLoadedData={() => setIsCameraActive(true)}
+                        mirrored={facingMode === "user" || !isMobile()}
+                        audio={false}
+                        ref={webcamRef}
+                        className="w-full h-full "
+                        videoConstraints={videoConstraints}
+                        screenshotFormat="image/jpeg"
+                      />
+                    </>
+                  ) : (
+                    <Image src={image} alt="" fill />
+                  )}
+                </div>
+                {!image ? (
+                  <div
+                    className={`grid ${isMobile() ? "grid-cols-2" : "grid-cols-1"} gap-4 w-full`}
                   >
-                    Switch Camera
-                  </Button>
+                    {isMobile() && (
+                      <Button onClick={toggleFacingMode}>Switch Camera</Button>
+                    )}
+                    <Button variant="secondary" onClick={handleCaptureClick}>
+                      Capture
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-4 w-full">
+                    <Button onClick={handleRetakeClick}>Retake</Button>
+                    <Button variant="secondary" onClick={handleUploadClick}>
+                      Upload
+                    </Button>
+                  </div>
                 )}
-                <Button size="lg" onClick={handleCaptureClick}>
-                  Capture
-                </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-4 w-full">
-                <Button size="lg" variant="outline" onClick={handleRetakeClick}>
-                  Retake
-                </Button>
-                <Button size="lg" onClick={handleUploadClick}>
-                  Upload
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
         {menuList.map((item, index) => (
           <Button
             size="icon"
@@ -145,8 +148,7 @@ const Navbar = () => {
                 "rounded-l-[50%] rounded-r-md",
               getPositionInArray(index, menuList.length) === "last" &&
                 "rounded-r-[50%] rounded-l-md",
-              !isMenuActive(item.key) &&
-                `bg-transparent text-black hover:bg-primary/5`
+              isMenuActive(item.key) && "bg-white/15 hover:bg-white/15"
             )}
           >
             <item.icon size={20} />
