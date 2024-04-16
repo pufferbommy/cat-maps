@@ -1,7 +1,7 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, AttributionControl } from "react-leaflet";
 
 import { useCats } from "@/hooks/useCats";
 import CatMarker from "@/components/cat-marker";
@@ -25,11 +25,13 @@ const Map = () => {
       maxZoom={16}
       className="z-[49] w-full h-full"
       zoomControl={false}
+      attributionControl={false}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <AttributionControl position="bottomleft" />
       <MapControl />
       {cats.map((cat) => (
         <CatMarker key={cat._id} cat={cat} />

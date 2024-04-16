@@ -16,8 +16,7 @@ export async function GET(request: NextRequest) {
   return Response.json([
     {
       _id: "sad2123",
-      nickname: "Tom",
-      description: "A cat",
+      description: "This cat is so cuteeeeeeeeeeeeeeeeeee long text",
       latitude: 51.505,
       longitude: -0.09,
       comments: [],
@@ -31,7 +30,6 @@ export async function GET(request: NextRequest) {
     },
     {
       _id: "sad21233",
-      nickname: "Tom",
       description: "A cat",
       latitude: 51.505,
       longitude: -0.09,
@@ -46,7 +44,6 @@ export async function GET(request: NextRequest) {
     },
     {
       _id: "sad212333",
-      nickname: "Tom",
       description: "A cat",
       latitude: 51.505,
       longitude: -0.09,
@@ -61,7 +58,6 @@ export async function GET(request: NextRequest) {
     },
     {
       _id: "sad21233443",
-      nickname: "Tom",
       description: "A cat",
       latitude: 51.505,
       longitude: -0.09,

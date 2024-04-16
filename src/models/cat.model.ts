@@ -2,7 +2,6 @@ import mongoose, { Schema, models } from "mongoose";
 
 const catSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  nickname: String,
   description: String,
   latitude: {
     type: Number,

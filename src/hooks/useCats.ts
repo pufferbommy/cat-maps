@@ -6,7 +6,6 @@ const useCats = () => {
   const [cats, setCats] = useState<
     {
       _id: string;
-      nickname: string;
       description: string;
       latitude: number;
       longitude: number;
@@ -19,6 +18,7 @@ const useCats = () => {
       createdAt: string;
     }[]
   >([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -26,8 +26,9 @@ const useCats = () => {
     fetch("/api/cats", {
       signal: abortController.signal,
     }).then(async (response) => {
-      const result = await response.json();
-      setCats(result);
+      const _cats = await response.json();
+      setCats(_cats);
+      setIsLoading(false);
     });
 
     return () => abortController.abort();
@@ -35,6 +36,7 @@ const useCats = () => {
 
   return {
     cats,
+    isLoading,
   };
 };
 

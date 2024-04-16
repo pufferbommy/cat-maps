@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Lato } from "next/font/google";
 
 import "./globals.css";
 
-const roboto = Poppins({ subsets: ["latin"], weight: ["400", "700"] });
+const lato = Lato({ subsets: ["latin"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
   title: "Cat Maps",
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.className}>{children}</body>
+      <body className={lato.className}>{children}</body>
     </html>
   );
 }

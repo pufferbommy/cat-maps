@@ -1,48 +1,61 @@
 "use client";
 
+import Image from "next/image";
+import CountUp from "react-countup";
+
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
+import { Skeleton } from "./ui/skeleton";
 import { useCats } from "@/hooks/useCats";
+import { Button } from "./ui/button";
 
 const Sidebar = () => {
-  const { cats } = useCats();
+  const { cats, isLoading } = useCats();
 
   return (
-    <div className="w-full max-w-[400px] h-full flex flex-col">
-      <div className="p-4">
-        <h1 className="font-bold">Cats</h1>
+    <div className="max-w-[300px] w-full shadow flex flex-col h-full">
+      <div className="flex px-4 mb-6 pt-4 justify-between items-center">
+        <h1 className="font-bold text-xl">Cat Maps</h1>
+        <h2 className="before:mr-2 text-lg before:content-['🐱']">
+          <CountUp start={0} end={cats.length} />
+        </h2>
       </div>
-      <div className="flex overflow-y-auto flex-col gap-4 h-full p-4">
+      <div className="flex px-4 mb-4 overflow-y-auto flex-col gap-4 h-full">
+        {isLoading && (
+          <div>
+            Loading...
+            {/* <Skeleton className="w-full" /> */}
+          </div>
+        )}
         {cats.map((cat) => (
           <Card key={cat._id}>
             <CardHeader>
-              <CardTitle>{cat.nickname}</CardTitle>
-              <CardDescription className="mb-2">
-                <div className="w-full rounded overflow-hidden aspect-square">
+              <CardTitle>
+                <div className="relative cursor-pointer aspect-square">
                   <Image
-                    src={
-                      cat.imageUrl
-                        ? cat.imageUrl
-                        : "https://via.placeholder.com/500x500"
-                    }
-                    alt={cat.nickname}
-                    width={500}
-                    height={500}
-                    className="w-full h-full object-cover"
+                    sizes="100%"
+                    priority
+                    src={cat.imageUrl}
+                    alt="cat"
+                    fill
+                    className="h-full w-full object-cover rounded-lg"
                   />
                 </div>
-              </CardDescription>
+              </CardTitle>
             </CardHeader>
           </Card>
         ))}
+      </div>
+      <div className="px-4 pb-4 gap-2 grid grid-cols-2">
+        <Button variant="outline">Login</Button>
+        <Button>Register</Button>
       </div>
     </div>
   );
 };
 
-export default Sidebar;
+export { Sidebar };

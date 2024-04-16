@@ -6,7 +6,6 @@ import { Marker } from "react-leaflet";
 interface CatMarkerProps {
   cat: {
     _id: string;
-    nickname: string;
     description: string;
     latitude: number;
     longitude: number;
