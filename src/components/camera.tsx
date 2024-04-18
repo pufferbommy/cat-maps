@@ -12,12 +12,11 @@ import { isMobile } from "@/utils/device";
 import { Badge } from "@/components/ui/badge";
 
 const Camera = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const [facingMode, setFacingMode] = useState<"user" | "environment">(
     "environment"
   );
   const [image, setImage] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
@@ -56,7 +55,14 @@ const Camera = () => {
     });
   };
 
+  const handleCloseCamera = () => {
+    setIsOpen(false);
+    setImage(null);
+  };
+
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleResize = () => {
       setWidth(cameraWrapperRef.current?.clientWidth!);
       setHeight(cameraWrapperRef.current?.clientHeight!);
@@ -66,10 +72,8 @@ const Camera = () => {
 
     window?.addEventListener("resize", handleResize);
 
-    return () => {
-      window?.removeEventListener("resize", handleResize);
-    };
-  }, []);
+    return () => window?.removeEventListener("resize", handleResize);
+  }, [isOpen]);
 
   return (
     <>
@@ -83,7 +87,7 @@ const Camera = () => {
         {isOpen && (
           <>
             <motion.div
-              onClick={() => setIsOpen(false)}
+              onClick={handleCloseCamera}
               initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
               animate={{
                 opacity: 1,
@@ -97,22 +101,22 @@ const Camera = () => {
             />
             <div className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-[50]">
               <motion.div
-                initial={{ y: -20, opacity: 0 }}
+                initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
+                exit={{ y: -50, opacity: 0 }}
                 className="flex flex-col rounded-md p-4 items-end bg-white shadow-sm"
               >
-                <div className="mb-2 w-full flex justify-between">
-                  <Badge variant="outline">
+                <div className="mb-4 w-full justify-between flex items-center">
+                  <Badge variant="secondary">
                     {width} x {height}
                   </Badge>
                   <Button
-                    onClick={() => setIsOpen(false)}
-                    className="w-5 h-5 rounded-full"
+                    onClick={handleCloseCamera}
+                    className="w-4 h-4 rounded-full hover:scale-110 transition-transform"
                     variant="destructive"
                     size="icon"
                   >
-                    <X size={14} />
+                    <X size={12} />
                   </Button>
                 </div>
                 <div
@@ -139,6 +143,7 @@ const Camera = () => {
                     <Image src={image} alt="" fill />
                   )}
                 </div>
+
                 {!image ? (
                   <div
                     className={`grid ${isMobile() ? "grid-cols-2" : "grid-cols-1"} gap-2 w-full`}

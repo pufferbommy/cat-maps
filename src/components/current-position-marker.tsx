@@ -50,7 +50,7 @@ const CurrentPositionMarker = () => {
     <>
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button
               className="w-8 h-8"
               onClick={handleToggleSearchClick}
@@ -64,7 +64,9 @@ const CurrentPositionMarker = () => {
             </Button>
           </TooltipTrigger>
           <TooltipContent side="left">
-            {isSearchable ? "Hide current location" : "Show current location"}
+            {isSearchable
+              ? "ปิดการค้นหาตำแหน่งปัจจุบัน"
+              : "ค้นหาตำแหน่งปัจจุบัน"}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

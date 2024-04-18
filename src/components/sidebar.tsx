@@ -5,13 +5,17 @@ import CountUp from "react-countup";
 
 import {
   Card,
+  CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { useCats } from "@/hooks/useCats";
 import { Button } from "./ui/button";
+import LoginButton from "./login-button";
+import { Heart } from "lucide-react";
 
 const Sidebar = () => {
   const { cats, isLoading } = useCats();
@@ -33,25 +37,27 @@ const Sidebar = () => {
         )}
         {cats.map((cat) => (
           <Card key={cat._id}>
-            <CardHeader>
-              <CardTitle>
-                <div className="relative cursor-pointer aspect-square">
-                  <Image
-                    sizes="100%"
-                    priority
-                    src={cat.imageUrl}
-                    alt="cat"
-                    fill
-                    className="h-full w-full object-cover rounded-lg"
-                  />
-                </div>
-              </CardTitle>
-            </CardHeader>
+            <CardContent className="relative rounded-lg overflow-hidden">
+              <div className="cursor-pointer aspect-square">
+                <Image
+                  sizes="100%"
+                  priority
+                  src={cat.imageUrl}
+                  alt="cat"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="bg-gradient-to-b from-black/50 via-black/0 to-transparent absolute inset-0" />
+              <button className="hover:bg-transparent hover:scale-110 transition-transform absolute right-4 top-4">
+                <Heart className="text-red-300" size={18} />
+              </button>
+            </CardContent>
           </Card>
         ))}
       </div>
       <div className="px-4 pb-4 gap-2 grid grid-cols-2">
-        <Button variant="outline">Login</Button>
+        <LoginButton />
         <Button>Register</Button>
       </div>
     </div>

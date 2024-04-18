@@ -26,7 +26,7 @@ const ZoomControl = () => {
     <div className="flex flex-col">
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button
               className="w-8 h-8 rounded-b-none"
               disabled={zoom === map.getMaxZoom()}
@@ -36,12 +36,12 @@ const ZoomControl = () => {
               <ZoomIn size={16} />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">Zoom In</TooltipContent>
+          <TooltipContent side="left">ซูมเข้า</TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button
               className="w-8 h-8 rounded-t-none"
               disabled={zoom === map.getMinZoom()}
@@ -51,7 +51,7 @@ const ZoomControl = () => {
               <ZoomOut size={16} />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">Zoom Out</TooltipContent>
+          <TooltipContent side="left">ซูมออก</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>
