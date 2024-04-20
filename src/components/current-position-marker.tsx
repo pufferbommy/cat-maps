@@ -28,15 +28,11 @@ const CurrentPositionMarker = () => {
     setIsSearchable(newIsSearchable);
     setFoundLocation(false);
     if (newIsSearchable && navigator.geolocation) {
-      map
-        .locate({
-          watch: true,
-        })
-        .on("locationfound", (e) => {
-          setPosition(e.latlng);
-          map.flyTo(e.latlng, 16);
-          setFoundLocation(true);
-        });
+      map.locate().on("locationfound", (e) => {
+        setPosition(e.latlng);
+        map.flyTo(e.latlng, 16);
+        setFoundLocation(true);
+      });
     }
   };
 

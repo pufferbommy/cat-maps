@@ -5,7 +5,6 @@ import { NextRequest } from "next/server";
 import { env } from "@/env";
 import { connectDB } from "@/lib/db";
 import User from "@/models/user.model";
-import { capitalize } from "@/utils/string";
 import { loginSchema } from "@/schema/login.schema";
 
 export async function POST(request: NextRequest) {
@@ -19,17 +18,16 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user || !(await argon2.verify(user.password, password))) {
-      throw new Error("Username or password is incorrect");
+      throw new Error("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
     }
 
     const payload = {
       _id: user._id,
-      displayName: user.displayName,
     };
 
     const response: BaseResponse<AuthResponseData> = {
       success: true,
-      message: `Welcome back, ${capitalize(user.displayName)}! Logged in successfully`,
+      message: "เข้าสู่ระบบสำเร็จ",
       data: {
         accessToken: jwt.sign(payload, env.JWT_SECRET, {
           expiresIn: "15m",
@@ -44,7 +42,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     const response: BaseResponse = {
       success: false,
-      message: (error as Error).message || "Something went wrong",
+      message: (error as Error).message || "เกิดข้อผิดพลาด",
     };
     return Response.json(response);
   }

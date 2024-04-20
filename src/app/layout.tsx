@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={lato.className}>{children}</body>
+      <body className={lato.className}>
+        <Toaster richColors />
+        {children}
+      </body>
     </html>
   );
 }

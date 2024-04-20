@@ -21,17 +21,11 @@ const useCats = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const abortController = new AbortController();
-
-    fetch("/api/cats", {
-      signal: abortController.signal,
-    }).then(async (response) => {
+    fetch("/api/cats").then(async (response) => {
       const _cats = await response.json();
       setCats(_cats);
       setIsLoading(false);
     });
-
-    return () => abortController.abort();
   }, []);
 
   return {

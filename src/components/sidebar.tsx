@@ -2,20 +2,13 @@
 
 import Image from "next/image";
 import CountUp from "react-countup";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Skeleton } from "./ui/skeleton";
-import { useCats } from "@/hooks/useCats";
-import { Button } from "./ui/button";
-import LoginButton from "./login-button";
 import { Heart } from "lucide-react";
+
+import { Button } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
+import AuthButton from "./auth-button";
+import { useCats } from "@/hooks/useCats";
+import { Card, CardContent } from "@/components/ui/card";
 
 const Sidebar = () => {
   const { cats, isLoading } = useCats();
@@ -57,8 +50,8 @@ const Sidebar = () => {
         ))}
       </div>
       <div className="px-4 pb-4 gap-2 grid grid-cols-2">
-        <LoginButton />
-        <Button>Register</Button>
+        <AuthButton initialAction="login" />
+        <AuthButton initialAction="register" />
       </div>
     </div>
   );

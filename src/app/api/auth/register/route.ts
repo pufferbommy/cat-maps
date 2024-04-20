@@ -2,17 +2,14 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
+import { env } from "@/env";
 import { connectDB } from "@/lib/db";
 import User from "@/models/user.model";
-import { capitalize } from "@/utils/string";
 import { registerSchema } from "@/schema/register.schema";
-import { env } from "@/env";
 
 export async function POST(request: NextRequest) {
   try {
-    const { displayName, username, password } = registerSchema.parse(
-      await request.json()
-    );
+    const { username, password } = registerSchema.parse(await request.json());
 
     await connectDB();
 
@@ -21,23 +18,22 @@ export async function POST(request: NextRequest) {
     });
 
     if (user) {
-      throw new Error("User is already taken");
+      throw new Error("ชื่อผู้ใช้นี้มีอยู่แล้ว");
     }
 
-    const createdUser = await User.create({
-      displayName,
-      username,
-      password: await argon2.hash(password),
-    });
+    const createdUser: { _id: string; username: string; password: string } =
+      await User.create({
+        username,
+        password: await argon2.hash(password),
+      });
 
     const payload = {
       _id: createdUser._id,
-      displayName: createdUser.displayName,
     };
 
     const response: BaseResponse<AuthResponseData> = {
       success: true,
-      message: `Registration successful! Meow, you're in, ${capitalize(createdUser.displayName)}! 🐱`,
+      message: "สมัครสมาชิกสำเร็จ",
       data: {
         accessToken: jwt.sign(payload, env.JWT_SECRET, {
           expiresIn: "15m",
@@ -52,7 +48,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     const response: BaseResponse = {
       success: false,
-      message: (error as Error).message || "Something went wrong",
+      message: (error as Error).message || "เกิดข้อผิดพลาด",
     };
     return Response.json(response);
   }
