@@ -1,5 +1,5 @@
 interface BaseResponse<T = void> {
   success: boolean;
-  message: string;
+  message?: string;
   data?: T;
 }

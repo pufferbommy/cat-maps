@@ -1,17 +1,14 @@
 import { Toaster } from "sonner";
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
 
 import "./globals.css";
 
-const lato = Lato({ subsets: ["latin"], weight: ["400", "700"] });
-
 export const metadata: Metadata = {
-  title: "Cat Maps",
+  title: "CatMaps: Explore the World Through Feline Eyes",
   description:
-    "Cat Maps is a fun and interactive app that allows users to capture and map the locations of cats they encounter. Explore the world through the lens of our feline friends!",
+    "CatMaps is a revolutionary app that allows users to map and share the locations of feline friends they encounter. Discover the secret lives of cats, contribute to a global cat-tracking community, and embark on a journey of feline adventure.",
   keywords:
-    "cat mapping, cat locator, feline tracking, interactive cat app, cat sighting, cat encounter, pet mapping, feline location, feline finder, cat spotting, cat tracker, cat explorer, cat discovery, cat adventure",
+    "cat mapping, cat locator, feline tracking, interactive cat app, cat sighting, cat encounter, pet mapping, feline location, feline finder, cat spotting, cat tracker, cat explorer, cat discovery, cat adventure, global cat community, feline exploration, cat enthusiasts, pet lovers",
 };
 
 export default function RootLayout({
@@ -21,8 +18,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={lato.className}>
-        <Toaster richColors />
+      <body className="font-lato">
+        <Toaster richColors position="top-center" />
         {children}
       </body>
     </html>

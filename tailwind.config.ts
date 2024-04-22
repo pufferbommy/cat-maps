@@ -73,6 +73,9 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "big-fade": "big-fade 2s ease-out infinite",
       },
+      fontFamily: {
+        lato: "'Lato', sans-serif;",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

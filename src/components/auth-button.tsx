@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -47,7 +46,7 @@ const AuthButton = ({
       body: JSON.stringify(values),
     })
       .then(async (response) => {
-        const result: BaseResponse<AuthResponseData> = await response.json();
+        const result: BaseResponse<Auth> = await response.json();
         if (!result.success) throw new Error(result.message);
         localStorage.setItem("accessToken", result.data!.accessToken);
         localStorage.setItem("refreshToken", result.data!.refreshToken);

@@ -21,11 +21,24 @@ const useCats = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch("/api/cats").then(async (response) => {
-      const _cats = await response.json();
-      setCats(_cats);
-      setIsLoading(false);
-    });
+    const abortController = new AbortController();
+
+    const getCats = async (signal: AbortSignal) => {
+      fetch("/api/cats", {
+        signal,
+      }).then(async (response) => {
+        const _cats = await response.json();
+        setCats(_cats);
+        setIsLoading(false);
+      });
+    };
+
+    getCats(abortController.signal);
+
+    return () => {
+      const reason = new DOMException("Fetch aborted", "AbortError");
+      abortController.abort(reason);
+    };
   }, []);
 
   return {

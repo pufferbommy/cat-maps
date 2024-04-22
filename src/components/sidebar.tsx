@@ -1,22 +1,35 @@
 "use client";
 
+import { toast } from "sonner";
 import Image from "next/image";
 import CountUp from "react-countup";
-import { Heart } from "lucide-react";
+import { Heart, LogOut } from "lucide-react";
+import { useStore } from "@nanostores/react";
 
-import { Button } from "./ui/button";
-import { Skeleton } from "./ui/skeleton";
 import AuthButton from "./auth-button";
 import { useCats } from "@/hooks/useCats";
+import { $isLoading, $profile, clearProfile } from "@/store/profile";
 import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Button } from "./ui/button";
 
 const Sidebar = () => {
+  const profile = useStore($profile);
+  const isProfileLoading = useStore($isLoading);
+
   const { cats, isLoading } = useCats();
+
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    clearProfile();
+    toast.success("ออกจากระบบแล้ว");
+  };
 
   return (
     <div className="max-w-[300px] w-full shadow flex flex-col h-full">
       <div className="flex px-4 mb-6 pt-4 justify-between items-center">
-        <h1 className="font-bold text-xl">Cat Maps</h1>
+        <h1 className="font-bold text-xl">CatMaps</h1>
         <h2 className="before:mr-2 text-lg before:content-['🐱']">
           <CountUp start={0} end={cats.length} />
         </h2>
@@ -49,9 +62,33 @@ const Sidebar = () => {
           </Card>
         ))}
       </div>
-      <div className="px-4 pb-4 gap-2 grid grid-cols-2">
-        <AuthButton initialAction="login" />
-        <AuthButton initialAction="register" />
+      <div className="px-4 pb-4 gap-4 grid grid-cols-2">
+        {isProfileLoading ? (
+          <div className="flex flex-col justify-center h-10">Loading...</div>
+        ) : (
+          <>
+            {!profile ? (
+              <>
+                <AuthButton initialAction="login" />
+                <AuthButton initialAction="register" />
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <Avatar>
+                    <AvatarFallback>
+                      {profile.username.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <p className="truncate">{profile.username}</p>
+                </div>
+                <Button onClick={logout} variant="secondary" className="gap-2">
+                  ออกจากระบบ
+                </Button>
+              </>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

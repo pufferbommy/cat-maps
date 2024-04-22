@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       _id: user._id,
     };
 
-    const response: BaseResponse<AuthResponseData> = {
+    const response: BaseResponse<Auth> = {
       success: true,
       message: "เข้าสู่ระบบสำเร็จ",
       data: {
