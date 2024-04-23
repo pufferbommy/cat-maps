@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import axios from "@/lib/axios";
+
 const useCats = () => {
   const [cats, setCats] = useState<
     {
@@ -18,32 +20,21 @@ const useCats = () => {
       createdAt: string;
     }[]
   >([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingCats, setIsLoadingCats] = useState<boolean>(true);
 
   useEffect(() => {
-    const abortController = new AbortController();
-
-    const getCats = async (signal: AbortSignal) => {
-      fetch("/api/cats", {
-        signal,
-      }).then(async (response) => {
-        const _cats = await response.json();
-        setCats(_cats);
-        setIsLoading(false);
-      });
+    const getCats = async () => {
+      const response = await axios.get("cats");
+      setCats(response.data);
+      setIsLoadingCats(false);
     };
 
-    getCats(abortController.signal);
-
-    return () => {
-      const reason = new DOMException("Fetch aborted", "AbortError");
-      abortController.abort(reason);
-    };
+    getCats();
   }, []);
 
   return {
     cats,
-    isLoading,
+    isLoadingCats,
   };
 };
 

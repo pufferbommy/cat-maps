@@ -1,30 +1,22 @@
 "use client";
 
-import { toast } from "sonner";
 import Image from "next/image";
 import CountUp from "react-countup";
-import { Heart, LogOut } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useStore } from "@nanostores/react";
 
 import AuthButton from "./auth-button";
 import { useCats } from "@/hooks/useCats";
-import { $isLoading, $profile, clearProfile } from "@/store/profile";
-import { Card, CardContent } from "@/components/ui/card";
+import LogoutButton from "./logout-button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { Button } from "./ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { $profile, $isLoadingProfile } from "@/store/profile";
 
 const Sidebar = () => {
   const profile = useStore($profile);
-  const isProfileLoading = useStore($isLoading);
+  const isLoadingProfile = useStore($isLoadingProfile);
 
-  const { cats, isLoading } = useCats();
-
-  const logout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    clearProfile();
-    toast.success("ออกจากระบบแล้ว");
-  };
+  const { cats, isLoadingCats } = useCats();
 
   return (
     <div className="max-w-[300px] w-full shadow flex flex-col h-full">
@@ -35,7 +27,7 @@ const Sidebar = () => {
         </h2>
       </div>
       <div className="flex px-4 mb-4 overflow-y-auto flex-col gap-4 h-full">
-        {isLoading && (
+        {isLoadingCats && (
           <div>
             Loading...
             {/* <Skeleton className="w-full" /> */}
@@ -63,7 +55,7 @@ const Sidebar = () => {
         ))}
       </div>
       <div className="px-4 pb-4 gap-4 grid grid-cols-2">
-        {isProfileLoading ? (
+        {isLoadingProfile ? (
           <div className="flex flex-col justify-center h-10">Loading...</div>
         ) : (
           <>
@@ -82,9 +74,7 @@ const Sidebar = () => {
                   </Avatar>
                   <p className="truncate">{profile.username}</p>
                 </div>
-                <Button onClick={logout} variant="secondary" className="gap-2">
-                  ออกจากระบบ
-                </Button>
+                <LogoutButton />
               </>
             )}
           </>

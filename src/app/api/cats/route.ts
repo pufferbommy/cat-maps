@@ -2,7 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { type NextRequest } from "next/server";
 
 import { env } from "@/env";
-import { connectDB } from "@/lib/db";
+import { connectDB } from "@/lib/database";
 import Cat from "@/models/cat.model";
 
 cloudinary.config({

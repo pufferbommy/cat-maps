@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { connectDB } from "@/lib/db";
+import { connectDB } from "@/lib/database";
 import User from "@/models/user.model";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";

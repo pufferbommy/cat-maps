@@ -1,6 +1,5 @@
 "use client";
 
-import { toast } from "sonner";
 import { useState } from "react";
 
 import {
@@ -11,8 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import axios from "@/lib/axios";
 import { Button } from "./ui/button";
 import LoginForm from "./login-form";
+import { useAuth } from "@/hooks/useAuth";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
 import { Register } from "@/schema/register.schema";
@@ -22,6 +23,8 @@ const AuthButton = ({
 }: {
   initialAction: "login" | "register";
 }) => {
+  const { getProfile } = useAuth();
+
   const [action, setAction] = useState(initialAction);
 
   const [open, setOpen] = useState(false);
@@ -39,23 +42,14 @@ const AuthButton = ({
     setAction((prev) => (isLogin(prev) ? "register" : "login"));
   };
 
-  const onSubmit = (values: Login | Register) => {
-    const url = `/api/auth/${action}`;
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify(values),
-    })
-      .then(async (response) => {
-        const result: BaseResponse<Auth> = await response.json();
-        if (!result.success) throw new Error(result.message);
-        localStorage.setItem("accessToken", result.data!.accessToken);
-        localStorage.setItem("refreshToken", result.data!.refreshToken);
-        setOpen(false);
-        toast.success(result.message);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+  const onSubmit = async (values: Login | Register) => {
+    const url = `auth/${action}`;
+    const response = await axios.post<BaseResponse<Auth>>(url, values);
+    const { accessToken, refreshToken } = response.data.data!;
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    setOpen(false);
+    getProfile();
   };
 
   return (
