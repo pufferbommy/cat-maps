@@ -18,7 +18,13 @@ export default function Home() {
   const { previewCats, isLoadingPreviewCats } = usePreviewCats();
 
   useEffect(() => {
-    getProfile();
+    const abortController = new AbortController();
+
+    getProfile(abortController.signal);
+
+    return () => {
+      abortController.abort();
+    };
   }, [getProfile]);
 
   useEffect(() => {

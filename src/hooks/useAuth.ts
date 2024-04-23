@@ -6,10 +6,13 @@ import axios from "@/lib/axios";
 import { clearProfile, setIsLoadingProfile, setProfile } from "@/store/profile";
 
 const useAuth = () => {
-  const getProfile = async () => {
+  const getProfile = async (signal?: AbortSignal) => {
     try {
       setIsLoadingProfile(true);
-      const response = await axios.get<BaseResponse<Profile>>("auth/profile");
+      const response = await axios.get<BaseResponse<Profile>>("auth/profile", {
+        signal,
+      });
+      console.log(response.data.data);
       setProfile(response.data.data!);
     } catch (error) {
       if (error instanceof Error && "jwt expired" === error.message) {
