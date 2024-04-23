@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { connectDB } from "@/lib/database";
+import { connectDatabase } from "@/lib/database";
 import User from "@/models/user.model";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     const decoded = jwt.verify(refreshToken, env.JWT_SECRET);
 
-    await connectDB();
+    await connectDatabase();
 
     const user = await User.findById(decoded);
 

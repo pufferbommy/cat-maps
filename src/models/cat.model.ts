@@ -1,8 +1,6 @@
 import mongoose, { Schema, models } from "mongoose";
 
 const catSchema = new Schema({
-  _id: Schema.Types.ObjectId,
-  description: String,
   latitude: {
     type: Number,
     required: true,
@@ -16,7 +14,7 @@ const catSchema = new Schema({
     type: String,
     required: true,
   },
-  createdByUserId: {
+  uploader: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },

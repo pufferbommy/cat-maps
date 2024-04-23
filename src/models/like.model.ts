@@ -1,7 +1,6 @@
 import mongoose, { Schema, models } from "mongoose";
 
 const likeSchema = new Schema({
-  _id: Schema.Types.ObjectId,
   catId: {
     type: Schema.Types.ObjectId,
     ref: "Cat",

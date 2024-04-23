@@ -6,42 +6,42 @@ import { Heart } from "lucide-react";
 import { useStore } from "@nanostores/react";
 
 import AuthButton from "./auth-button";
-import { useCats } from "@/hooks/useCats";
 import LogoutButton from "./logout-button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { $profile, $isLoadingProfile } from "@/store/profile";
+import { $isLoadingPreviewCats, $previewCats } from "@/store/preview-cats";
 
 const Sidebar = () => {
   const profile = useStore($profile);
   const isLoadingProfile = useStore($isLoadingProfile);
-
-  const { cats, isLoadingCats } = useCats();
+  const previewCats = useStore($previewCats);
+  const isLoadingPreviewCats = useStore($isLoadingPreviewCats);
 
   return (
     <div className="max-w-[300px] w-full shadow flex flex-col h-full">
       <div className="flex px-4 mb-6 pt-4 justify-between items-center">
         <h1 className="font-bold text-xl">CatMaps</h1>
         <h2 className="before:mr-2 text-lg before:content-['🐱']">
-          <CountUp start={0} end={cats.length} />
+          <CountUp start={0} end={previewCats.length} />
         </h2>
       </div>
       <div className="flex px-4 mb-4 overflow-y-auto flex-col gap-4 h-full">
-        {isLoadingCats && (
+        {isLoadingPreviewCats && (
           <div>
             Loading...
             {/* <Skeleton className="w-full" /> */}
           </div>
         )}
-        {cats.map((cat) => (
-          <Card key={cat._id}>
+        {previewCats.map((previewCat) => (
+          <Card key={previewCat._id}>
             <CardContent className="relative rounded-lg overflow-hidden">
               <div className="cursor-pointer aspect-square">
                 <Image
                   sizes="100%"
                   priority
-                  src={cat.imageUrl}
-                  alt="cat"
+                  src={previewCat.imageUrl}
+                  alt="preview cat"
                   fill
                   className="object-cover"
                 />

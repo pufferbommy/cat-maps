@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
 import { env } from "@/env";
-import { connectDB } from "@/lib/database";
+import { connectDatabase } from "@/lib/database";
 import User from "@/models/user.model";
 import { loginSchema } from "@/schema/login.schema";
 
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     const { username, password } = loginSchema.parse(await request.json());
 
-    await connectDB();
+    await connectDatabase();
 
     const user = await User.findOne({
       username,

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import { env } from "@/env";
-import { connectDB } from "@/lib/database";
+import { connectDatabase } from "@/lib/database";
 import User from "@/models/user.model";
 import { NextRequest } from "next/server";
 
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     const decoded = jwt.verify(accessToken, env.JWT_SECRET);
 
-    await connectDB();
+    await connectDatabase();
 
     const user = await User.findById(decoded);
 
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     const response: BaseResponse = {
       success: false,
-      message: (error as Error).message || "เกิดข้อผิดพลาด",
+      // message: (error as Error).message || "เกิดข้อผิดพลาด",
     };
     return Response.json(response);
   }

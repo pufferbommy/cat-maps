@@ -6,11 +6,11 @@ const commentSchema = new Schema({
     type: String,
     required: true,
   },
-  catId: {
+  cat: {
     type: Schema.Types.ObjectId,
     ref: "Cat",
   },
-  createdByUserId: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },

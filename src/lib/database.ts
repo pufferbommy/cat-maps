@@ -4,7 +4,7 @@ import { env } from "@/env";
 
 const DATABASE_URL = env.DATABASE_URL;
 
-const connectDB = async () => {
+const connectDatabase = async () => {
   if (!DATABASE_URL) {
     throw new Error(
       "Please define the DATABASE_URL environment variable inside .env.local"
@@ -18,4 +18,8 @@ const connectDB = async () => {
   await mongoose.connect(DATABASE_URL, opts);
 };
 
-export { connectDB };
+const disconnectDatabase = async () => {
+  await mongoose.disconnect();
+};
+
+export { connectDatabase, disconnectDatabase };
