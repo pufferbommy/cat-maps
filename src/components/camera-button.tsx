@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import axios from "@/lib/axios";
 import Webcam from "react-webcam";
 import { useRef, useState } from "react";
 import { CameraIcon } from "lucide-react";
@@ -9,14 +8,15 @@ import { useStore } from "@nanostores/react";
 
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
-
 import { $profile } from "@/store/profile";
+import * as catsService from "@/services/cats";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
-const Camera = () => {
+const CameraButton = () => {
   const profile = useStore($profile);
 
-  const isMobile = () =>
+  const isMobile =
+    typeof window !== "undefined" &&
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
@@ -52,8 +52,9 @@ const Camera = () => {
   };
 
   const handleUploadClick = async () => {
+    if (!image) return;
     window.navigator.geolocation.getCurrentPosition(async (position) => {
-      await axios.post("cats", {
+      await catsService.addCat({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
         image,
@@ -73,7 +74,7 @@ const Camera = () => {
       <Button
         onClick={() => {
           if (!profile) {
-            alert("กรุณาเข้าสู่ระบบก่อนใช้งาน");
+            alert("Please login first");
             return;
           }
           setOpen(true);
@@ -84,7 +85,7 @@ const Camera = () => {
       </Button>
       <DialogContent className="w-[75dvw] max-w-[500px] md:w-[50dvw]">
         <DialogHeader>
-          <DialogTitle>กล้อง</DialogTitle>
+          <DialogTitle>{image ? "View Image" : "Take a picture"}</DialogTitle>
         </DialogHeader>
         <div
           ref={cameraWrapperRef}
@@ -96,7 +97,7 @@ const Camera = () => {
               <Webcam
                 id="webcam"
                 onLoadedData={() => setIsCameraActive(true)}
-                mirrored={facingMode === "user" || !isMobile()}
+                mirrored={facingMode === "user" || !isMobile}
                 audio={false}
                 ref={webcamRef}
                 className="w-full h-full "
@@ -110,21 +111,21 @@ const Camera = () => {
         </div>
         {!image ? (
           <div
-            className={`grid ${isMobile() ? "grid-cols-2" : "grid-cols-1"} gap-2 w-full`}
+            className={`grid ${isMobile ? "grid-cols-2" : "grid-cols-1"} gap-2 w-full`}
           >
-            {isMobile() && (
+            {isMobile && (
               <Button variant="outline" onClick={toggleFacingMode}>
-                เปลี่ยนกล้อง
+                Switch Camera
               </Button>
             )}
-            <Button onClick={handleCaptureClick}>ถ่ายรูป</Button>
+            <Button onClick={handleCaptureClick}>Capture</Button>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-2 w-full">
             <Button variant="outline" onClick={handleRetakeClick}>
-              ถ่ายใหม่
+              Retake
             </Button>
-            <Button onClick={handleUploadClick}>อัพโหลด</Button>
+            <Button onClick={handleUploadClick}>Upload</Button>
           </div>
         )}
       </DialogContent>
@@ -132,4 +133,4 @@ const Camera = () => {
   );
 };
 
-export default Camera;
+export default CameraButton;

@@ -3,8 +3,8 @@ import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
 import { env } from "@/env";
-import { connectDatabase } from "@/lib/database";
 import User from "@/models/user.model";
+import { connectDatabase } from "@/lib/database";
 import { loginSchema } from "@/schema/login.schema";
 
 export async function POST(request: NextRequest) {
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user || !(await argon2.verify(user.password, password))) {
-      throw new Error("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+      throw new Error("Username or password is incorrect");
     }
 
     const payload = {
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     const response: BaseResponse<Auth> = {
       success: true,
-      message: "เข้าสู่ระบบสำเร็จ",
+      message: "Login successfully",
       data: {
         accessToken: jwt.sign(payload, env.JWT_SECRET, {
           expiresIn: "15m",
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     const response: BaseResponse = {
       success: false,
-      message: (error as Error).message || "เกิดข้อผิดพลาด",
+      message: (error as Error).message || "An error occurred",
     };
     return Response.json(response);
   }

@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Input } from "./ui/input";
 import {
   Form,
   FormControl,
@@ -12,6 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Login, loginSchema } from "@/schema/login.schema";
 
@@ -35,9 +35,9 @@ const LoginForm = ({ onSubmit }: { onSubmit: (values: Login) => void }) => {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>ชื่อผู้ใช้</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="ชื่อผู้ใช้" {...field} />
+                  <Input placeholder="Username" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -48,13 +48,13 @@ const LoginForm = ({ onSubmit }: { onSubmit: (values: Login) => void }) => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>รหัสผ่าน</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
                       {...field}
                       type={showPassword ? "text" : "password"}
-                      placeholder="รหัสผ่าน"
+                      placeholder="Password"
                     />
                     <Button
                       onClick={() => setShowPassword((prev) => !prev)}
@@ -70,7 +70,7 @@ const LoginForm = ({ onSubmit }: { onSubmit: (values: Login) => void }) => {
               </FormItem>
             )}
           />
-          <Button type="submit">เข้าสู่ระบบ</Button>
+          <Button type="submit">Login</Button>
         </div>
       </form>
     </Form>

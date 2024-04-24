@@ -18,8 +18,4 @@ const connectDatabase = async () => {
   await mongoose.connect(DATABASE_URL, opts);
 };
 
-const disconnectDatabase = async () => {
-  await mongoose.disconnect();
-};
-
-export { connectDatabase, disconnectDatabase };
+export { connectDatabase };

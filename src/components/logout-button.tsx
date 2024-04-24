@@ -1,12 +1,19 @@
+import { toast } from "sonner";
+
 import { Button } from "./ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { clearProfile } from "@/store/profile";
 
 const LogoutButton = () => {
-  const { logout } = useAuth();
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    toast.success("Logout successful");
+    clearProfile();
+  };
 
   return (
     <Button onClick={logout} variant="secondary" className="gap-2">
-      ออกจากระบบ
+      Logout
     </Button>
   );
 };

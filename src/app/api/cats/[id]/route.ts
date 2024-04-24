@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-import { connectDatabase, disconnectDatabase } from "@/lib/database";
+import { connectDatabase } from "@/lib/database";
 
 export async function PUT(
   request: NextRequest,
@@ -19,6 +19,4 @@ export async function PUT(
   console.log({ id, rating });
 
   await connectDatabase();
-
-  await disconnectDatabase();
 }

@@ -36,7 +36,7 @@ const ZoomControl = () => {
               <ZoomIn size={16} />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">ซูมเข้า</TooltipContent>
+          <TooltipContent side="left">Zoom in</TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <TooltipProvider>
@@ -51,7 +51,7 @@ const ZoomControl = () => {
               <ZoomOut size={16} />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">ซูมออก</TooltipContent>
+          <TooltipContent side="left">Zoom out</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>

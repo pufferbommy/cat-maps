@@ -10,21 +10,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import axios from "@/lib/axios";
 import { Button } from "./ui/button";
 import LoginForm from "./login-form";
-import { useAuth } from "@/hooks/useAuth";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
+import * as authService from "@/services/auth";
 import { Register } from "@/schema/register.schema";
+import { setIsLoadingProfile, setProfile } from "@/store/profile";
 
 const AuthButton = ({
   initialAction,
 }: {
   initialAction: "login" | "register";
 }) => {
-  const { getProfile } = useAuth();
-
   const [action, setAction] = useState(initialAction);
 
   const [open, setOpen] = useState(false);
@@ -33,9 +31,9 @@ const AuthButton = ({
 
   const title = (action: typeof initialAction, inverse: boolean = false) => {
     if (inverse) {
-      return isLogin(action) ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
+      return isLogin(action) ? "Register" : "Login";
     }
-    return isLogin(action) ? "เข้าสู่ระบบ" : "สมัครสมาชิก";
+    return isLogin(action) ? "Login" : "Register";
   };
 
   const handleToggleAction = () => {
@@ -43,13 +41,19 @@ const AuthButton = ({
   };
 
   const onSubmit = async (values: Login | Register) => {
-    const url = `auth/${action}`;
-    const response = await axios.post<BaseResponse<Auth>>(url, values);
-    const { accessToken, refreshToken } = response.data.data!;
+    const data = await authService.auth(action, values);
+    const { accessToken, refreshToken } = data;
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
-    setOpen(false);
-    getProfile();
+    try {
+      setIsLoadingProfile(true);
+      const data = await authService.getProfile();
+      setProfile(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoadingProfile(false);
+    }
   };
 
   return (
@@ -74,7 +78,9 @@ const AuthButton = ({
         <DialogFooter>
           <div className="flex items-center gap-2 text-sm justify-center">
             <p className="text-muted-foreground">
-              {isLogin(action) ? "ยังไม่มีบัญชี?" : "มีบัญชีแล้ว?"}
+              {isLogin(action)
+                ? "Don't have an account yet?"
+                : "Already have an account?"}
             </p>
             <Button onClick={handleToggleAction} className="p-0" variant="link">
               {title(action, true)}

@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (user) {
-      throw new Error("ชื่อผู้ใช้นี้มีอยู่แล้ว");
+      throw new Error("Username has already been taken");
     }
 
     const createdUser: { _id: string; username: string; password: string } =
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     const response: BaseResponse<Auth> = {
       success: true,
-      message: "สมัครสมาชิกสำเร็จ",
+      message: "Register successfully",
       data: {
         accessToken: jwt.sign(payload, env.JWT_SECRET, {
           expiresIn: "15m",
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     const response: BaseResponse = {
       success: false,
-      message: (error as Error).message || "เกิดข้อผิดพลาด",
+      message: (error as Error).message || "An error occurred",
     };
     return Response.json(response);
   }

@@ -61,8 +61,8 @@ const CurrentPositionMarker = () => {
           </TooltipTrigger>
           <TooltipContent side="left">
             {isSearchable
-              ? "ปิดการค้นหาตำแหน่งปัจจุบัน"
-              : "ค้นหาตำแหน่งปัจจุบัน"}
+              ? "Stop searching for current location"
+              : "Search for current location"}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

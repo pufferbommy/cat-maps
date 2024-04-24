@@ -41,9 +41,9 @@ const RegisterForm = ({
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>ชื่อผู้ใช้</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="ชื่อผู้ใช้" {...field} />
+                  <Input placeholder="Username" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -54,13 +54,13 @@ const RegisterForm = ({
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>รหัสผ่าน</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
                       {...field}
                       type={showPassword ? "text" : "password"}
-                      placeholder="รหัสผ่าน"
+                      placeholder="Password"
                     />
                     <Button
                       onClick={() => setShowPassword((prev) => !prev)}
@@ -81,13 +81,13 @@ const RegisterForm = ({
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>ยืนยันรหัสผ่าน</FormLabel>
+                <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
                       {...field}
                       type={showConfirmPassword ? "text" : "password"}
-                      placeholder="ยืนยันรหัสผ่าน"
+                      placeholder="Confirm Password"
                     />
                     <Button
                       onClick={() => setShowConfirmPassword((prev) => !prev)}
@@ -107,7 +107,7 @@ const RegisterForm = ({
               </FormItem>
             )}
           />
-          <Button type="submit">สมัครสมาชิก</Button>
+          <Button type="submit">Register</Button>
         </div>
       </form>
     </Form>

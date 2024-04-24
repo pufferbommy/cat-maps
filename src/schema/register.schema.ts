@@ -2,12 +2,12 @@ import { z } from "zod";
 
 export const registerSchema = z
   .object({
-    username: z.string().min(1, "กรุณากรอกชื่อผู้ใช้"),
-    password: z.string().min(1, "กรุณากรอกรหัสผ่าน"),
+    username: z.string().min(1, "Please enter a username"),
+    password: z.string().min(1, "Please enter a password"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "รหัสผ่านไม่ตรงกัน",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 

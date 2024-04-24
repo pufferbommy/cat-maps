@@ -5,7 +5,7 @@ import { type NextRequest } from "next/server";
 import { env } from "@/env";
 import Cat from "@/models/cat.model";
 import User from "@/models/user.model";
-import { connectDatabase, disconnectDatabase } from "@/lib/database";
+import { connectDatabase } from "@/lib/database";
 
 cloudinary.config({
   cloud_name: env.CLOUDINARY_CLOUD_NAME,
@@ -27,8 +27,6 @@ export async function GET(request: NextRequest) {
     success: true,
     data: previewCats,
   };
-
-  await disconnectDatabase();
 
   return Response.json(response);
 }

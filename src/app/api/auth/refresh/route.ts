@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const refreshToken = json.refreshToken;
 
     if (!refreshToken) {
-      throw new Error("ไม่พบ Refresh Token");
+      throw new Error("Refresh token is required");
     }
 
     const decoded = jwt.verify(refreshToken, env.JWT_SECRET);
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     const user = await User.findById(decoded);
 
-    if (!user) throw new Error("ไม่พบผู้ใช้");
+    if (!user) throw new Error("User not found");
 
     const payload = {
       _id: user._id,
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     const response: BaseResponse = {
       success: false,
-      message: (error as Error).message || "เกิดข้อผิดพลาด",
+      message: (error as Error).message || "An error occurred",
     };
     return Response.json(response);
   }
