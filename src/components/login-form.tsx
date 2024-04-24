@@ -15,7 +15,13 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Login, loginSchema } from "@/schema/login.schema";
 
-const LoginForm = ({ onSubmit }: { onSubmit: (values: Login) => void }) => {
+const LoginForm = ({
+  isLoading,
+  onSubmit,
+}: {
+  isLoading: boolean;
+  onSubmit: (values: Login) => void;
+}) => {
   const loginForm = useForm<Login>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -70,7 +76,7 @@ const LoginForm = ({ onSubmit }: { onSubmit: (values: Login) => void }) => {
               </FormItem>
             )}
           />
-          <Button type="submit">Login</Button>
+          <Button type="submit">{isLoading ? "Logging in..." : "Login"}</Button>
         </div>
       </form>
     </Form>

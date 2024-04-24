@@ -14,9 +14,10 @@ export async function PUT(
 ) {
   const { id } = params;
   const searchParams = request.nextUrl.searchParams;
-  const rating = searchParams.get("rating");
 
-  console.log({ id, rating });
+  console.log({ id });
 
   await connectDatabase();
+
+  // return boolean of latest value to update at client
 }

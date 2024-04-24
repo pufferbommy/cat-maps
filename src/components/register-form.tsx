@@ -16,8 +16,10 @@ import { Button } from "./ui/button";
 import { Register, registerSchema } from "@/schema/register.schema";
 
 const RegisterForm = ({
+  isLoading,
   onSubmit,
 }: {
+  isLoading: boolean;
   onSubmit: (values: Register) => void;
 }) => {
   const form = useForm<Register>({
@@ -107,7 +109,9 @@ const RegisterForm = ({
               </FormItem>
             )}
           />
-          <Button type="submit">Register</Button>
+          <Button type="submit">
+            {isLoading ? "Registering..." : "Register"}
+          </Button>
         </div>
       </form>
     </Form>

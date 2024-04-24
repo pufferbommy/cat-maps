@@ -24,6 +24,7 @@ const AuthButton = ({
   initialAction: "login" | "register";
 }) => {
   const [action, setAction] = useState(initialAction);
+  const [isActioning, setIsActioning] = useState(false);
 
   const [open, setOpen] = useState(false);
 
@@ -41,10 +42,17 @@ const AuthButton = ({
   };
 
   const onSubmit = async (values: Login | Register) => {
-    const data = await authService.auth(action, values);
-    const { accessToken, refreshToken } = data;
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+    try {
+      setIsActioning(true);
+      const data = await authService.auth(action, values);
+      const { accessToken, refreshToken } = data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsActioning(false);
+    }
     try {
       setIsLoadingProfile(true);
       const data = await authService.getProfile();
@@ -71,9 +79,9 @@ const AuthButton = ({
           <DialogTitle>{title(action)}</DialogTitle>
         </DialogHeader>
         {isLogin(action) ? (
-          <LoginForm onSubmit={onSubmit} />
+          <LoginForm isLoading={isActioning} onSubmit={onSubmit} />
         ) : (
-          <RegisterForm onSubmit={onSubmit} />
+          <RegisterForm isLoading={isActioning} onSubmit={onSubmit} />
         )}
         <DialogFooter>
           <div className="flex items-center gap-2 text-sm justify-center">
