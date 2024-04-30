@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       });
 
     const payload: AuthPayload = {
-      _id: createdUser._id,
+      userId: createdUser._id,
     };
 
     const response: BaseResponse<Auth> = {

@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     }
 
     const payload: AuthPayload = {
-      _id: user._id,
+      userId: user._id,
     };
 
     const response: BaseResponse<Auth> = {
@@ -39,6 +39,8 @@ export async function POST(request: NextRequest) {
       success: false,
       message: (error as Error).message || "An error occurred",
     };
-    return Response.json(response);
+    return Response.json(response, {
+      status: 500,
+    });
   }
 }

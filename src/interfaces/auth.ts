@@ -8,5 +8,5 @@ interface Profile {
 }
 
 interface AuthPayload {
-  _id: string;
+  userId: string;
 }

@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
     if (accessToken) {
       try {
         const { payload } = await verifyJwt(accessToken);
-        requestHeaders.set("userId", (payload.payload as AuthPayload)._id);
+        requestHeaders.set("userId", (payload.payload as AuthPayload).userId);
       } catch (error) {
         // console.error(error);
       }

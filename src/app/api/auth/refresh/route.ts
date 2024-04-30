@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     if (!user) throw new Error("User not found");
 
     const payload: AuthPayload = {
-      _id: user._id,
+      userId: user._id,
     };
 
     const response: BaseResponse<Auth> = {
