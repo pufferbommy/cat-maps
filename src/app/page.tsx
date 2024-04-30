@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 
 import * as authService from "@/services/auth";
 import { Sidebar } from "@/components/sidebar";
+import FullLoader from "@/components/full-loader";
 import CameraButton from "@/components/camera-button";
 const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
@@ -48,6 +49,7 @@ export default function Home() {
       <Sidebar />
       <Map />
       <CameraButton />
+      <FullLoader />
     </main>
   );
 }

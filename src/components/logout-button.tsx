@@ -1,21 +1,19 @@
 import { toast } from "sonner";
-import { useState } from "react";
+import { LogOut } from "lucide-react";
 
 import { Button } from "./ui/button";
 import { clearProfile } from "@/store/profile";
-import { LogOut } from "lucide-react";
+import { setFullLoader } from "@/store/full-loader";
 
 const LogoutButton = ({ disabled = false }: { disabled?: boolean }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
   const logout = () => {
-    setIsLoading(true);
+    setFullLoader(true);
     setTimeout(() => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       toast.success("Logout successful");
       clearProfile();
-      setIsLoading(false);
+      setFullLoader(false);
     }, 250);
   };
 

@@ -17,6 +17,7 @@ import { Login } from "@/schema/login.schema";
 import * as authService from "@/services/auth";
 import { Register } from "@/schema/register.schema";
 import { setIsLoadingProfile, setProfile } from "@/store/profile";
+import { setFullLoader } from "@/store/full-loader";
 
 const AuthButton = ({
   disabled = false,
@@ -45,6 +46,7 @@ const AuthButton = ({
 
   const onSubmit = async (values: Login | Register) => {
     try {
+      setFullLoader(true);
       setIsActioning(true);
       const data = await authService.auth(action, values);
       const { accessToken, refreshToken } = data;
@@ -55,6 +57,7 @@ const AuthButton = ({
       console.error(error);
     } finally {
       setIsActioning(false);
+      setFullLoader(false);
     }
     try {
       setIsLoadingProfile(true);
