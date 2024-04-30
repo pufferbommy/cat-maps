@@ -3,6 +3,7 @@ interface PreviewCat {
   latitude: number;
   longitude: number;
   imageUrl: string;
+  liked: boolean;
 }
 
 interface Cat {

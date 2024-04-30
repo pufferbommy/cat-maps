@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         password: await argon2.hash(password),
       });
 
-    const payload = {
+    const payload: AuthPayload = {
       _id: createdUser._id,
     };
 

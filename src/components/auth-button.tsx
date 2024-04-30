@@ -48,6 +48,7 @@ const AuthButton = ({
       const { accessToken, refreshToken } = data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      setOpen(false);
     } catch (error) {
       console.error(error);
     } finally {

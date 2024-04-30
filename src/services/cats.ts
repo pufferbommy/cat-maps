@@ -17,4 +17,9 @@ const addCat = async ({
   return response.data.data!;
 };
 
-export { addCat };
+const toggleLike = async (catId: string) => {
+  const response = await axios.put(`cats/${catId}/toggle-like`);
+  return response.data.data!;
+};
+
+export { addCat, toggleLike };

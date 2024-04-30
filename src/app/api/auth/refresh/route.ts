@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     if (!user) throw new Error("User not found");
 
-    const payload = {
+    const payload: AuthPayload = {
       _id: user._id,
     };
 

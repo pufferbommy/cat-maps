@@ -1,4 +1,5 @@
 import argon2 from "argon2";
+import * as jose from "jose";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
       throw new Error("Username or password is incorrect");
     }
 
-    const payload = {
+    const payload: AuthPayload = {
       _id: user._id,
     };
 
@@ -29,9 +30,12 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "Login successfully",
       data: {
-        accessToken: jwt.sign(payload, env.JWT_SECRET, {
-          expiresIn: "15m",
-        }),
+        accessToken: await new jose.SignJWT({ payload })
+          .setProtectedHeader({
+            alg: "HS256",
+          })
+          .setExpirationTime("15m")
+          .sign(new TextEncoder().encode(env.JWT_SECRET)),
         refreshToken: jwt.sign(payload, env.JWT_SECRET, {
           expiresIn: "15 days",
         }),

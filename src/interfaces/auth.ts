@@ -6,3 +6,7 @@ interface Auth {
 interface Profile {
   username: string;
 }
+
+interface AuthPayload {
+  _id: string;
+}

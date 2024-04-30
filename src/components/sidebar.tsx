@@ -9,6 +9,7 @@ import AuthButton from "./auth-button";
 import { Skeleton } from "./ui/skeleton";
 import { $profile } from "@/store/profile";
 import LogoutButton from "./logout-button";
+import * as catsService from "@/services/cats";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { $isLoadingPreviewCats, $previewCats } from "@/store/preview-cats";
@@ -18,8 +19,8 @@ const Sidebar = () => {
   const previewCats = useStore($previewCats);
   const isLoadingPreviewCats = useStore($isLoadingPreviewCats);
 
-  const toggleLike = (catId: string) => {
-    console.log(catId);
+  const toggleLike = async (catId: string) => {
+    await catsService.toggleLike(catId);
   };
 
   return (

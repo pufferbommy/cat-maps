@@ -15,6 +15,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 const CameraButton = () => {
   const profile = useStore($profile);
 
+  const [isUploading, setIsUploading] = useState(false);
+
   const isMobile =
     typeof window !== "undefined" &&
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -54,12 +56,19 @@ const CameraButton = () => {
   const handleUploadClick = async () => {
     if (!image) return;
     window.navigator.geolocation.getCurrentPosition(async (position) => {
-      await catsService.addCat({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        image,
-      });
-      setOpen(false);
+      try {
+        setIsUploading(true);
+        await catsService.addCat({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          image,
+        });
+        setOpen(false);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsUploading(false);
+      }
     });
   };
 
@@ -125,7 +134,9 @@ const CameraButton = () => {
             <Button variant="outline" onClick={handleRetakeClick}>
               Retake
             </Button>
-            <Button onClick={handleUploadClick}>Upload</Button>
+            <Button onClick={handleUploadClick}>
+              {isUploading ? "Uploading..." : "Upload"}
+            </Button>
           </div>
         )}
       </DialogContent>
