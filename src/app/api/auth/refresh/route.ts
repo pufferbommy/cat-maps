@@ -1,5 +1,6 @@
 import { env } from "@/env";
 import { connectDatabase } from "@/lib/database";
+import { signJwt } from "@/lib/jwt";
 import User from "@/models/user.model";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
@@ -29,12 +30,8 @@ export async function POST(request: NextRequest) {
     const response: BaseResponse<Auth> = {
       success: true,
       data: {
-        accessToken: jwt.sign(payload, env.JWT_SECRET, {
-          expiresIn: "15m",
-        }),
-        refreshToken: jwt.sign(payload, env.JWT_SECRET, {
-          expiresIn: "15 days",
-        }),
+        accessToken: await signJwt(payload, "15m"),
+        refreshToken: await signJwt(payload, "15 days"),
       },
     };
 

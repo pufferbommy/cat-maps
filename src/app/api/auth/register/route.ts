@@ -1,10 +1,9 @@
 import argon2 from "argon2";
-import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
-import { env } from "@/env";
-import { connectDatabase } from "@/lib/database";
+import { signJwt } from "@/lib/jwt";
 import User from "@/models/user.model";
+import { connectDatabase } from "@/lib/database";
 import { registerSchema } from "@/schema/register.schema";
 
 export async function POST(request: NextRequest) {
@@ -35,12 +34,8 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "Register successfully",
       data: {
-        accessToken: jwt.sign(payload, env.JWT_SECRET, {
-          expiresIn: "15m",
-        }),
-        refreshToken: jwt.sign(payload, env.JWT_SECRET, {
-          expiresIn: "15 days",
-        }),
+        accessToken: await signJwt(payload, "15m"),
+        refreshToken: await signJwt(payload, "15 days"),
       },
     };
 

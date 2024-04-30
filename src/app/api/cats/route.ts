@@ -4,7 +4,7 @@ import Cat from "@/models/cat.model";
 import { cloudinary } from "@/lib/cloudinary";
 import { connectDatabase } from "@/lib/database";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   await connectDatabase();
 
   const previewCats: PreviewCat[] = await Cat.find({}, [

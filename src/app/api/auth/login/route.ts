@@ -1,9 +1,7 @@
 import argon2 from "argon2";
-import * as jose from "jose";
-import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
-import { env } from "@/env";
+import { signJwt } from "@/lib/jwt";
 import User from "@/models/user.model";
 import { connectDatabase } from "@/lib/database";
 import { loginSchema } from "@/schema/login.schema";
@@ -30,15 +28,8 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "Login successfully",
       data: {
-        accessToken: await new jose.SignJWT({ payload })
-          .setProtectedHeader({
-            alg: "HS256",
-          })
-          .setExpirationTime("15m")
-          .sign(new TextEncoder().encode(env.JWT_SECRET)),
-        refreshToken: jwt.sign(payload, env.JWT_SECRET, {
-          expiresIn: "15 days",
-        }),
+        accessToken: await signJwt(payload, "15m"),
+        refreshToken: await signJwt(payload, "15 days"),
       },
     };
 

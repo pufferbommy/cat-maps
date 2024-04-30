@@ -1,25 +1,21 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-import { env } from "./env";
-import * as jose from "jose";
+import { verifyJwt } from "./lib/jwt";
 
 export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
 
-  const authHeader = requestHeaders.get("Authorization");
+  const authorization = requestHeaders.get("Authorization");
 
-  if (authHeader) {
-    const accessToken = authHeader.split(" ")[1];
+  if (authorization) {
+    const accessToken = authorization.split(" ")[1];
     if (accessToken) {
       try {
-        const { payload } = await jose.jwtVerify<AuthPayload>(
-          accessToken,
-          new TextEncoder().encode(env.JWT_SECRET)
-        );
-        requestHeaders.set("userId", payload._id);
+        const { payload } = await verifyJwt(accessToken);
+        requestHeaders.set("userId", (payload.payload as AuthPayload)._id);
       } catch (error) {
-        console.log(error);
+        // console.error(error);
       }
     }
   }
@@ -28,3 +24,7 @@ export async function middleware(request: NextRequest) {
     headers: requestHeaders,
   });
 }
+
+export const config = {
+  matcher: "/api/:path*",
+};
