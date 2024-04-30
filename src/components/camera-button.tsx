@@ -10,6 +10,7 @@ import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 import { $profile } from "@/store/profile";
 import * as catsService from "@/services/cats";
+import { setFullLoader } from "@/store/full-loader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
 const CameraButton = () => {
@@ -57,6 +58,7 @@ const CameraButton = () => {
     if (!image) return;
     window.navigator.geolocation.getCurrentPosition(async (position) => {
       try {
+        setFullLoader(true);
         setIsUploading(true);
         await catsService.addCat({
           latitude: position.coords.latitude,
@@ -67,6 +69,7 @@ const CameraButton = () => {
       } catch (error) {
         console.error(error);
       } finally {
+        setFullLoader(false);
         setIsUploading(false);
       }
     });

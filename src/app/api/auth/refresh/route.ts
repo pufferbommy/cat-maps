@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { connectDatabase } from "@/lib/database";
-import { signJwt } from "@/lib/jwt";
+import { signJwt, verifyJwt } from "@/lib/jwt";
 import User from "@/models/user.model";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
@@ -15,23 +15,19 @@ export async function POST(request: NextRequest) {
       throw new Error("Refresh token is required");
     }
 
-    const decoded = jwt.verify(refreshToken, env.JWT_SECRET);
+    const { payload } = await verifyJwt(refreshToken);
 
-    await connectDatabase();
+    const userId = (payload.payload as AuthPayload).userId;
 
-    const user = await User.findById(decoded);
-
-    if (!user) throw new Error("User not found");
-
-    const payload: AuthPayload = {
-      userId: user._id,
+    const newPayload: AuthPayload = {
+      userId,
     };
 
     const response: BaseResponse<Auth> = {
       success: true,
       data: {
-        accessToken: await signJwt(payload, "15m"),
-        refreshToken: await signJwt(payload, "15 days"),
+        accessToken: await signJwt(newPayload, "15m"),
+        refreshToken: await signJwt(newPayload, "15 days"),
       },
     };
 

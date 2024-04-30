@@ -1,8 +1,10 @@
 import { type NextRequest } from "next/server";
 
 import Cat from "@/models/cat.model";
-import { cloudinary } from "@/lib/cloudinary";
 import { connectDatabase } from "@/lib/database";
+import { cloudinary, configCloudinary } from "@/lib/cloudinary";
+
+configCloudinary();
 
 export async function GET() {
   await connectDatabase();
@@ -28,16 +30,17 @@ export async function POST(request: NextRequest) {
 
   await connectDatabase();
 
-  const cat = new Cat({
+  await Cat.create({
     latitude,
     longitude,
     imageUrl: uploadResponse.secure_url,
     uploader: request.headers.get("userId"),
   });
 
-  await cat.save();
+  const response: BaseResponse = {
+    success: true,
+    message: "Upload cat success",
+  };
 
-  return Response.json({
-    m: "Upload cat success",
-  });
+  return Response.json(response);
 }
