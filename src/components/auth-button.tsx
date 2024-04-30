@@ -16,16 +16,21 @@ import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
 import * as authService from "@/services/auth";
 import { Register } from "@/schema/register.schema";
-import { setIsLoadingProfile, setProfile } from "@/store/profile";
+import {
+  $isLoadingProfile,
+  setIsLoadingProfile,
+  setProfile,
+} from "@/store/profile";
 import { setFullLoader } from "@/store/full-loader";
+import { useStore } from "@nanostores/react";
 
 const AuthButton = ({
-  disabled = false,
   initialAction,
 }: {
-  disabled?: boolean;
   initialAction: "login" | "register";
 }) => {
+  const isLoadingProfile = useStore($isLoadingProfile);
+
   const [action, setAction] = useState(initialAction);
   const [isActioning, setIsActioning] = useState(false);
 
@@ -74,7 +79,7 @@ const AuthButton = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          disabled={disabled}
+          disabled={isLoadingProfile}
           className="w-full"
           variant={isLogin(initialAction) ? "outline" : "default"}
         >

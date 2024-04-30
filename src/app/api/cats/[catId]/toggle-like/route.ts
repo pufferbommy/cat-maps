@@ -9,6 +9,7 @@ export async function PUT(
 ) {
   try {
     const { catId } = params;
+
     await connectDatabase();
 
     const userId = request.headers.get("userId");
@@ -21,15 +22,14 @@ export async function PUT(
       await Like.create({ cat: catId, user: userId });
     }
 
-    const response = {
+    const response: BaseResponse<Like> = {
       success: true,
-      message: "",
       data: {
         liked: !liked,
       },
     };
 
-    return NextResponse.json(response, { status: 200 });
+    return NextResponse.json(response);
   } catch (error) {
     console.error("Error:", error);
     return NextResponse.json(

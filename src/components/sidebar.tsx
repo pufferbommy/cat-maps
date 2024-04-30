@@ -22,6 +22,10 @@ const Sidebar = () => {
   const isLoadingPreviewCats = useStore($isLoadingPreviewCats);
 
   const toggleLike = async (catId: string) => {
+    if (!profile) {
+      alert("Please login first");
+      return;
+    }
     await catsService.toggleLike(catId);
   };
 
@@ -67,8 +71,8 @@ const Sidebar = () => {
       <div className="px-4 pb-4">
         {!maybeUser && !profile ? (
           <div className="w-full flex gap-2">
-            <AuthButton disabled={isLoadingProfile} initialAction="login" />
-            <AuthButton disabled={isLoadingProfile} initialAction="register" />
+            <AuthButton initialAction="login" />
+            <AuthButton initialAction="register" />
           </div>
         ) : (
           <div className="flex gap-4">
@@ -89,7 +93,7 @@ const Sidebar = () => {
                 </>
               )}
             </div>
-            <LogoutButton disabled={isLoadingProfile} />
+            <LogoutButton />
           </div>
         )}
       </div>

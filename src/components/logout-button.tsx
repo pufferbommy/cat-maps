@@ -1,11 +1,14 @@
 import { toast } from "sonner";
-import { LogOut } from "lucide-react";
+import { useStore } from "@nanostores/react";
+import { Loader2, LogOut } from "lucide-react";
 
 import { Button } from "./ui/button";
 import { clearProfile } from "@/store/profile";
-import { setFullLoader } from "@/store/full-loader";
+import { $isLoading, setFullLoader } from "@/store/full-loader";
 
-const LogoutButton = ({ disabled = false }: { disabled?: boolean }) => {
+const LogoutButton = () => {
+  const isLoading = useStore($isLoading);
+
   const logout = () => {
     setFullLoader(true);
     setTimeout(() => {
@@ -19,13 +22,17 @@ const LogoutButton = ({ disabled = false }: { disabled?: boolean }) => {
 
   return (
     <Button
-      disabled={disabled}
+      disabled={isLoading}
       onClick={logout}
       size="icon"
       variant="secondary"
       className="gap-2 w-10 h-10 flex-shrink-0"
     >
-      <LogOut size={16} />
+      {isLoading ? (
+        <Loader2 size={16} className="animate-spin" />
+      ) : (
+        <LogOut size={16} />
+      )}
     </Button>
   );
 };
