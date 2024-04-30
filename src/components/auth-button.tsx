@@ -19,8 +19,10 @@ import { Register } from "@/schema/register.schema";
 import { setIsLoadingProfile, setProfile } from "@/store/profile";
 
 const AuthButton = ({
+  disabled = false,
   initialAction,
 }: {
+  disabled?: boolean;
   initialAction: "login" | "register";
 }) => {
   const [action, setAction] = useState(initialAction);
@@ -69,6 +71,7 @@ const AuthButton = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
+          disabled={disabled}
           className="w-full"
           variant={isLogin(initialAction) ? "outline" : "default"}
         >

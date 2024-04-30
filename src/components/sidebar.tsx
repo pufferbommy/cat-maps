@@ -7,21 +7,25 @@ import { useStore } from "@nanostores/react";
 
 import AuthButton from "./auth-button";
 import { Skeleton } from "./ui/skeleton";
-import { $profile } from "@/store/profile";
 import LogoutButton from "./logout-button";
 import * as catsService from "@/services/cats";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import { $isLoadingProfile, $profile } from "@/store/profile";
 import { $isLoadingPreviewCats, $previewCats } from "@/store/preview-cats";
 
 const Sidebar = () => {
   const profile = useStore($profile);
+  const isLoadingProfile = useStore($isLoadingProfile);
+
   const previewCats = useStore($previewCats);
   const isLoadingPreviewCats = useStore($isLoadingPreviewCats);
 
   const toggleLike = async (catId: string) => {
     await catsService.toggleLike(catId);
   };
+
+  const maybeUser = Boolean(localStorage.getItem("accessToken"));
 
   return (
     <div className="max-w-[300px] w-full shadow flex flex-col h-full">
@@ -60,22 +64,33 @@ const Sidebar = () => {
               </Card>
             ))}
       </div>
-      <div className="px-4 pb-4 gap-4 grid grid-cols-2">
-        {!profile ? (
-          <>
-            <AuthButton initialAction="login" />
-            <AuthButton initialAction="register" />
-          </>
+      <div className="px-4 pb-4">
+        {!maybeUser && !profile ? (
+          <div className="w-full flex gap-2">
+            <AuthButton disabled={isLoadingProfile} initialAction="login" />
+            <AuthButton disabled={isLoadingProfile} initialAction="register" />
+          </div>
         ) : (
-          <>
-            <div className="flex items-center gap-2">
-              <Avatar>
-                <AvatarFallback>{profile.username.slice(0, 2)}</AvatarFallback>
-              </Avatar>
-              <p className="truncate">{profile.username}</p>
+          <div className="flex gap-4">
+            <div className="flex items-center gap-2 w-full overflow-x-hidden">
+              {isLoadingProfile ? (
+                <>
+                  <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+                  <Skeleton className="w-full h-5" />
+                </>
+              ) : (
+                <>
+                  <Avatar>
+                    <AvatarFallback>
+                      {profile?.username.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <p className="truncate w-full">{profile?.username}</p>
+                </>
+              )}
             </div>
-            <LogoutButton />
-          </>
+            <LogoutButton disabled={isLoadingProfile} />
+          </div>
         )}
       </div>
     </div>

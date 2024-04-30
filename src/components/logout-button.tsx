@@ -3,8 +3,9 @@ import { useState } from "react";
 
 import { Button } from "./ui/button";
 import { clearProfile } from "@/store/profile";
+import { LogOut } from "lucide-react";
 
-const LogoutButton = () => {
+const LogoutButton = ({ disabled = false }: { disabled?: boolean }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const logout = () => {
@@ -19,8 +20,14 @@ const LogoutButton = () => {
   };
 
   return (
-    <Button onClick={logout} variant="secondary" className="gap-2">
-      {isLoading ? "Logging out..." : "Logout"}
+    <Button
+      disabled={disabled}
+      onClick={logout}
+      size="icon"
+      variant="secondary"
+      className="gap-2 w-10 h-10 flex-shrink-0"
+    >
+      <LogOut size={16} />
     </Button>
   );
 };
