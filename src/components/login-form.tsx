@@ -63,6 +63,7 @@ const LoginForm = ({
                       placeholder="Password"
                     />
                     <Button
+                      type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
                       variant="ghost"
                       size="icon"

@@ -65,6 +65,7 @@ const RegisterForm = ({
                       placeholder="Password"
                     />
                     <Button
+                      type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
                       variant="ghost"
                       size="icon"
@@ -95,6 +96,7 @@ const RegisterForm = ({
                       onClick={() => setShowConfirmPassword((prev) => !prev)}
                       variant="ghost"
                       size="icon"
+                      type="button"
                       className="right-0 absolute top-1/2 -translate-y-1/2 hover:bg-transparent"
                     >
                       {showConfirmPassword ? (
