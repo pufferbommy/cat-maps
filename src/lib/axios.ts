@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { isCancel, AxiosError, AxiosResponse } from "axios";
 
 import * as authService from "@/services/auth";
 
@@ -14,30 +14,25 @@ instance.interceptors.request.use((config) => {
 });
 
 instance.interceptors.response.use(
-  async (response: AxiosResponse<BaseResponse>) => {
-    try {
-      if (!response.data.success) throw new Error(response.data.message);
-      if (response.data.message) toast.success(response.data.message);
-    } catch (error) {
-      if ((error as Error).message === "jwt expired") {
-        const { accessToken, refreshToken } = await authService.refresh();
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-
-        const retryConfig: AxiosRequestConfig = {
-          ...response.config,
-          headers: {
-            ...response.config.headers,
-            Authorization: `Bearer ${accessToken}`,
-          },
-        };
-
-        return instance(retryConfig);
-      } else {
-        if (response.data.message) toast.error((error as Error).message);
-      }
-    }
+  (response: AxiosResponse<BaseResponse>) => {
+    response.data.message && toast.success(response.data.message);
     return response;
+  },
+  async (error) => {
+    const e = error as AxiosError;
+    const status = e.response?.status;
+    const message = (e.response?.data as BaseResponse)?.message || "";
+
+    if (status === 401) {
+      const { accessToken, refreshToken } = await authService.refresh();
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      return instance(error.config);
+    } else if (!isCancel(error) && message) {
+      toast.error(message);
+    }
+
+    return Promise.reject(error);
   }
 );
 

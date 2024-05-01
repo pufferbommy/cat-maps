@@ -9,15 +9,11 @@ configCloudinary();
 export async function GET() {
   await connectDatabase();
 
-  const previewCats: PreviewCat[] = await Cat.find({}, [
-    "imageUrl",
-    "latitude",
-    "longitude",
-  ]);
+  const cats: Cat[] = await Cat.find({}, ["imageUrl", "latitude", "longitude"]);
 
-  const response: BaseResponse<PreviewCat[]> = {
+  const response: BaseResponse<Cat[]> = {
     success: true,
-    data: previewCats,
+    data: cats,
   };
 
   return Response.json(response);

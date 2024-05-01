@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
-import * as authService from "@/services/auth";
 import { Sidebar } from "@/components/sidebar";
 import FullLoader from "@/components/full-loader";
 import CameraButton from "@/components/camera-button";
@@ -11,38 +10,26 @@ const Map = dynamic(() => import("@/components/map"), {
   ssr: false,
   loading: () => <div className="p-4">Loading...</div>,
 });
-import { usePreviewCats } from "@/hooks/usePreviewCats";
-import { setIsLoadingProfile, setProfile } from "@/store/profile";
-import { setIsLoadingPreviewCats, setPreviewCats } from "@/store/preview-cats";
+import { useCats } from "@/hooks/useCats";
+import { useProfile } from "@/hooks/useProfile";
+import { setIsLoadingProfile } from "@/store/profile";
 
 export default function Home() {
-  const { previewCats, isLoadingPreviewCats } = usePreviewCats();
+  useCats();
+  const { getProfile } = useProfile();
 
   useEffect(() => {
-    const abortController = new AbortController();
+    const hasAccessToken = Boolean(localStorage.getItem("accessToken"));
+    if (hasAccessToken) {
+      const abortController = new AbortController();
 
-    (async () => {
-      try {
-        setIsLoadingProfile(true);
-        const data = await authService.getProfile(abortController.signal);
-        setProfile(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoadingProfile(false);
-      }
-    })();
+      getProfile(abortController.signal);
 
-    return () => abortController.abort();
-  }, []);
-
-  useEffect(() => {
-    setPreviewCats(previewCats);
-  }, [previewCats]);
-
-  useEffect(() => {
-    setIsLoadingPreviewCats(isLoadingPreviewCats);
-  }, [isLoadingPreviewCats]);
+      return () => abortController.abort();
+    } else {
+      setIsLoadingProfile(false);
+    }
+  }, [getProfile]);
 
   return (
     <main className="h-screen flex overflow-y-hidden">

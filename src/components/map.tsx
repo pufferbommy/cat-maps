@@ -4,12 +4,12 @@ import "leaflet/dist/leaflet.css";
 import { useStore } from "@nanostores/react";
 import { MapContainer, TileLayer, AttributionControl } from "react-leaflet";
 
+import { $cats } from "@/store/cats";
+import CatMarker from "@/components/cat-marker";
 import MapControl from "@/components/map-control";
-import { $previewCats } from "@/store/preview-cats";
-import PreviewCatMarker from "@/components/preview-cat-marker";
 
 const Map = () => {
-  const previewCats = useStore($previewCats);
+  const cats = useStore($cats);
 
   return (
     <MapContainer
@@ -34,8 +34,8 @@ const Map = () => {
       />
       <AttributionControl position="bottomleft" />
       <MapControl />
-      {previewCats.map((previewCat) => (
-        <PreviewCatMarker key={previewCat._id} previewCat={previewCat} />
+      {cats.map((cat) => (
+        <CatMarker key={cat._id} cat={cat} />
       ))}
     </MapContainer>
   );

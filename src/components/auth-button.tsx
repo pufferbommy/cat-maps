@@ -23,12 +23,15 @@ import {
 } from "@/store/profile";
 import { setFullLoader } from "@/store/full-loader";
 import { useStore } from "@nanostores/react";
+import { useProfile } from "@/hooks/useProfile";
 
 const AuthButton = ({
   initialAction,
 }: {
   initialAction: "login" | "register";
 }) => {
+  const { getProfile } = useProfile();
+
   const isLoadingProfile = useStore($isLoadingProfile);
 
   const [action, setAction] = useState(initialAction);
@@ -53,26 +56,28 @@ const AuthButton = ({
     try {
       setFullLoader(true);
       setIsActioning(true);
-      const data = await authService.auth(action, values);
-      const { accessToken, refreshToken } = data;
+      const response = await authService.auth(action, values);
+      const { accessToken, refreshToken } = response.data.data!;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setOpen(false);
+      await getProfile();
     } catch (error) {
       console.error(error);
     } finally {
       setIsActioning(false);
       setFullLoader(false);
     }
-    try {
-      setIsLoadingProfile(true);
-      const data = await authService.getProfile();
-      setProfile(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoadingProfile(false);
-    }
+
+    // try {
+    //   setIsLoadingProfile(true);
+    //   const data = await authService.getProfile();
+    //   setProfile(data);
+    // } catch (error) {
+    //   console.error(error);
+    // } finally {
+    //   setIsLoadingProfile(false);
+    // }
   };
 
   return (

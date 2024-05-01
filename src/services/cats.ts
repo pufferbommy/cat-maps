@@ -1,5 +1,12 @@
 import axios from "@/lib/axios";
 
+const getCats = async (signal: AbortSignal) => {
+  const response = await axios.get<BaseResponse<PreviewCat[]>>("cats", {
+    signal,
+  });
+  return response.data.data!;
+};
+
 const addCat = async ({
   latitude,
   longitude,
@@ -22,4 +29,4 @@ const toggleLike = async (catId: string) => {
   return response.data.data!;
 };
 
-export { addCat, toggleLike };
+export { getCats, addCat, toggleLike };
