@@ -57,13 +57,13 @@ const AuthButton = ({
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setOpen(false);
-      await getProfile();
     } catch (error) {
       console.error(error);
     } finally {
       setIsActioning(false);
       setFullLoader(false);
     }
+    await getProfile();
   };
 
   return (
