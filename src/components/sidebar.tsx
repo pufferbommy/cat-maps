@@ -29,8 +29,6 @@ const Sidebar = () => {
     await catsService.toggleLike(catId);
   };
 
-  const maybeUser = Boolean(localStorage.getItem("accessToken"));
-
   return (
     <div className="max-w-[300px] w-full shadow flex flex-col h-full">
       <div className="flex px-4 mb-6 pt-4 justify-between items-center">
@@ -47,7 +45,7 @@ const Sidebar = () => {
           : previewCats.map((previewCat) => (
               <Card key={previewCat._id}>
                 <CardContent className="relative rounded-lg overflow-hidden">
-                  <div className="cursor-pointer aspect-square">
+                  <div className="cursor-pointer aspect-square relative">
                     <Image
                       sizes="100%"
                       priority
@@ -69,32 +67,29 @@ const Sidebar = () => {
             ))}
       </div>
       <div className="px-4 pb-4">
-        {!maybeUser && !profile ? (
-          <div className="w-full flex gap-2">
-            <AuthButton initialAction="login" />
-            <AuthButton initialAction="register" />
-          </div>
-        ) : (
-          <div className="flex gap-4">
-            <div className="flex items-center gap-2 w-full overflow-x-hidden">
-              {isLoadingProfile ? (
-                <>
-                  <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
-                  <Skeleton className="w-full h-5" />
-                </>
-              ) : (
-                <>
+        {!isLoadingProfile ? (
+          <>
+            {!profile ? (
+              <div className="w-full flex gap-2">
+                <AuthButton initialAction="login" />
+                <AuthButton initialAction="register" />
+              </div>
+            ) : (
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2 w-full overflow-x-hidden">
                   <Avatar>
                     <AvatarFallback>
                       {profile?.username.slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
                   <p className="truncate w-full">{profile?.username}</p>
-                </>
-              )}
-            </div>
-            <LogoutButton />
-          </div>
+                </div>
+                <LogoutButton />
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="h-10 flex items-center">Loading...</p>
         )}
       </div>
     </div>

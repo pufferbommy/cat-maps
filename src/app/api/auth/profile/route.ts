@@ -7,9 +7,9 @@ import { connectDatabase } from "@/lib/database";
 
 export async function GET(request: NextRequest) {
   try {
-    await connectDatabase();
     const userId = request.headers.get("userId");
     if (!userId) throw new Error();
+    await connectDatabase();
     const user = await User.findById(userId);
     const response: BaseResponse<Profile> = {
       success: true,
