@@ -9,7 +9,7 @@ import AuthButton from "./auth-button";
 import { Skeleton } from "./ui/skeleton";
 import LogoutButton from "./logout-button";
 import * as catsService from "@/services/cats";
-import { $isLoadingCats, $cats } from "@/store/cats";
+import { $isLoadingCats, $cats, updateLike } from "@/store/cats";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { $isLoadingProfile, $profile } from "@/store/profile";
@@ -21,11 +21,13 @@ const Sidebar = () => {
   const cats = useStore($cats);
   const isLoadingCats = useStore($isLoadingCats);
 
-  const toggleLike = async (catId: string) => {
+  const toggleLike = async (liked: boolean, catId: string) => {
     if (!profile) {
       alert("Please login first");
       return;
     }
+    const newLiked = !liked;
+    updateLike(catId, newLiked);
     await catsService.toggleLike(catId);
   };
 
@@ -57,10 +59,13 @@ const Sidebar = () => {
                   </div>
                   <div className="bg-gradient-to-b from-black/50 via-black/0 to-transparent absolute inset-0" />
                   <button
-                    onClick={() => toggleLike(cat._id)}
+                    onClick={() => toggleLike(cat.liked, cat._id)}
                     className="hover:bg-transparent hover:scale-110 active:scale-95 transition-transform absolute right-4 top-4"
                   >
-                    <Heart className="text-red-300" size={18} />
+                    <Heart
+                      className={`text-red-300 ${cat.liked && "fill-red-300"}`}
+                      size={18}
+                    />
                   </button>
                 </CardContent>
               </Card>

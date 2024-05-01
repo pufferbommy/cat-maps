@@ -1,7 +1,7 @@
 import axios from "@/lib/axios";
 
 const getCats = async (signal: AbortSignal) => {
-  const response = await axios.get<BaseResponse<PreviewCat[]>>("cats", {
+  const response = await axios.get<BaseResponse<Cat[]>>("cats", {
     signal,
   });
   return response.data.data!;
@@ -25,7 +25,9 @@ const addCat = async ({
 };
 
 const toggleLike = async (catId: string) => {
-  const response = await axios.put(`cats/${catId}/toggle-like`);
+  const response = await axios.put<BaseResponse<Like>>(
+    `cats/${catId}/toggle-like`
+  );
   return response.data.data!;
 };
 

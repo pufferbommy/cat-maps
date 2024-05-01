@@ -1,42 +1,77 @@
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
+import Like from "@/models/like";
 import Cat from "@/models/cat.model";
 import { connectDatabase } from "@/lib/database";
 import { cloudinary, configCloudinary } from "@/lib/cloudinary";
 
 configCloudinary();
 
-export async function GET() {
-  await connectDatabase();
+export async function GET(request: NextRequest) {
+  try {
+    await connectDatabase();
 
-  const cats: Cat[] = await Cat.find({}, ["imageUrl", "latitude", "longitude"]);
+    const userId = request.headers.get("userId");
 
-  const response: BaseResponse<Cat[]> = {
-    success: true,
-    data: cats,
-  };
+    const cats: Cat[] = await Promise.all(
+      (await Cat.find({}, ["imageUrl", "latitude", "longitude"]).lean()).map(
+        async (cat) => {
+          const liked = userId
+            ? Boolean(
+                await Like.findOne({
+                  cat: cat._id,
+                  user: request.headers.get("userId"),
+                })
+              )
+            : false;
+          return { ...cat, liked } as Cat;
+        }
+      )
+    );
 
-  return Response.json(response);
+    return NextResponse.json<BaseResponse<Cat[]>>({
+      success: true,
+      data: cats,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: "Failed to fetch cats" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: NextRequest) {
-  const { latitude, longitude, image } = await request.json();
+  try {
+    const { latitude, longitude, image } = await request.json();
 
-  const uploadResponse = await cloudinary.uploader.upload(image);
+    const uploadResponse = await cloudinary.uploader.upload(image);
 
-  await connectDatabase();
+    await connectDatabase();
 
-  await Cat.create({
-    latitude,
-    longitude,
-    imageUrl: uploadResponse.secure_url,
-    uploader: request.headers.get("userId"),
-  });
+    const userId = request.headers.get("userId");
 
-  const response: BaseResponse = {
-    success: true,
-    message: "Upload cat success",
-  };
+    await Cat.create({
+      latitude,
+      longitude,
+      imageUrl: uploadResponse.secure_url,
+      uploader: userId,
+    });
 
-  return Response.json(response);
+    return NextResponse.json<BaseResponse>(
+      {
+        success: true,
+        message: "Upload cat success",
+      },
+      {
+        status: 201,
+      }
+    );
+  } catch (error) {
+    console.error("Error uploading cat:", error);
+    return NextResponse.json(
+      { success: false, message: "Failed to upload cat" },
+      { status: 500 }
+    );
+  }
 }
