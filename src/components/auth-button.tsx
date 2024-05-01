@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useStore } from "@nanostores/react";
 
 import {
   Dialog,
@@ -15,15 +16,10 @@ import LoginForm from "./login-form";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
 import * as authService from "@/services/auth";
-import { Register } from "@/schema/register.schema";
-import {
-  $isLoadingProfile,
-  setIsLoadingProfile,
-  setProfile,
-} from "@/store/profile";
-import { setFullLoader } from "@/store/full-loader";
-import { useStore } from "@nanostores/react";
 import { useProfile } from "@/hooks/useProfile";
+import { Register } from "@/schema/register.schema";
+import { $isLoadingProfile } from "@/store/profile";
+import { setFullLoader } from "@/store/full-loader";
 
 const AuthButton = ({
   initialAction,
@@ -68,16 +64,6 @@ const AuthButton = ({
       setIsActioning(false);
       setFullLoader(false);
     }
-
-    // try {
-    //   setIsLoadingProfile(true);
-    //   const data = await authService.getProfile();
-    //   setProfile(data);
-    // } catch (error) {
-    //   console.error(error);
-    // } finally {
-    //   setIsLoadingProfile(false);
-    // }
   };
 
   return (
@@ -85,7 +71,6 @@ const AuthButton = ({
       <DialogTrigger asChild>
         <Button
           disabled={isLoadingProfile}
-          className="w-full"
           variant={isLogin(initialAction) ? "outline" : "default"}
         >
           {title(initialAction)}

@@ -24,7 +24,7 @@ const Map = () => {
       ]}
       minZoom={2}
       maxZoom={16}
-      className="z-[49] w-full h-full"
+      className="z-[49] w-full h-full relative"
       zoomControl={false}
       attributionControl={false}
     >

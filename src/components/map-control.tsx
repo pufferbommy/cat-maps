@@ -3,7 +3,7 @@ import CurrentPositionMarker from "@/components/current-position-marker";
 
 const MapControl = () => {
   return (
-    <div className="z-[999] flex gap-2 flex-col fixed top-2 right-2">
+    <div className="z-[999] flex gap-2 flex-col absolute top-3 right-3">
       <ZoomControl />
       <CurrentPositionMarker />
     </div>

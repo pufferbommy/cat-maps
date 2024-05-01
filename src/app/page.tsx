@@ -13,6 +13,7 @@ const Map = dynamic(() => import("@/components/map"), {
 import { useCats } from "@/hooks/useCats";
 import { useProfile } from "@/hooks/useProfile";
 import { setIsLoadingProfile } from "@/store/profile";
+import Navbar from "@/components/navbar";
 
 export default function Home() {
   useCats();
@@ -32,9 +33,12 @@ export default function Home() {
   }, [getProfile]);
 
   return (
-    <main className="h-screen flex overflow-y-hidden">
+    <main className="h-dvh flex overflow-y-hidden">
       <Sidebar />
-      <Map />
+      <div className="flex flex-col w-full">
+        <Navbar />
+        <Map />
+      </div>
       <CameraButton />
       <FullLoader />
     </main>

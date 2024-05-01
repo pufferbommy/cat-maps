@@ -5,18 +5,14 @@ import CountUp from "react-countup";
 import { Heart } from "lucide-react";
 import { useStore } from "@nanostores/react";
 
-import AuthButton from "./auth-button";
 import { Skeleton } from "./ui/skeleton";
-import LogoutButton from "./logout-button";
+import { $profile } from "@/store/profile";
 import * as catsService from "@/services/cats";
-import { $isLoadingCats, $cats, updateLike } from "@/store/cats";
-import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { $isLoadingProfile, $profile } from "@/store/profile";
+import { $isLoadingCats, $cats, updateLike } from "@/store/cats";
 
 const Sidebar = () => {
   const profile = useStore($profile);
-  const isLoadingProfile = useStore($isLoadingProfile);
 
   const cats = useStore($cats);
   const isLoadingCats = useStore($isLoadingCats);
@@ -33,13 +29,15 @@ const Sidebar = () => {
 
   return (
     <div className="max-w-[300px] w-full shadow flex flex-col h-full">
-      <div className="flex px-4 mb-6 pt-4 justify-between items-center">
-        <h1 className="font-bold text-xl">CatMaps</h1>
-        <h2 className="before:mr-2 text-lg before:content-['🐱']">
+      <div className="flex px-3 h-16 flex-shrink-0 justify-between items-center">
+        <h1 className="font-bold bg-gradient-to-br text-lg text-transparent bg-clip-text from-orange-500 to-pink-500">
+          Cat Maps
+        </h1>
+        <h2 className="before:mr-2 before:content-['🐱']">
           <CountUp start={0} end={cats.length} />
         </h2>
       </div>
-      <div className="flex px-4 mb-4 overflow-y-auto flex-col gap-4 h-full">
+      <div className="flex px-3 pb-3 overflow-y-auto flex-col gap-2 h-full">
         {isLoadingCats
           ? Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="w-full shrink-0 aspect-square" />
@@ -70,32 +68,6 @@ const Sidebar = () => {
                 </CardContent>
               </Card>
             ))}
-      </div>
-      <div className="px-4 pb-4">
-        {!isLoadingProfile ? (
-          <>
-            {!profile ? (
-              <div className="w-full flex gap-2">
-                <AuthButton initialAction="login" />
-                <AuthButton initialAction="register" />
-              </div>
-            ) : (
-              <div className="flex gap-4">
-                <div className="flex items-center gap-2 w-full overflow-x-hidden">
-                  <Avatar>
-                    <AvatarFallback>
-                      {profile?.username.slice(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <p className="truncate w-full">{profile?.username}</p>
-                </div>
-                <LogoutButton />
-              </div>
-            )}
-          </>
-        ) : (
-          <p className="h-10 flex items-center">Loading...</p>
-        )}
       </div>
     </div>
   );
