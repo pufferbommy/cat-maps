@@ -12,9 +12,12 @@ export async function POST(request: NextRequest) {
 
     await connectDatabase();
 
-    const user = await User.findOne({
-      username,
-    });
+    const user = await User.findOne(
+      {
+        username,
+      },
+      "_id"
+    );
 
     if (user) {
       throw new Error("Username has already been taken");

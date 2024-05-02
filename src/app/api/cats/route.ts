@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const userId = request.headers.get("userId");
 
     const cats: Cat[] = await Promise.all(
-      (await Cat.find({}, ["imageUrl", "latitude", "longitude"]).lean()).map(
+      (await Cat.find({}, "imageUrl latitude longitude").lean()).map(
         async (cat) => {
           const liked = userId
             ? Boolean(

@@ -1,9 +1,6 @@
-import { env } from "@/env";
-import { connectDatabase } from "@/lib/database";
-import { signJwt, verifyJwt } from "@/lib/jwt";
-import User from "@/models/user.model";
-import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
+
+import { signJwt, verifyJwt } from "@/lib/jwt";
 
 export async function POST(request: NextRequest) {
   try {

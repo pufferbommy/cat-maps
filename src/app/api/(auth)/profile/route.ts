@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const userId = request.headers.get("userId");
     if (!userId) throw new Error();
     await connectDatabase();
-    const user = await User.findById(userId);
+    const user = await User.findById(userId, "username");
     const response: BaseResponse<Profile> = {
       success: true,
       data: {

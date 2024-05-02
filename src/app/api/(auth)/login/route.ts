@@ -12,9 +12,12 @@ export async function POST(request: NextRequest) {
 
     await connectDatabase();
 
-    const user = await User.findOne({
-      username,
-    });
+    const user = await User.findOne(
+      {
+        username,
+      },
+      "password"
+    );
 
     if (!user || !(await argon2.verify(user.password, password))) {
       throw new Error("Username or password is incorrect");
