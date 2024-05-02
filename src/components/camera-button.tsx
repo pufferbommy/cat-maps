@@ -84,6 +84,7 @@ const CameraButton = () => {
       }}
     >
       <Button
+        aria-label="camera button"
         onClick={() => {
           if (!profile) {
             alert("Please log in first");

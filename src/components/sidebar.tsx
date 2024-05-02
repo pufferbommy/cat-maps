@@ -57,6 +57,7 @@ const Sidebar = () => {
                   </div>
                   <div className="bg-gradient-to-b from-black/50 via-black/0 to-transparent absolute inset-0" />
                   <button
+                    aria-label="toggle like button"
                     onClick={() => toggleLike(cat.liked, cat._id)}
                     className="hover:bg-transparent hover:scale-110 active:scale-95 transition-transform absolute right-4 top-4"
                   >

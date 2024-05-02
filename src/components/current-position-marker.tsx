@@ -51,6 +51,7 @@ const CurrentPositionMarker = () => {
               className="w-8 h-8"
               onClick={handleToggleSearchClick}
               size="icon"
+              aria-label="toggle current location button"
             >
               {isSearchable ? (
                 <LocateFixed size={16} />

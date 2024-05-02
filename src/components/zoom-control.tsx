@@ -32,6 +32,7 @@ const ZoomControl = () => {
               disabled={zoom === map.getMaxZoom()}
               onClick={() => map.zoomIn()}
               size="icon"
+              aria-label="zoom in button"
             >
               <ZoomIn size={16} />
             </Button>
@@ -47,6 +48,7 @@ const ZoomControl = () => {
               disabled={zoom === map.getMinZoom()}
               onClick={() => map.zoomOut()}
               size="icon"
+              aria-label="zoom out button"
             >
               <ZoomOut size={16} />
             </Button>

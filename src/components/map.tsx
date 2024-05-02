@@ -11,6 +11,13 @@ import MapControl from "@/components/map-control";
 const Map = () => {
   const cats = useStore($cats);
 
+  // Define the maximum bounds
+  const maxBounds: any = [
+    // [South, West], [North, East]
+    [-90, -180], // South West
+    [90, 180], // North East
+  ];
+
   return (
     <MapContainer
       center={{
@@ -18,19 +25,17 @@ const Map = () => {
         lng: 0,
       }}
       zoom={2}
-      maxBounds={[
-        [-90, -180],
-        [90, 180],
-      ]}
       minZoom={2}
       maxZoom={16}
       className="z-[49] w-full h-full relative"
       zoomControl={false}
       attributionControl={false}
+      maxBounds={maxBounds}
+      maxBoundsViscosity={1}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
       />
       <AttributionControl position="bottomleft" />
       <MapControl />
