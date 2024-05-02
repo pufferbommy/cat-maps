@@ -34,13 +34,13 @@ export default function Home() {
 
   return (
     <main className="h-dvh flex overflow-y-hidden">
+      <FullLoader />
       <Sidebar />
       <div className="flex flex-col w-full">
         <Navbar />
         <Map />
       </div>
       <CameraButton />
-      <FullLoader />
     </main>
   );
 }

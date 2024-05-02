@@ -45,7 +45,14 @@ export async function POST(request: NextRequest) {
   try {
     const { latitude, longitude, image } = await request.json();
 
-    const uploadResponse = await cloudinary.uploader.upload(image);
+    const uploadResponse = await cloudinary.uploader.upload(image, {
+      transformation: {
+        width: 500,
+        height: 500,
+        format: "jpg",
+        quality: 75,
+      },
+    });
 
     await connectDatabase();
 

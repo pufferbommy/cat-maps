@@ -19,7 +19,7 @@ const Sidebar = () => {
 
   const toggleLike = async (liked: boolean, catId: string) => {
     if (!profile) {
-      alert("Please login first");
+      alert("Please log in first");
       return;
     }
     const newLiked = !liked;

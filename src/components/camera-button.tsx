@@ -86,14 +86,14 @@ const CameraButton = () => {
       <Button
         onClick={() => {
           if (!profile) {
-            alert("Please login first");
+            alert("Please log in first");
             return;
           }
           setOpen(true);
         }}
         className="fixed bottom-3 right-3 w-16 h-16 rounded-full z-50"
       >
-        <CameraIcon size={20} />
+        <CameraIcon size={18} />
       </Button>
       <DialogContent className="w-[75dvw] max-w-[500px] md:w-[50dvw]">
         <DialogHeader>

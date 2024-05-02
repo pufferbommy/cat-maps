@@ -14,7 +14,7 @@ const LogoutButton = () => {
     setTimeout(() => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      toast.success("Logout successful");
+      toast.success("Log out successful");
       clearProfile();
       setFullLoader(false);
     }, 250);
@@ -24,15 +24,18 @@ const LogoutButton = () => {
     <Button
       disabled={isLoading}
       onClick={logout}
-      size="icon"
       variant="secondary"
-      className="gap-2 w-10 h-10 flex-shrink-0"
+      size="icon"
+      className="w-10 h-10 hover:w-auto transition-all hover:px-4 hover:gap-2 flex-shrink-0 group"
     >
       {isLoading ? (
         <Loader2 size={16} className="animate-spin" />
       ) : (
         <LogOut size={16} />
       )}
+      <span className="w-0 transition-[width] group-hover:w-auto overflow-hidden">
+        Log out
+      </span>
     </Button>
   );
 };

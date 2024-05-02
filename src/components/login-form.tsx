@@ -77,7 +77,9 @@ const LoginForm = ({
               </FormItem>
             )}
           />
-          <Button type="submit">{isLoading ? "Logging in..." : "Login"}</Button>
+          <Button type="submit">
+            {isLoading ? "Logging in..." : "Log in"}
+          </Button>
         </div>
       </form>
     </Form>

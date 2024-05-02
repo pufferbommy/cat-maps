@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     const response: BaseResponse<Auth> = {
       success: true,
-      message: "Login successfully",
+      message: "Log in successfully",
       data: {
         accessToken: await signJwt(payload, "15m"),
         refreshToken: await signJwt(payload, "15 days"),

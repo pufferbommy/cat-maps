@@ -39,9 +39,9 @@ const AuthButton = ({
 
   const title = (action: typeof initialAction, inverse: boolean = false) => {
     if (inverse) {
-      return isLogin(action) ? "Register" : "Login";
+      return isLogin(action) ? "Register" : "Log in";
     }
-    return isLogin(action) ? "Login" : "Register";
+    return isLogin(action) ? "Log in" : "Register";
   };
 
   const handleToggleAction = () => {
@@ -57,13 +57,13 @@ const AuthButton = ({
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setOpen(false);
+      await getProfile();
     } catch (error) {
       console.error(error);
     } finally {
-      setIsActioning(false);
       setFullLoader(false);
+      setIsActioning(false);
     }
-    await getProfile();
   };
 
   return (
