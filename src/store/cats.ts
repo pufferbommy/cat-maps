@@ -2,6 +2,11 @@ import { atom } from "nanostores";
 
 export const $cats = atom<Cat[]>([]);
 export const $isLoadingCats = atom<boolean>(true);
+export const $focusedCatId = atom<string | null>(null);
+
+export function setFocusedCatId(catId: string) {
+  $focusedCatId.set(catId);
+}
 
 export function setCats(data: Cat[]) {
   $cats.set(data);

@@ -9,10 +9,12 @@ import { Skeleton } from "./ui/skeleton";
 import { $profile } from "@/store/profile";
 import * as catsService from "@/services/cats";
 import { Card, CardContent } from "@/components/ui/card";
-import { $isLoadingCats, $cats, updateLike } from "@/store/cats";
+import { $isLoadingCats, $cats, updateLike, $focusedCatId } from "@/store/cats";
+import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
   const profile = useStore($profile);
+  const focusedCatId = useStore($focusedCatId);
 
   const cats = useStore($cats);
   const isLoadingCats = useStore($isLoadingCats);
@@ -37,20 +39,26 @@ const Sidebar = () => {
           <CountUp start={0} end={cats.length} />
         </h2>
       </div>
-      <div className="flex px-3 pb-3 overflow-y-auto flex-col gap-2 h-full">
+      <div className="flex p-3 overflow-y-auto flex-col gap-2 h-full">
         {isLoadingCats
           ? Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="w-full shrink-0 aspect-square" />
             ))
           : cats.map((cat) => (
-              <Card key={cat._id}>
-                <CardContent className="relative rounded-lg overflow-hidden">
-                  <div className="cursor-pointer aspect-square relative">
+              <Card
+                className={cn(
+                  "ring-offset-2 rounded-lg overflow-hidden relative",
+                  focusedCatId === cat._id && "ring-2 ring-orange-500"
+                )}
+                key={cat._id}
+              >
+                <CardContent>
+                  <div className="aspect-square relative">
                     <Image
                       sizes="100%"
                       priority
                       src={cat.imageUrl}
-                      alt="preview cat"
+                      alt="cat"
                       fill
                       className="object-cover"
                     />
