@@ -98,7 +98,7 @@ const CameraButton = () => {
       </Button>
       <DialogContent className="w-[75dvw] max-w-[500px] md:w-[50dvw]">
         <DialogHeader>
-          <DialogTitle>{image ? "View Image" : "Take a picture"}</DialogTitle>
+          <DialogTitle>Camera</DialogTitle>
         </DialogHeader>
         <div
           ref={cameraWrapperRef}
