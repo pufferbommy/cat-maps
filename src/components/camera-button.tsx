@@ -92,7 +92,8 @@ const CameraButton = () => {
           }
           setOpen(true);
         }}
-        className="fixed bottom-4 right-4 w-16 h-16 rounded-full z-50"
+        size="icon"
+        className="fixed w-12 h-12 bottom-4 right-4 rounded-full z-50"
       >
         <CameraIcon size={18} />
       </Button>
