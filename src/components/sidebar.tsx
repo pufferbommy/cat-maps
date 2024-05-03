@@ -5,12 +5,12 @@ import CountUp from "react-countup";
 import { Heart } from "lucide-react";
 import { useStore } from "@nanostores/react";
 
+import { cn } from "@/lib/utils";
 import { Skeleton } from "./ui/skeleton";
 import { $profile } from "@/store/profile";
 import * as catsService from "@/services/cats";
 import { Card, CardContent } from "@/components/ui/card";
 import { $isLoadingCats, $cats, updateLike, $focusedCatId } from "@/store/cats";
-import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
   const profile = useStore($profile);
@@ -46,8 +46,9 @@ const Sidebar = () => {
             ))
           : cats.map((cat) => (
               <Card
+                id={`cat-${cat._id}`}
                 className={cn(
-                  "ring-offset-2 rounded-lg overflow-hidden relative",
+                  "ring-offset-2 shrink-0 rounded-lg overflow-hidden relative",
                   focusedCatId === cat._id && "ring-2 ring-orange-500"
                 )}
                 key={cat._id}
