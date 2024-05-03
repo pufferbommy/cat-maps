@@ -20,12 +20,15 @@ import { useProfile } from "@/hooks/useProfile";
 import { Register } from "@/schema/register.schema";
 import { $isLoadingProfile } from "@/store/profile";
 import { setFullLoader } from "@/store/full-loader";
+import { useCats } from "@/hooks/useCats";
 
 const AuthButton = ({
   initialAction,
 }: {
   initialAction: "login" | "register";
 }) => {
+  const { getCats } = useCats();
+
   const { getProfile } = useProfile();
 
   const isLoadingProfile = useStore($isLoadingProfile);
@@ -57,7 +60,10 @@ const AuthButton = ({
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setOpen(false);
-      await getProfile();
+      if (action === "login") {
+        getCats();
+      }
+      getProfile();
     } catch (error) {
       console.error(error);
     } finally {

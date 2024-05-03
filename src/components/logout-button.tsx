@@ -4,6 +4,7 @@ import { Loader2, LogOut } from "lucide-react";
 
 import { Button } from "./ui/button";
 import { clearProfile } from "@/store/profile";
+import { clearMyLikedCats } from "@/store/cats";
 import { $isLoading, setFullLoader } from "@/store/full-loader";
 
 const LogoutButton = () => {
@@ -15,6 +16,7 @@ const LogoutButton = () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       toast.success("Log out successful");
+      clearMyLikedCats();
       clearProfile();
       setFullLoader(false);
     }, 250);

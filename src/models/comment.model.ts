@@ -1,6 +1,12 @@
-import mongoose, { Schema, models } from "mongoose";
+import mongoose, { Schema, Types, models } from "mongoose";
 
-const commentSchema = new Schema({
+interface IComment {
+  text: string;
+  cat: Types.ObjectId;
+  user: Types.ObjectId;
+}
+
+const commentSchema = new Schema<IComment>({
   text: {
     type: String,
     required: true,

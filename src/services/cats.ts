@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
 
-const getCats = async (signal: AbortSignal) => {
+const getCats = async (signal?: AbortSignal) => {
   const response = await axios.get<BaseResponse<Cat[]>>("cats", {
     signal,
   });

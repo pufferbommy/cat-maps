@@ -4,4 +4,5 @@ interface Cat {
   longitude: number;
   imageUrl: string;
   liked: boolean;
+  totalLikes: number;
 }

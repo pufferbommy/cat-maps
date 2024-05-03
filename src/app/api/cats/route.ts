@@ -24,7 +24,8 @@ export async function GET(request: NextRequest) {
                 })
               )
             : false;
-          return { ...cat, liked } as Cat;
+          const totalLikes = await Like.countDocuments({ cat: cat._id });
+          return { ...cat, liked, totalLikes } as Cat;
         }
       )
     );

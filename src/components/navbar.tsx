@@ -33,7 +33,7 @@ const Navbar = () => {
     encouragements[Math.floor(Math.random() * encouragements.length)];
 
   return (
-    <div className="p-3 shadow">
+    <div className="p-4 shadow">
       {!isLoadingProfile ? (
         <>
           {!profile ? (
