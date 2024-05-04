@@ -10,9 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { Button } from "./ui/button";
+} from "../ui/dialog";
 import LoginForm from "./login-form";
+import { Button } from "../ui/button";
+import { getCats } from "@/services/cats";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
 import * as authService from "@/services/auth";
@@ -20,15 +21,12 @@ import { useProfile } from "@/hooks/useProfile";
 import { Register } from "@/schema/register.schema";
 import { $isLoadingProfile } from "@/store/profile";
 import { setFullLoader } from "@/store/full-loader";
-import { useCats } from "@/hooks/useCats";
 
 const AuthButton = ({
   initialAction,
 }: {
   initialAction: "login" | "register";
 }) => {
-  const { getCats } = useCats();
-
   const { getProfile } = useProfile();
 
   const isLoadingProfile = useStore($isLoadingProfile);

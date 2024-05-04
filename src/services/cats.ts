@@ -1,10 +1,18 @@
 import axios from "@/lib/axios";
+import { setCats, setIsLoadingCats } from "@/store/cats";
 
 const getCats = async (signal?: AbortSignal) => {
-  const response = await axios.get<BaseResponse<Cat[]>>("cats", {
-    signal,
-  });
-  return response.data.data!;
+  try {
+    setIsLoadingCats(true);
+    const response = await axios.get<BaseResponse<Cat[]>>("cats", {
+      signal,
+    });
+    setCats(response.data.data!);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setIsLoadingCats(false);
+  }
 };
 
 const addCat = async ({

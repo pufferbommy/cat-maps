@@ -5,8 +5,8 @@ import { useStore } from "@nanostores/react";
 import { MapContainer, TileLayer, AttributionControl } from "react-leaflet";
 
 import { $cats } from "@/store/cats";
-import CatMarker from "@/components/cat-marker";
-import MapControl from "@/components/map-control";
+import CatMarker from "@/components/cat/cat-marker";
+import MapControl from "@/components/map/map-control";
 
 const Map = () => {
   const cats = useStore($cats);

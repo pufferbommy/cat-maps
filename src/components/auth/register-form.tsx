@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import {
   Form,
   FormControl,
@@ -11,8 +11,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Button } from "./ui/button";
+} from "../ui/form";
+import { Button } from "../ui/button";
 import { Register, registerSchema } from "@/schema/register.schema";
 
 const RegisterForm = ({

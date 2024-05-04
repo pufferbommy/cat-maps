@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { useStore } from "@nanostores/react";
 import { Loader2, LogOut } from "lucide-react";
 
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { clearProfile } from "@/store/profile";
 import { clearMyLikedCats } from "@/store/cats";
 import { $isLoading, setFullLoader } from "@/store/full-loader";

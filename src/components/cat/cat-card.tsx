@@ -4,7 +4,7 @@ import { useStore } from "@nanostores/react";
 
 import { cn } from "@/lib/utils";
 import { $profile } from "@/store/profile";
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent } from "../ui/card";
 import * as catsService from "@/services/cats";
 import { $focusedCatId, updateLike } from "@/store/cats";
 

@@ -1,7 +1,7 @@
 import Avatar from "boring-avatars";
 import { useStore } from "@nanostores/react";
 
-import AuthButton from "./auth-button";
+import AuthButton from "../auth/auth-button";
 import LogoutButton from "./logout-button";
 import { $isLoadingProfile, $profile } from "@/store/profile";
 

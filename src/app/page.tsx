@@ -3,20 +3,19 @@
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
-import Navbar from "@/components/navbar";
-import { useCats } from "@/hooks/useCats";
-import { Sidebar } from "@/components/sidebar";
+import { getCats } from "@/services/cats";
+import Navbar from "@/components/site/navbar";
 import { useProfile } from "@/hooks/useProfile";
-import FullLoader from "@/components/full-loader";
+import { Sidebar } from "@/components/site/sidebar";
 import { setIsLoadingProfile } from "@/store/profile";
-import CameraButton from "@/components/camera-button";
-const Map = dynamic(() => import("@/components/map"), {
+import FullLoader from "@/components/site/full-loader";
+import CameraButton from "@/components/site/camera-button";
+const Map = dynamic(() => import("@/components/map/map"), {
   ssr: false,
   loading: () => <div className="p-4">Loading...</div>,
 });
 
 export default function Home() {
-  const { getCats } = useCats();
   const { getProfile } = useProfile();
 
   useEffect(() => {
@@ -25,7 +24,7 @@ export default function Home() {
     getCats(abortController.signal);
 
     return () => abortController.abort();
-  }, [getCats]);
+  }, []);
 
   useEffect(() => {
     const hasAccessToken = Boolean(localStorage.getItem("accessToken"));

@@ -1,5 +1,5 @@
-import ZoomControl from "@/components/zoom-control";
-import CurrentPositionMarker from "@/components/current-position-marker";
+import ZoomControl from "@/components/map/zoom-control";
+import CurrentPositionMarker from "@/components/map/current-position-marker";
 
 const MapControl = () => {
   return (

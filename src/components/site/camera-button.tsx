@@ -6,12 +6,12 @@ import { useRef, useState } from "react";
 import { CameraIcon } from "lucide-react";
 import { useStore } from "@nanostores/react";
 
-import { Button } from "./ui/button";
-import { Skeleton } from "./ui/skeleton";
+import { Button } from "../ui/button";
+import { Skeleton } from "../ui/skeleton";
 import { $profile } from "@/store/profile";
 import * as catsService from "@/services/cats";
 import { setFullLoader } from "@/store/full-loader";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 
 const CameraButton = () => {
   const profile = useStore($profile);

@@ -3,8 +3,8 @@
 import CountUp from "react-countup";
 import { useStore } from "@nanostores/react";
 
-import CatCard from "./cat-card";
-import { Skeleton } from "./ui/skeleton";
+import CatCard from "../cat/cat-card";
+import { Skeleton } from "../ui/skeleton";
 import { $isLoadingCats, $cats } from "@/store/cats";
 
 const Sidebar = () => {
@@ -24,7 +24,10 @@ const Sidebar = () => {
       <div className="flex p-4 overflow-y-auto flex-col gap-4 h-full">
         {isLoadingCats
           ? Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="w-full shrink-0 aspect-square" />
+              <Skeleton
+                key={i}
+                className="w-full shrink-0 aspect-square rounded-lg"
+              />
             ))
           : cats.map((cat) => <CatCard key={cat._id} cat={cat} />)}
       </div>
