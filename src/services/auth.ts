@@ -1,4 +1,5 @@
 import axios from "@/lib/axios";
+import { setIsLoadingProfile, setProfile } from "@/store/profile";
 
 const auth = async (action: "login" | "register", values: any) => {
   const url = action;
@@ -7,11 +8,18 @@ const auth = async (action: "login" | "register", values: any) => {
 };
 
 const getProfile = async (signal?: AbortSignal) => {
-  const url = "profile";
-  const response = await axios.get<BaseResponse<Profile>>(url, {
-    signal,
-  });
-  return response.data.data!;
+  try {
+    setIsLoadingProfile(true);
+    const url = "profile";
+    const response = await axios.get<BaseResponse<Profile>>(url, {
+      signal,
+    });
+    setProfile(response.data.data!);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setIsLoadingProfile(false);
+  }
 };
 
 const refresh = async () => {

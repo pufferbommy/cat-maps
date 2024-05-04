@@ -4,40 +4,36 @@ import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
 import { getCats } from "@/services/cats";
+import { getProfile } from "@/services/auth";
 import Navbar from "@/components/site/navbar";
-import { useProfile } from "@/hooks/useProfile";
 import { Sidebar } from "@/components/site/sidebar";
-import { setIsLoadingProfile } from "@/store/profile";
 import FullLoader from "@/components/site/full-loader";
 import CameraButton from "@/components/site/camera-button";
+import { setFullLoader } from "@/store/full-loader";
 const Map = dynamic(() => import("@/components/map/map"), {
   ssr: false,
   loading: () => <div className="p-4">Loading...</div>,
 });
 
 export default function Home() {
-  const { getProfile } = useProfile();
-
   useEffect(() => {
-    const abortController = new AbortController();
+    const getCatsAbortController = new AbortController();
+    const getProfileAbortController = new AbortController();
 
-    getCats(abortController.signal);
+    (async () => {
+      setFullLoader(true);
+      await Promise.all([
+        getProfile(getProfileAbortController.signal),
+        getCats(getCatsAbortController.signal),
+      ]);
+      setFullLoader(false);
+    })();
 
-    return () => abortController.abort();
+    return () => {
+      getProfileAbortController.abort();
+      getCatsAbortController.abort();
+    };
   }, []);
-
-  useEffect(() => {
-    const hasAccessToken = Boolean(localStorage.getItem("accessToken"));
-    if (hasAccessToken) {
-      const abortController = new AbortController();
-
-      getProfile(abortController.signal);
-
-      return () => abortController.abort();
-    } else {
-      setIsLoadingProfile(false);
-    }
-  }, [getProfile]);
 
   return (
     <main className="h-dvh flex overflow-y-hidden">

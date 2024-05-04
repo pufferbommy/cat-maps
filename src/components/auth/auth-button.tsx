@@ -16,19 +16,16 @@ import { Button } from "../ui/button";
 import { getCats } from "@/services/cats";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
-import * as authService from "@/services/auth";
-import { useProfile } from "@/hooks/useProfile";
 import { Register } from "@/schema/register.schema";
 import { $isLoadingProfile } from "@/store/profile";
 import { setFullLoader } from "@/store/full-loader";
+import { auth, getProfile } from "@/services/auth";
 
 const AuthButton = ({
   initialAction,
 }: {
   initialAction: "login" | "register";
 }) => {
-  const { getProfile } = useProfile();
-
   const isLoadingProfile = useStore($isLoadingProfile);
 
   const [action, setAction] = useState(initialAction);
@@ -53,15 +50,17 @@ const AuthButton = ({
     try {
       setFullLoader(true);
       setIsActioning(true);
-      const response = await authService.auth(action, values);
+      const response = await auth(action, values);
       const { accessToken, refreshToken } = response.data.data!;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setOpen(false);
+      const promises = [];
+      promises.push(getProfile());
       if (action === "login") {
-        getCats();
+        promises.push(getCats());
       }
-      getProfile();
+      await Promise.all(promises);
     } catch (error) {
       console.error(error);
     } finally {
