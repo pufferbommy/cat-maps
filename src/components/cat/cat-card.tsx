@@ -7,6 +7,7 @@ import { $profile } from "@/store/profile";
 import { Card, CardContent } from "../ui/card";
 import * as catsService from "@/services/cats";
 import { $focusedCatId, updateLike } from "@/store/cats";
+import { toast } from "sonner";
 
 interface CatCardProps {
   cat: Cat;
@@ -23,6 +24,7 @@ const CatCard = ({ cat }: CatCardProps) => {
     }
     const newLiked = !liked;
     updateLike(catId, newLiked);
+    toast.info(newLiked ? "Liked" : "Unliked");
     await catsService.toggleLike(catId);
   };
 

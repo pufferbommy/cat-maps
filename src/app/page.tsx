@@ -7,12 +7,13 @@ import { getCats } from "@/services/cats";
 import { getProfile } from "@/services/auth";
 import Navbar from "@/components/site/navbar";
 import { Sidebar } from "@/components/site/sidebar";
+import { setFullLoader } from "@/store/full-loader";
+import { Skeleton } from "@/components/ui/skeleton";
 import FullLoader from "@/components/site/full-loader";
 import CameraButton from "@/components/site/camera-button";
-import { setFullLoader } from "@/store/full-loader";
 const Map = dynamic(() => import("@/components/map/map"), {
   ssr: false,
-  loading: () => <div className="p-4">Loading...</div>,
+  loading: () => <Skeleton className="w-full h-full" />,
 });
 
 export default function Home() {

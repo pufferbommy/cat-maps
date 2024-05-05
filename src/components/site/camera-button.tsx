@@ -93,9 +93,9 @@ const CameraButton = () => {
           setOpen(true);
         }}
         size="icon"
-        className="fixed w-12 h-12 bottom-4 right-4 rounded-full z-50"
+        className="fixed w-14 h-14 bottom-4 right-4 rounded-full z-50"
       >
-        <CameraIcon size={18} />
+        <CameraIcon size={20} />
       </Button>
       <DialogContent className="w-[75dvw] max-w-[500px] md:w-[50dvw]">
         <DialogHeader>
