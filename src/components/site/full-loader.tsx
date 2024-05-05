@@ -14,10 +14,12 @@ const FullLoader = () => {
           <motion.div
             initial={{
               scale: 0,
+              opacity: 0,
               rotate: 0,
             }}
             animate={{
               scale: 1,
+              opacity: 1,
               rotate: 360,
             }}
             transition={{
@@ -30,6 +32,9 @@ const FullLoader = () => {
                 repeat: Infinity,
                 ease: "linear",
               },
+            }}
+            exit={{
+              opacity: 0,
             }}
           >
             <Logo isVeryBig />

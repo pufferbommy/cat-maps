@@ -12,14 +12,14 @@ const Sidebar = () => {
   const isLoadingCats = useStore($isLoadingCats);
 
   return (
-    <div className="max-w-[300px] w-full flex flex-col h-full">
-      <div className="flex px-4 h-20 flex-shrink-0 justify-between items-center">
+    <div className="max-w-[300px] w-full flex flex-col h-full border-r border-r-gray-100">
+      <div className="flex px-4 border-b border-gray-100 h-20 flex-shrink-0 justify-between items-center">
         <h2 className="font-bold">Cats</h2>
         <h3 className="before:mr-2 before:content-['🐱']">
           <CountUp start={0} end={cats.length} />
         </h3>
       </div>
-      <div className="flex px-4 pb-4 overflow-y-auto flex-col gap-4 h-full">
+      <div className="flex p-4 overflow-y-auto flex-col gap-4 h-full">
         {isLoadingCats
           ? Array.from({ length: 5 }).map((_, i) => (
               <Skeleton

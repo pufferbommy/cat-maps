@@ -68,7 +68,7 @@ const CurrentPositionMarker = () => {
         </Tooltip>
       </TooltipProvider>
       {foundLocation && isSearchable && (
-        <Marker position={position} icon={markerIcon} />
+        <Marker position={position} icon={markerIcon} interactive={false} />
       )}
     </>
   );
