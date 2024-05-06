@@ -13,7 +13,7 @@ const Sidebar = () => {
 
   return (
     <div className="max-w-[300px] w-full flex flex-col h-full border-r border-r-gray-100">
-      <div className="flex px-4 border-b border-gray-100 h-20 flex-shrink-0 justify-between items-center">
+      <div className="flex p-4 border-b border-gray-100 flex-shrink-0 justify-between items-center">
         <h2 className="font-bold">Cats</h2>
         <h3 className="before:mr-2 before:content-['🐱']">
           <CountUp start={0} end={cats.length} />

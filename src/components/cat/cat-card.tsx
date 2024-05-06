@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { toast } from "sonner";
+import { useState } from "react";
 import { Heart } from "lucide-react";
 import { useStore } from "@nanostores/react";
 
@@ -7,7 +9,7 @@ import { $profile } from "@/store/profile";
 import { Card, CardContent } from "../ui/card";
 import * as catsService from "@/services/cats";
 import { $focusedCatId, updateLike } from "@/store/cats";
-import { toast } from "sonner";
+import LoginRequiredAlertDialog from "../auth/login-required-dialog";
 
 interface CatCardProps {
   cat: Cat;
@@ -16,10 +18,11 @@ interface CatCardProps {
 const CatCard = ({ cat }: CatCardProps) => {
   const profile = useStore($profile);
   const focusedCatId = useStore($focusedCatId);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleLike = async (liked: boolean, catId: string) => {
     if (!profile) {
-      alert("Please log in first");
+      setIsOpen(true);
       return;
     }
     const newLiked = !liked;
@@ -60,6 +63,11 @@ const CatCard = ({ cat }: CatCardProps) => {
           <span className="text-red-300 text-sm">{cat.totalLikes}</span>
         </button>
       </CardContent>
+      <LoginRequiredAlertDialog
+        description="You need to login to like a cat."
+        isAlertDialogOpen={isOpen}
+        setIsAlertDialogOpen={setIsOpen}
+      />
     </Card>
   );
 };

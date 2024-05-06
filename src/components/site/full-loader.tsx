@@ -13,8 +13,8 @@ const FullLoader = () => {
         <motion.div className="fixed inset-0 bg-black/25 z-[999999] flex flex-col gap-4 items-center justify-center">
           <motion.div
             initial={{
-              scale: 0,
-              opacity: 0,
+              scale: 0.5,
+              opacity: 0.5,
               rotate: 0,
             }}
             animate={{
@@ -23,6 +23,10 @@ const FullLoader = () => {
               rotate: 360,
             }}
             transition={{
+              opacity: {
+                duration: 0.5,
+                ease: "linear",
+              },
               scale: {
                 duration: 1,
                 ease: "linear",
@@ -34,7 +38,8 @@ const FullLoader = () => {
               },
             }}
             exit={{
-              opacity: 0,
+              scale: 0.5,
+              opacity: 0.5,
             }}
           >
             <Logo isVeryBig />

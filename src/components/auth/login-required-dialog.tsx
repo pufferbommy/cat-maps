@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { useStore } from "@nanostores/react";
 
@@ -12,31 +10,45 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import LoginForm from "./login-form";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
 import { getCats } from "@/services/cats";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
 import { auth, getProfile } from "@/services/auth";
+import { setFullLoader } from "@/store/full-loader";
 import { Register } from "@/schema/register.schema";
 import { $isLoadingProfile } from "@/store/profile";
-import { setFullLoader } from "@/store/full-loader";
 
-const AuthButton = ({
-  initialAction,
-  variant,
-}: {
-  initialAction: "login" | "register";
-  variant?: "outline" | "default";
-}) => {
-  const isLoadingProfile = useStore($isLoadingProfile);
+interface LoginRequiredAlertDialogProps {
+  isAlertDialogOpen: boolean;
+  setIsAlertDialogOpen: (isOpen: boolean) => void;
+  description?: string;
+}
 
-  const [action, setAction] = useState(initialAction);
-  const [isActioning, setIsActioning] = useState(false);
+const LoginRequiredAlertDialog = ({
+  isAlertDialogOpen,
+  setIsAlertDialogOpen,
+  description,
+}: LoginRequiredAlertDialogProps) => {
   const [open, setOpen] = useState(false);
+  const isLoadingProfile = useStore($isLoadingProfile);
+  const initialAction = "login";
+  const [action, setAction] = useState<"login" | "register">(initialAction);
+  const [isActioning, setIsActioning] = useState(false);
 
-  const isLogin = (action: typeof initialAction) => action === "login";
+  const isLogin = (action: "login" | "register") => action === "login";
 
-  const title = (action: typeof initialAction, inverse: boolean = false) => {
+  const title = (action: "login" | "register", inverse: boolean = false) => {
     if (inverse) {
       return isLogin(action) ? "Register" : "Log in";
     }
@@ -44,7 +56,9 @@ const AuthButton = ({
   };
 
   const handleToggleAction = () => {
-    setAction((prev) => (isLogin(prev) ? "register" : "login"));
+    setAction((prev) => {
+      return isLogin(prev) ? "register" : "login";
+    });
   };
 
   const onSubmit = async (values: Login | Register) => {
@@ -72,11 +86,24 @@ const AuthButton = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button disabled={isLoadingProfile} variant={variant}>
-          {title(initialAction)}
-        </Button>
-      </DialogTrigger>
+      <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Login Required</AlertDialogTitle>
+            <AlertDialogDescription>{description}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <DialogTrigger asChild>
+                <Button disabled={isLoadingProfile}>
+                  {title(initialAction)}
+                </Button>
+              </DialogTrigger>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <DialogContent className="max-w-[400px]">
         <DialogHeader>
           <DialogTitle>{title(action)}</DialogTitle>
@@ -103,4 +130,4 @@ const AuthButton = ({
   );
 };
 
-export default AuthButton;
+export default LoginRequiredAlertDialog;

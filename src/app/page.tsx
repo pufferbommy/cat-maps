@@ -37,11 +37,11 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="h-dvh flex overflow-y-hidden">
+    <main className="h-dvh flex flex-col overflow-hidden">
       <FullLoader />
-      <Sidebar />
-      <div className="flex flex-col w-full">
-        <Navbar />
+      <Navbar />
+      <div className="flex w-full h-[calc(100%-77px)]">
+        <Sidebar />
         <Map />
       </div>
       <CameraButton />

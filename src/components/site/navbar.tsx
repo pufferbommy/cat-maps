@@ -39,7 +39,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="p-4 flex justify-between flex-shrink-0 gap-4 h-20 items-center border-b border-b-gray-100">
+    <div className="p-4 flex justify-between flex-shrink-0 gap-4 h-[77px] items-center border-b border-b-gray-100">
       <div className="flex flex-shrink-0 justify-between items-center">
         <h1 className="inline-flex items-center gap-2 font-bold bg-gradient-to-br text-transparent bg-clip-text from-orange-500 to-pink-500">
           <Logo />
@@ -50,7 +50,7 @@ const Navbar = () => {
         <>
           {!profile ? (
             <div className="flex gap-2">
-              <AuthButton initialAction="login" />
+              <AuthButton variant="outline" initialAction="login" />
               <AuthButton initialAction="register" />
             </div>
           ) : (
