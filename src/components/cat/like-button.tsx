@@ -1,6 +1,5 @@
 "use client";
 
-import { toast } from "sonner";
 import { useState } from "react";
 import { Heart } from "lucide-react";
 import { useStore } from "@nanostores/react";
@@ -25,7 +24,6 @@ const LikeButton = ({ cat }: LikeButtonProps) => {
     }
     const newLiked = !liked;
     updateLike(catId, newLiked);
-    toast.info(newLiked ? "Liked" : "Unliked");
     await catsService.toggleLike(catId);
   };
 

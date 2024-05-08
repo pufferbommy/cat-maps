@@ -26,21 +26,15 @@ const CatCard = ({ cat, inCatPage }: CatCardProps) => {
       }}
       id={`cat-${cat._id}`}
       className={cn(
-        "ring-offset-2 shrink-0 rounded-lg shadow overflow-hidden relative transition-transform",
+        "ring-offset-2 shrink-0 w-full rounded-lg max-w-[300px] md:max-w-full shadow overflow-hidden relative transition-transform",
         focusedCatId === cat._id && "ring-2 ring-offset-4 ring-orange-500",
-        !inCatPage && "cursor-pointer"
+        !inCatPage && "cursor-pointer",
+        inCatPage && "max-w-full"
       )}
     >
       <CardContent>
-        <div className="aspect-square relative">
-          <Image
-            sizes="100%"
-            priority
-            src={cat.imageUrl}
-            alt="cat"
-            fill
-            className="object-cover"
-          />
+        <div className="aspect-square  relative">
+          <Image sizes="100%" priority src={cat.imageUrl} alt="cat" fill />
         </div>
         <div className="bg-gradient-to-b pointer-events-none from-black/75 via-black/0 to-transparent absolute inset-0" />
         {!inCatPage && <LikeButton cat={cat} />}
