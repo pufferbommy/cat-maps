@@ -4,7 +4,7 @@ interface Auth {
 }
 
 interface Profile {
-  _id: string;
+  _id?: string;
   username: string;
 }
 
