@@ -6,3 +6,8 @@ interface Cat {
   liked: boolean;
   totalLikes: number;
 }
+
+interface CatDetail extends Cat {
+  uploader: Profile;
+  createdAt: string;
+}

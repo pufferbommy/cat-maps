@@ -1,11 +1,11 @@
 "use client";
 
-import CountUp from "react-countup";
 import { useStore } from "@nanostores/react";
 
 import CatCard from "../cat/cat-card";
 import { Skeleton } from "../ui/skeleton";
 import { $isLoadingCats, $cats } from "@/store/cats";
+import { Badge } from "../ui/badge";
 
 const Sidebar = () => {
   const cats = useStore($cats);
@@ -14,10 +14,8 @@ const Sidebar = () => {
   return (
     <div className="max-w-[300px] w-full flex flex-col h-full border-r border-r-gray-100">
       <div className="flex p-4 border-b border-gray-100 flex-shrink-0 justify-between items-center">
-        <h2 className="font-bold">Cats</h2>
-        <h3 className="before:mr-2 before:content-['🐱']">
-          <CountUp start={0} end={cats.length} />
-        </h3>
+        <h2>Cats</h2>
+        <Badge variant="secondary">{cats.length}</Badge>
       </div>
       <div className="flex p-4 overflow-y-auto flex-col gap-4 h-full">
         {isLoadingCats

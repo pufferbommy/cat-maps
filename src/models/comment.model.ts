@@ -4,6 +4,7 @@ interface IComment {
   text: string;
   cat: Types.ObjectId;
   user: Types.ObjectId;
+  createdAt: Date;
 }
 
 const commentSchema = new Schema<IComment>({
@@ -18,6 +19,10 @@ const commentSchema = new Schema<IComment>({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

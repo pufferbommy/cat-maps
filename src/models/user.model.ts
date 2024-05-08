@@ -1,5 +1,10 @@
 import mongoose, { Schema, models } from "mongoose";
 
+interface IUser {
+  username: string;
+  password: string;
+}
+
 const userSchema = new Schema({
   username: String,
   password: String,

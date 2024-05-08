@@ -1,42 +1,34 @@
+"use client";
+
 import Image from "next/image";
-import { toast } from "sonner";
-import { useState } from "react";
-import { Heart } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useStore } from "@nanostores/react";
 
 import { cn } from "@/lib/utils";
-import { $profile } from "@/store/profile";
+import LikeButton from "./like-button";
+import { $focusedCatId } from "@/store/cats";
 import { Card, CardContent } from "../ui/card";
-import * as catsService from "@/services/cats";
-import { $focusedCatId, updateLike } from "@/store/cats";
-import LoginRequiredAlertDialog from "../auth/login-required-dialog";
 
 interface CatCardProps {
   cat: Cat;
+  inCatPage?: boolean;
 }
 
-const CatCard = ({ cat }: CatCardProps) => {
-  const profile = useStore($profile);
+const CatCard = ({ cat, inCatPage }: CatCardProps) => {
   const focusedCatId = useStore($focusedCatId);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleLike = async (liked: boolean, catId: string) => {
-    if (!profile) {
-      setIsOpen(true);
-      return;
-    }
-    const newLiked = !liked;
-    updateLike(catId, newLiked);
-    toast.info(newLiked ? "Liked" : "Unliked");
-    await catsService.toggleLike(catId);
-  };
+  const router = useRouter();
 
   return (
     <Card
+      onClick={() => {
+        if (inCatPage) return;
+        router.push(`/cats/${cat._id}`);
+      }}
       id={`cat-${cat._id}`}
       className={cn(
-        "ring-offset-2 shrink-0 rounded-lg shadow overflow-hidden cursor-pointer relative transition-transform",
-        focusedCatId === cat._id && "ring-2 ring-offset-4 ring-orange-500"
+        "ring-offset-2 shrink-0 rounded-lg shadow overflow-hidden relative transition-transform",
+        focusedCatId === cat._id && "ring-2 ring-offset-4 ring-orange-500",
+        !inCatPage && "cursor-pointer"
       )}
     >
       <CardContent>
@@ -50,24 +42,9 @@ const CatCard = ({ cat }: CatCardProps) => {
             className="object-cover"
           />
         </div>
-        <div className="bg-gradient-to-b from-black/75 via-black/0 to-transparent absolute inset-0" />
-        <button
-          aria-label="toggle like button"
-          onClick={() => toggleLike(cat.liked, cat._id)}
-          className="hover:bg-transparent hover:scale-110 inline-flex gap-2 items-center active:scale-95 transition-transform absolute right-4 top-4"
-        >
-          <Heart
-            className={`text-red-300 ${cat.liked && "fill-red-300"}`}
-            size={18}
-          />
-          <span className="text-red-300 text-sm">{cat.totalLikes}</span>
-        </button>
+        <div className="bg-gradient-to-b pointer-events-none from-black/75 via-black/0 to-transparent absolute inset-0" />
+        {!inCatPage && <LikeButton cat={cat} />}
       </CardContent>
-      <LoginRequiredAlertDialog
-        description="You need to login to like a cat."
-        isAlertDialogOpen={isOpen}
-        setIsAlertDialogOpen={setIsOpen}
-      />
     </Card>
   );
 };

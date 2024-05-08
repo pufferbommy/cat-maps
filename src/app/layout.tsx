@@ -2,25 +2,29 @@ import { Toaster } from "sonner";
 import type { Metadata } from "next";
 
 import "./globals.css";
+import Navbar from "@/components/site/navbar";
+import FullLoader from "@/components/site/full-loader";
 
 export const metadata: Metadata = {
   title: "Cat Maps",
   description:
-    "A revolutionary app that allows users to map and share the locations of feline friends they encounter. Discover the secret lives of cats, contribute to a global cat-tracking community, and embark on a journey of feline adventure.",
+    "A community-driven platform for cat lovers to share cat sightings, locations, and adventures.",
   keywords:
-    "cat mapping, cat locator, feline tracking, interactive cat app, cat sighting, cat encounter, pet mapping, feline location, feline finder, cat spotting, cat tracker, cat explorer, cat discovery, cat adventure, global cat community, feline exploration, cat enthusiasts, pet lovers",
+    "cats, cat maps, cat tracking, cat locations, cat sightings, cat community, cat lovers, cat enthusiasts, cat adventures",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) {
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className="font-lato">
         <Toaster richColors position="top-center" />
-        {children}
+        <FullLoader />
+        <Navbar />
+        <main>{children}</main>
       </body>
     </html>
   );

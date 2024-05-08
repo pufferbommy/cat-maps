@@ -9,6 +9,7 @@ export const env = createEnv({
     CLOUDINARY_API_SECRET: z.string(),
     DATABASE_URL: z.string(),
     JWT_SECRET: z.string(),
+    URL: z.string(),
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
@@ -17,5 +18,6 @@ export const env = createEnv({
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     JWT_SECRET: process.env.JWT_SECRET,
+    URL: process.env.URL,
   },
 });

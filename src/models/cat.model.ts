@@ -1,6 +1,14 @@
-import mongoose, { Schema, models } from "mongoose";
+import mongoose, { Schema, Types, models } from "mongoose";
 
-const catSchema = new Schema({
+interface ICat {
+  latitude: number;
+  longitude: number;
+  imageUrl: string;
+  uploader: Types.ObjectId;
+  createdAt: Date;
+}
+
+const catSchema = new Schema<ICat>({
   latitude: {
     type: Number,
     required: true,
@@ -9,7 +17,6 @@ const catSchema = new Schema({
     type: Number,
     required: true,
   },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   imageUrl: {
     type: String,
     required: true,
