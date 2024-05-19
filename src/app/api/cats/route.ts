@@ -50,8 +50,6 @@ export async function POST(request: NextRequest) {
       transformation: {
         width: 500,
         height: 500,
-        format: "jpg",
-        quality: 75,
       },
     });
 

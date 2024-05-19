@@ -8,9 +8,9 @@ import FullLoader from "@/components/site/full-loader";
 export const metadata: Metadata = {
   title: "Cat Maps",
   description:
-    "A community-driven platform for cat lovers to share cat sightings, locations, and adventures.",
+    "A community-driven platform for cat lovers to share cat sightings",
   keywords:
-    "cats, cat maps, cat tracking, cat locations, cat sightings, cat community, cat lovers, cat enthusiasts, cat adventures",
+    "cats, cat maps, cat tracking, cat locations, cat sightings, cat community, cat lovers, cat enthusiasts",
 };
 
 interface RootLayoutProps {

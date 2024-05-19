@@ -14,6 +14,7 @@ import { setFullLoader } from "@/store/full-loader";
 import { Dialog, DialogContent } from "../ui/dialog";
 import whiteAndBrownCatLyingOnFloor from "@/images/white-and-brown-cat-lying-on-floor.jpg";
 import LoginRequiredAlertDialog from "../auth/login-required-dialog";
+import { setCats } from "@/store/cats";
 
 const CameraButton = () => {
   const profile = useStore($profile);
@@ -72,6 +73,8 @@ const CameraButton = () => {
           image,
         });
         setOpen(false);
+        const cats = await catsService.getCats();
+        setCats(cats || []);
       } catch (error) {
         console.error(error);
       } finally {

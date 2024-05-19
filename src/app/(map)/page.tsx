@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
+import { setCats } from "@/store/cats";
 import { getCats } from "@/services/cats";
 import { setFullLoader } from "@/store/full-loader";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,17 +14,21 @@ const Map = dynamic(() => import("@/components/map/map"), {
 
 export default function Home() {
   useEffect(() => {
-    const getCatsAbortController = new AbortController();
+    const abortController = new AbortController();
 
     (async () => {
-      setFullLoader(true);
-      await getCats(getCatsAbortController.signal);
-      setFullLoader(false);
+      try {
+        setFullLoader(true);
+        const cats = await getCats(abortController.signal);
+        setCats(cats || []);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setFullLoader(false);
+      }
     })();
 
-    return () => {
-      getCatsAbortController.abort();
-    };
+    return () => abortController.abort();
   }, []);
 
   return (

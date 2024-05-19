@@ -20,6 +20,7 @@ import { auth, getProfile } from "@/services/auth";
 import { Register } from "@/schema/register.schema";
 import { $isLoadingProfile } from "@/store/profile";
 import { setFullLoader } from "@/store/full-loader";
+import { setCats } from "@/store/cats";
 
 const AuthButton = ({
   initialAction,
@@ -56,12 +57,11 @@ const AuthButton = ({
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       setOpen(false);
-      const promises = [];
-      promises.push(getProfile());
+      await getProfile();
       if (action === "login") {
-        promises.push(getCats());
+        const cats = await getCats();
+        setCats(cats || []);
       }
-      await Promise.all(promises);
     } catch (error) {
       console.error(error);
     } finally {
