@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types, models } from "mongoose";
+import mongoose, { Document, Schema, Types, models } from "mongoose";
 
 interface ICat {
   latitude: number;

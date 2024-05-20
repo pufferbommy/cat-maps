@@ -1,7 +1,8 @@
+import { Document } from "mongoose";
 import { NextResponse, type NextRequest } from "next/server";
 
-import Like from "@/models/like";
 import Cat from "@/models/cat.model";
+import { getLikeInfo } from "@/utils";
 import { connectDatabase } from "@/lib/database";
 import { cloudinary, configCloudinary } from "@/lib/cloudinary";
 
@@ -11,28 +12,20 @@ export async function GET(request: NextRequest) {
   try {
     await connectDatabase();
 
-    const userId = request.headers.get("userId");
+    const userId = request.headers.get("userId")!;
 
-    const cats: Cat[] = await Promise.all(
-      (await Cat.find({}, "imageUrl latitude longitude").lean()).map(
-        async (cat) => {
-          const liked = userId
-            ? Boolean(
-                await Like.findOne({
-                  cat: cat._id,
-                  user: request.headers.get("userId"),
-                })
-              )
-            : false;
-          const totalLikes = await Like.countDocuments({ cat: cat._id });
-          return { ...cat, liked, totalLikes } as Cat;
-        }
-      )
-    );
+    const cats: Document[] = await Cat.find({}, "imageUrl latitude longitude");
 
-    return NextResponse.json<BaseResponse<Cat[]>>({
+    const catsDto: CatDto[] = [];
+
+    for (const cat of cats) {
+      const { liked, totalLikes } = await getLikeInfo(userId, cat);
+      catsDto.push({ ...cat.toObject(), liked, totalLikes });
+    }
+
+    return NextResponse.json<BaseResponse<CatDto[]>>({
       success: true,
-      data: cats,
+      data: catsDto,
     });
   } catch (error) {
     return NextResponse.json(

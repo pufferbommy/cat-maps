@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import Like from "@/models/like";
 import Cat from "@/models/cat.model";
+import { getLikeInfo } from "@/utils";
 import { connectDatabase } from "@/lib/database";
 
 export async function GET(
@@ -11,7 +11,7 @@ export async function GET(
   try {
     await connectDatabase();
 
-    const userId = request.headers.get("userId");
+    const userId = request.headers.get("userId")!;
 
     const cat = await Cat.findById(
       params.catId,
@@ -25,20 +25,13 @@ export async function GET(
       );
     }
 
-    const liked = userId
-      ? Boolean(
-          await Like.findOne({
-            cat: cat._id,
-            user: userId,
-          })
-        )
-      : false;
+    const { liked, totalLikes } = await getLikeInfo(userId, cat);
 
-    const totalLikes = await Like.countDocuments({ cat: cat._id });
+    const catDto: CatDto = { ...cat.toObject(), liked, totalLikes };
 
     return NextResponse.json<BaseResponse<Cat>>({
       success: true,
-      data: { ...cat.toObject(), liked, totalLikes },
+      data: catDto,
     });
   } catch (error) {
     return NextResponse.json(

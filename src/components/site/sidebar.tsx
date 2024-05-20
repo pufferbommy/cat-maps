@@ -22,7 +22,7 @@ const Sidebar = () => {
           ? Array.from({ length: 5 }).map((_, i) => (
               <Skeleton
                 key={i}
-                className="w-full h-full shrink-0 aspect-square rounded-lg"
+                className="max-w-[300px] w-full shrink-0 aspect-square rounded-lg"
               />
             ))
           : cats.map((cat) => <CatCard key={cat._id} cat={cat} />)}
