@@ -1,0 +1,8 @@
+{
+  "name": "server",
+  "private": true,
+  "scripts": {
+    "build": "go build main.go",
+    "dev": "go run main.go"
+  }
+}

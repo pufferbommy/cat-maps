@@ -26,6 +26,7 @@ import { clearMyLikedCats } from "@/store/cats";
 import { setFullLoader } from "@/store/full-loader";
 import { $isLoadingProfile, $profile, clearProfile } from "@/store/profile";
 import Link from "next/link";
+import CameraButton from "./camera-button";
 
 const Navbar = () => {
   const profile = useStore($profile);
@@ -72,14 +73,15 @@ const Navbar = () => {
       >
         <div className="flex flex-shrink-0 justify-between items-center">
           <Link href="/">
-            <h1 className="inline-flex items-center gap-2 font-bold bg-gradient-to-br text-transparent bg-clip-text from-orange-500 to-pink-500">
+            <h1 className="inline-flex items-center gap-2 font-bold">
               <Logo />
               Cat Maps
             </h1>
           </Link>
         </div>
         {!isLoadingProfile ? (
-          <>
+          <div className="flex gap-4 items-center">
+            <CameraButton />
             {!profile ? (
               <div className="flex gap-2">
                 <AuthButton variant="outline" initialAction="login" />
@@ -118,7 +120,7 @@ const Navbar = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
-          </>
+          </div>
         ) : (
           <div className="flex gap-2 items-center">
             <Skeleton className="w-7 h-7 rounded-full" />

@@ -93,7 +93,6 @@ const CameraButton = () => {
       }}
     >
       <Button
-        aria-label="camera button"
         onClick={() => {
           if (!profile) {
             setIsLoginRequiredDialogOpen(true);
@@ -101,10 +100,11 @@ const CameraButton = () => {
           }
           setOpen(true);
         }}
-        size="icon"
-        className="fixed w-14 h-14 bottom-4 right-4 rounded-full z-50"
+        variant="secondary"
+        className="gap-2"
       >
-        <CameraIcon size={20} />
+        <CameraIcon size={16} />
+        Snap
       </Button>
       <DialogContent className="w-[75dvw] max-w-[500px] md:w-[50dvw]">
         <div
