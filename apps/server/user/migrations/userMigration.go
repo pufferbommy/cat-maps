@@ -3,11 +3,15 @@ package main
 import (
 	"server/config"
 	"server/database"
-	"server/server"
+	"server/user/entities"
 )
 
 func main() {
 	config := config.GetConfig()
 	db := database.NewPostgresDatabase(config)
-	server.NewEchoServer(config, db).Start()
+	userMigrate(db)
+}
+
+func userMigrate(db database.Database) {
+	db.GetDb().Migrator().CreateTable(&entities.User{})
 }

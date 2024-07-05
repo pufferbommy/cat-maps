@@ -2,7 +2,7 @@ import axios from "@/lib/axios";
 import { setIsLoadingProfile, setProfile } from "@/store/profile";
 
 const auth = async (action: "login" | "register", values: any) => {
-  const url = action;
+  const url = `/v1/user/${action}`;
   const response = await axios.post<BaseResponse<Auth>>(url, values);
   return response;
 };
