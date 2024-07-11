@@ -8,7 +8,7 @@ import (
 
 var secretKey = []byte(config.GetConfig().JwtSecretKey)
 
-func CreateToken(userId uint32, expUnix int64) string {
+func CreateToken(userId string, expUnix int64) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userId": userId,
 		"exp":    expUnix,

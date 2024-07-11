@@ -24,6 +24,7 @@ func NewUserUsecaseImpl(userRepo repositories.UserRepository) UserUsecase {
 
 func (u *userUsecaseImpl) Register(m *models.RegisterUserData) (*entities.RegisterUserResDto, error) {
 	existingUser, err := u.userRepo.FindByUsername(m.Username)
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to find user by username: %w", err)
 	}
@@ -40,7 +41,7 @@ func (u *userUsecaseImpl) Register(m *models.RegisterUserData) (*entities.Regist
 		return nil, fmt.Errorf("failed to hash password: %w", err)
 	}
 
-	createUserData := &entities.CreateUserDto{
+	createUserData := &entities.CreateUserReqDto{
 		Username: m.Username,
 		Password: string(hashedPassword),
 	}
@@ -50,8 +51,10 @@ func (u *userUsecaseImpl) Register(m *models.RegisterUserData) (*entities.Regist
 		return nil, fmt.Errorf("failed to insert user data: %w", err)
 	}
 
-	accessToken := util.CreateToken(createdUser.Id, time.Now().Add(time.Hour*1).Unix())        // 1 hour
-	refreshToken := util.CreateToken(createdUser.Id, time.Now().Add(time.Hour*1*24*15).Unix()) // 15 days
+	createdUserId := createdUser.Id.String()
+
+	accessToken := util.CreateToken(createdUserId, time.Now().Add(time.Hour*1).Unix())        // 1 hour
+	refreshToken := util.CreateToken(createdUserId, time.Now().Add(time.Hour*1*24*15).Unix()) // 15 days
 
 	return &entities.RegisterUserResDto{
 		AccessToken:  accessToken,

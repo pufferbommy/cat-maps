@@ -8,6 +8,6 @@ import (
 
 func main() {
 	config := config.GetConfig()
-	db := database.NewPostgresDatabase(config)
+	db := database.NewMongoDatabase(config)
 	server.NewEchoServer(config, db).Start()
 }

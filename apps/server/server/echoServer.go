@@ -13,38 +13,38 @@ import (
 )
 
 type echoServer struct {
-	App    *echo.Echo
-	Db     database.Database
-	Config *config.Config
+	app    *echo.Echo
+	db     database.MongoDatabase
+	config *config.Config
 }
 
-func NewEchoServer(config *config.Config, db database.Database) Server {
+func NewEchoServer(config *config.Config, db database.MongoDatabase) Server {
 	app := echo.New()
 
 	return &echoServer{
-		App:    app,
-		Db:     db,
-		Config: config,
+		app:    app,
+		db:     db,
+		config: config,
 	}
 }
 
 func (e *echoServer) Start() {
-	e.App.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	e.app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 
 	e.initializeUserHttpHandler()
 
-	e.App.Logger.Fatal(e.App.Start(fmt.Sprintf(":%s", e.Config.ServerPort)))
+	e.app.Logger.Fatal(e.app.Start(fmt.Sprintf(":%s", e.config.ServerPort)))
 }
 
 func (e *echoServer) initializeUserHttpHandler() {
-	userRepository := repositories.NewUserPostgresRepository(e.Db)
+	userRepository := repositories.NewUserMongoRepository(e.db)
 	userUsecase := usecases.NewUserUsecaseImpl(userRepository)
 	userHttpHandler := handlers.NewUserHttpHandler(userUsecase)
 
-	userGroup := e.App.Group("/api/v1/user")
+	userGroup := e.app.Group("/api/v1/user")
 	userGroup.POST("/register", userHttpHandler.Register)
 	userGroup.POST("/login", userHttpHandler.Login)
 }

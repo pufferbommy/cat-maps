@@ -1,9 +1,15 @@
 package entities
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type (
-	CreateUserDto struct {
+	CreateUserReqDto struct {
 		Username string
 		Password string
+	}
+
+	CreateUserResDto struct {
+		Id primitive.ObjectID
 	}
 
 	RegisterUserResDto struct {
@@ -12,8 +18,8 @@ type (
 	}
 
 	User struct {
-		Id       uint32
-		Username string
-		Password string
+		Id       primitive.ObjectID `bson:"_id,omitempty"`
+		Username string             `bson:"username"`
+		Password string             `bson:"password"`
 	}
 )

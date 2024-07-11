@@ -1,7 +1,9 @@
 package database
 
-import "gorm.io/gorm"
+import (
+	"go.mongodb.org/mongo-driver/mongo"
+)
 
-type Database interface {
-	GetDb() *gorm.DB
+type MongoDatabase interface {
+	GetDb() *mongo.Client
 }
