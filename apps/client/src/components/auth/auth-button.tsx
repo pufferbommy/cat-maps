@@ -16,11 +16,12 @@ import { Button } from "../ui/button";
 import { getCats } from "@/services/cats";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
-import { auth, getProfile } from "@/services/auth";
+import { getProfile, login, register } from "@/services/auth";
 import { Register } from "@/schema/register.schema";
 import { $isLoadingProfile } from "@/store/profile";
 import { setFullLoader } from "@/store/full-loader";
 import { setCats } from "@/store/cats";
+import { AxiosResponse } from "axios";
 
 const AuthButton = ({
   initialAction,
@@ -52,7 +53,12 @@ const AuthButton = ({
     try {
       setFullLoader(true);
       setIsActioning(true);
-      const response = await auth(action, values);
+      let response: AxiosResponse<BaseResponse<AuthUserResDto>>;
+      if (isLogin(action)) {
+        response = await login(values as Login);
+      } else {
+        response = await register(values as Register);
+      }
       const { accessToken, refreshToken } = response.data.data!;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);

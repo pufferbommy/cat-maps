@@ -10,3 +10,7 @@ type LoginUserData struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
+
+type RefreshTokensData struct {
+	RefreshToken string `json:"refreshToken"`
+}

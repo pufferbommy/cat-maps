@@ -1,10 +1,10 @@
-interface Auth {
+interface AuthUserResDto {
   accessToken: string;
   refreshToken: string;
 }
 
-interface Profile {
-  _id?: string;
+interface UserProfileResDto {
+  id: string;
   username: string;
 }
 

@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"server/user/models"
 	"server/user/usecases"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -49,4 +50,37 @@ func (h userHttpHandler) Login(c echo.Context) error {
 	}
 
 	return response(c, http.StatusOK, "login success", res)
+}
+
+func (h userHttpHandler) GetProfile(c echo.Context) error {
+	token := strings.Split(c.Request().Header.Get("Authorization"), "Bearer ")[1]
+	if token == "" {
+		return response(c, http.StatusUnauthorized, "unauthorized", nil)
+	}
+
+	res, err := h.UserUsecase.GetProfile(token)
+	if err != nil {
+		if err.Error() == "Token is expired" {
+			return response(c, http.StatusUnauthorized, err.Error(), nil)
+		}
+		return response(c, http.StatusInternalServerError, err.Error(), nil)
+	}
+
+	return response(c, http.StatusOK, "", res)
+}
+
+func (h userHttpHandler) Refresh(c echo.Context) error {
+	reqBody := new(models.RefreshTokensData)
+
+	if err := c.Bind(reqBody); err != nil {
+		log.Errorf("Error binding request body: %v", err)
+		return response(c, http.StatusInternalServerError, "bad request", nil)
+	}
+
+	res, err := h.UserUsecase.Refresh(reqBody)
+	if err != nil {
+		return response(c, http.StatusInternalServerError, err.Error(), nil)
+	}
+
+	return response(c, http.StatusOK, "", res)
 }

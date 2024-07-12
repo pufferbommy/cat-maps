@@ -54,3 +54,21 @@ func (u *userMongoRepository) FindByUsername(username string) (*entities.User, e
 
 	return &user, nil
 }
+
+func (u *userMongoRepository) FindByUserId(userId string) (*entities.User, error) {
+	var user entities.User
+	objectId, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return nil, err
+	}
+	filter := bson.M{"_id": objectId}
+	decodeErr := u.db.GetDb().Database("catMaps").Collection("users").FindOne(context.TODO(), filter).Decode(&user)
+	if decodeErr != nil {
+		if errors.Is(decodeErr, mongo.ErrNoDocuments) {
+			return nil, nil
+		}
+		return nil, decodeErr
+	}
+
+	return &user, nil
+}

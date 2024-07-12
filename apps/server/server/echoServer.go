@@ -29,10 +29,7 @@ func NewEchoServer(config *config.Config, db database.MongoDatabase) Server {
 }
 
 func (e *echoServer) Start() {
-	e.app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-	}))
+	e.app.Use(middleware.CORSWithConfig(middleware.CORSConfig{}))
 
 	e.initializeUserHttpHandler()
 
@@ -47,4 +44,6 @@ func (e *echoServer) initializeUserHttpHandler() {
 	userGroup := e.app.Group("/api/v1/user")
 	userGroup.POST("/register", userHttpHandler.Register)
 	userGroup.POST("/login", userHttpHandler.Login)
+	userGroup.GET("/profile", userHttpHandler.GetProfile)
+	userGroup.POST("/refresh", userHttpHandler.Refresh)
 }

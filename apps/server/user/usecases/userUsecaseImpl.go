@@ -51,7 +51,7 @@ func (u *userUsecaseImpl) Register(m *models.RegisterUserData) (*entities.AuthUs
 		return nil, fmt.Errorf("failed to insert user data: %w", err)
 	}
 
-	return u.generateTokens(createdUser.Id.String()), nil
+	return u.generateTokens(createdUser.Id.Hex()), nil
 }
 
 func (u *userUsecaseImpl) Login(m *models.LoginUserData) (*entities.AuthUserResDto, error) {
@@ -64,7 +64,48 @@ func (u *userUsecaseImpl) Login(m *models.LoginUserData) (*entities.AuthUserResD
 		return nil, errors.New("username or password is incorrect")
 	}
 
-	return u.generateTokens(existingUser.Id.String()), nil
+	return u.generateTokens(existingUser.Id.Hex()), nil
+}
+
+func (u *userUsecaseImpl) GetProfile(accessToken string) (*entities.UserProfileResDto, error) {
+	claims, err := util.VerifyToken(accessToken)
+	if err != nil {
+		return nil, err
+	}
+
+	userId, ok := claims["userId"].(string)
+	if !ok {
+		return nil, errors.New("failed to get user id")
+	}
+
+	existingUser, err := u.userRepo.FindByUserId(userId)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find user by user id: %w", err)
+	}
+
+	return &entities.UserProfileResDto{
+		Id:       existingUser.Id.Hex(),
+		Username: existingUser.Username,
+	}, nil
+}
+
+func (u *userUsecaseImpl) Refresh(m *models.RefreshTokensData) (*entities.AuthUserResDto, error) {
+	claims, err := util.VerifyToken(m.RefreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	userId, ok := claims["userId"].(string)
+	if !ok {
+		return nil, errors.New("failed to get user id")
+	}
+
+	existingUser, err := u.userRepo.FindByUserId(userId)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find user by user id: %w", err)
+	}
+
+	return u.generateTokens(existingUser.Id.Hex()), nil
 }
 
 func (u *userUsecaseImpl) generateTokens(userId string) *entities.AuthUserResDto {
