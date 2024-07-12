@@ -12,7 +12,7 @@ type (
 		Id primitive.ObjectID
 	}
 
-	RegisterUserResDto struct {
+	AuthUserResDto struct {
 		AccessToken  string `json:"accessToken"`
 		RefreshToken string `json:"refreshToken"`
 	}

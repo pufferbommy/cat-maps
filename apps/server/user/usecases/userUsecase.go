@@ -6,6 +6,6 @@ import (
 )
 
 type UserUsecase interface {
-	Register(m *models.RegisterUserData) (*entities.RegisterUserResDto, error)
-	Login(m *models.LoginUserData) error
+	Register(m *models.RegisterUserData) (*entities.AuthUserResDto, error)
+	Login(m *models.LoginUserData) (*entities.AuthUserResDto, error)
 }

@@ -32,7 +32,7 @@ func (h userHttpHandler) Register(c echo.Context) error {
 		return response(c, http.StatusInternalServerError, err.Error(), nil)
 	}
 
-	return response(c, http.StatusOK, "register success", *res)
+	return response(c, http.StatusOK, "register success", res)
 }
 
 func (h userHttpHandler) Login(c echo.Context) error {
@@ -43,9 +43,10 @@ func (h userHttpHandler) Login(c echo.Context) error {
 		return response(c, http.StatusInternalServerError, "bad request", nil)
 	}
 
-	if err := h.UserUsecase.Login(reqBody); err != nil {
+	res, err := h.UserUsecase.Login(reqBody)
+	if err != nil {
 		return response(c, http.StatusInternalServerError, err.Error(), nil)
 	}
 
-	return response(c, http.StatusOK, "success", nil)
+	return response(c, http.StatusOK, "login success", res)
 }

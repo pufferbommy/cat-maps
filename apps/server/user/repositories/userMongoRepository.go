@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"errors"
 	"server/database"
 	"server/user/entities"
 
@@ -26,28 +27,30 @@ func (u *userMongoRepository) CreateUserData(e *entities.CreateUserReqDto) (*ent
 		Password: e.Password,
 	}
 
-	cratedUser, err := u.db.GetDb().Database("catMaps").Collection("users").InsertOne(context.TODO(), user)
-
+	result, err := u.db.GetDb().Database("catMaps").Collection("users").InsertOne(context.TODO(), user)
 	if err != nil {
 		return nil, err
 	}
 
-	return &entities.CreateUserResDto{Id: cratedUser.InsertedID.(primitive.ObjectID)}, nil
+	id, ok := result.InsertedID.(primitive.ObjectID)
+	if !ok {
+		return nil, err
+	}
+
+	return &entities.CreateUserResDto{Id: id}, nil
 }
 
 func (u *userMongoRepository) FindByUsername(username string) (*entities.User, error) {
-	user := &entities.User{}
-	err := u.db.GetDb().Database("catMaps").Collection("users").FindOne(
-		context.TODO(),
-		bson.D{{"username", username}},
-	).Decode(user)
+	var user entities.User
+	filter := bson.M{"username": username}
 
+	err := u.db.GetDb().Database("catMaps").Collection("users").FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
+		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, nil
 		}
-		panic(err)
+		return nil, err
 	}
 
-	return user, nil
+	return &user, nil
 }

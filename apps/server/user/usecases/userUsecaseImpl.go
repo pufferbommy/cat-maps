@@ -22,7 +22,7 @@ func NewUserUsecaseImpl(userRepo repositories.UserRepository) UserUsecase {
 	}
 }
 
-func (u *userUsecaseImpl) Register(m *models.RegisterUserData) (*entities.RegisterUserResDto, error) {
+func (u *userUsecaseImpl) Register(m *models.RegisterUserData) (*entities.AuthUserResDto, error) {
 	existingUser, err := u.userRepo.FindByUsername(m.Username)
 
 	if err != nil {
@@ -51,31 +51,27 @@ func (u *userUsecaseImpl) Register(m *models.RegisterUserData) (*entities.Regist
 		return nil, fmt.Errorf("failed to insert user data: %w", err)
 	}
 
-	createdUserId := createdUser.Id.String()
-
-	accessToken := util.CreateToken(createdUserId, time.Now().Add(time.Hour*1).Unix())        // 1 hour
-	refreshToken := util.CreateToken(createdUserId, time.Now().Add(time.Hour*1*24*15).Unix()) // 15 days
-
-	return &entities.RegisterUserResDto{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-	}, nil
+	return u.generateTokens(createdUser.Id.String()), nil
 }
 
-func (u *userUsecaseImpl) Login(m *models.LoginUserData) error {
+func (u *userUsecaseImpl) Login(m *models.LoginUserData) (*entities.AuthUserResDto, error) {
 	existingUser, err := u.userRepo.FindByUsername(m.Username)
 	if err != nil {
-		return fmt.Errorf("failed to find user by username: %w", err)
-	}
-	if existingUser == nil {
-		return errors.New("username or password is incorrect")
+		return nil, fmt.Errorf("failed to find user by username: %w", err)
 	}
 
-	hashedPassword := []byte(existingUser.Password)
-	password := []byte(m.Password)
-	if err := bcrypt.CompareHashAndPassword(hashedPassword, password); err != nil {
-		return errors.New("username or password is incorrect")
+	if existingUser == nil || bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(m.Password)) != nil {
+		return nil, errors.New("username or password is incorrect")
 	}
 
-	return nil
+	return u.generateTokens(existingUser.Id.String()), nil
+}
+
+func (u *userUsecaseImpl) generateTokens(userId string) *entities.AuthUserResDto {
+	accessToken := util.CreateToken(userId, time.Now().Add(time.Hour).Unix())        // 1 hour
+	refreshToken := util.CreateToken(userId, time.Now().Add(time.Hour*24*15).Unix()) // 15 days
+	return &entities.AuthUserResDto{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
 }
