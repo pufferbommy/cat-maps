@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useStore } from "@nanostores/react";
 
 import {
   Dialog,
@@ -21,15 +20,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
-import { getCats } from "@/services/cats";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
-import { login, register, getProfile } from "@/services/auth";
-import { setFullLoader } from "@/store/full-loader";
 import { Register } from "@/schema/register.schema";
-import { $isLoadingProfile } from "@/store/profile";
-import { setCats } from "@/store/cats";
-import { AxiosResponse } from "axios";
 
 interface LoginRequiredAlertDialogProps {
   isAlertDialogOpen: boolean;
@@ -43,7 +36,7 @@ const LoginRequiredAlertDialog = ({
   description,
 }: LoginRequiredAlertDialogProps) => {
   const [open, setOpen] = useState(false);
-  const isLoadingProfile = useStore($isLoadingProfile);
+
   const initialAction = "login";
   const [action, setAction] = useState<"login" | "register">(initialAction);
   const [isActioning, setIsActioning] = useState(false);
@@ -64,30 +57,30 @@ const LoginRequiredAlertDialog = ({
   };
 
   const onSubmit = async (values: Login | Register) => {
-    try {
-      setFullLoader(true);
-      setIsActioning(true);
-      let response: AxiosResponse<BaseResponse<AuthUserResDto>>;
-      if (isLogin(action)) {
-        response = await login(values as Login);
-      } else {
-        response = await register(values as Register);
-      }
-      const { accessToken, refreshToken } = response.data.data!;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      setOpen(false);
-      await getProfile();
-      if (action === "login") {
-        const cats = await getCats();
-        setCats(cats || []);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setFullLoader(false);
-      setIsActioning(false);
-    }
+    // try {
+    //   setFullLoader(true);
+    //   setIsActioning(true);
+    //   let response: AxiosResponse<BaseResponse<AuthUserResDto>>;
+    //   if (isLogin(action)) {
+    //     response = await login(values as Login);
+    //   } else {
+    //     response = await register(values as Register);
+    //   }
+    //   const { accessToken, refreshToken } = response.data.data!;
+    //   localStorage.setItem("accessToken", accessToken);
+    //   localStorage.setItem("refreshToken", refreshToken);
+    //   setOpen(false);
+    //   await getProfile();
+    //   if (action === "login") {
+    //     const cats = await getCats();
+    //     setCats(cats || []);
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // } finally {
+    //   setFullLoader(false);
+    //   setIsActioning(false);
+    // }
   };
 
   return (
@@ -102,9 +95,7 @@ const LoginRequiredAlertDialog = ({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction asChild>
               <DialogTrigger asChild>
-                <Button disabled={isLoadingProfile}>
-                  {title(initialAction)}
-                </Button>
+                <Button>{title(initialAction)}</Button>
               </DialogTrigger>
             </AlertDialogAction>
           </AlertDialogFooter>

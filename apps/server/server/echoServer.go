@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"server/config"
 	"server/database"
-	"server/user/handlers"
-	"server/user/repositories"
-	"server/user/usecases"
+	userHandlers "server/user/handlers"
+	userRepositories "server/user/repositories"
+	userUsecases "server/user/usecases"
+
+	catHandlers "server/cat/handlers"
+	catRepositories "server/cat/repositories"
+	catUsecases "server/cat/usecases"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -37,13 +41,18 @@ func (e *echoServer) Start() {
 }
 
 func (e *echoServer) initializeUserHttpHandler() {
-	userRepository := repositories.NewUserMongoRepository(e.db)
-	userUsecase := usecases.NewUserUsecaseImpl(userRepository)
-	userHttpHandler := handlers.NewUserHttpHandler(userUsecase)
-
+	userRepository := userRepositories.NewUserMongoRepository(e.db)
+	userUsecase := userUsecases.NewUserUsecaseImpl(userRepository)
+	userHandler := userHandlers.NewUserHttpHandler(userUsecase)
 	userGroup := e.app.Group("/api/v1/user")
-	userGroup.POST("/register", userHttpHandler.Register)
-	userGroup.POST("/login", userHttpHandler.Login)
-	userGroup.GET("/profile", userHttpHandler.GetProfile)
-	userGroup.POST("/refresh", userHttpHandler.Refresh)
+	userGroup.POST("/register", userHandler.Register)
+	userGroup.POST("/login", userHandler.Login)
+	userGroup.GET("/profile", userHandler.GetProfile)
+	userGroup.POST("/refresh", userHandler.Refresh)
+
+	catRepository := catRepositories.NewCatMongoRepository(e.db)
+	catUsecase := catUsecases.NewCatUsecaseImpl(catRepository)
+	catHandlers := catHandlers.NewCatHttpHandler(catUsecase)
+	catGroup := e.app.Group("/api/v1/cat")
+	catGroup.GET("", catHandlers.GetAll)
 }

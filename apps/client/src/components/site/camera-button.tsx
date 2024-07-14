@@ -2,22 +2,20 @@
 
 import Image from "next/image";
 import Webcam from "react-webcam";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { CameraIcon, SwitchCamera } from "lucide-react";
-import { useStore } from "@nanostores/react";
 
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
-import { $profile } from "@/store/profile";
-import * as catsService from "@/services/cats";
-import { setFullLoader } from "@/store/full-loader";
 import { Dialog, DialogContent } from "../ui/dialog";
-import whiteAndBrownCatLyingOnFloor from "@/images/white-and-brown-cat-lying-on-floor.jpg";
+
 import LoginRequiredAlertDialog from "../auth/login-required-dialog";
-import { setCats } from "@/store/cats";
+import whiteAndBrownCatLyingOnFloor from "@/images/white-and-brown-cat-lying-on-floor.jpg";
+import { useQuery } from "@tanstack/react-query";
+import { useUserQuery } from "@/hooks/use-user-query";
 
 const CameraButton = () => {
-  const profile = useStore($profile);
+  const { data: userProfile } = useQuery(useUserQuery());
 
   const [isUploading, setIsUploading] = useState(false);
 
@@ -63,25 +61,25 @@ const CameraButton = () => {
 
   const handleUploadClick = async () => {
     if (!image) return;
-    window.navigator.geolocation.getCurrentPosition(async (position) => {
-      try {
-        setFullLoader(true);
-        setIsUploading(true);
-        await catsService.addCat({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          image,
-        });
-        setOpen(false);
-        const cats = await catsService.getCats();
-        setCats(cats || []);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setFullLoader(false);
-        setIsUploading(false);
-      }
-    });
+    // window.navigator.geolocation.getCurrentPosition(async (position) => {
+    //   try {
+    //     setFullLoader(true);
+    //     setIsUploading(true);
+    //     await catsService.addCat({
+    //       latitude: position.coords.latitude,
+    //       longitude: position.coords.longitude,
+    //       image,
+    //     });
+    //     setOpen(false);
+    //     const cats = await catsService.getCats();
+    //     setCats(cats || []);
+    //   } catch (error) {
+    //     console.error(error);
+    //   } finally {
+    //     setFullLoader(false);
+    //     setIsUploading(false);
+    //   }
+    // });
   };
 
   return (
@@ -94,7 +92,7 @@ const CameraButton = () => {
     >
       <Button
         onClick={() => {
-          if (!profile) {
+          if (!userProfile) {
             setIsLoginRequiredDialogOpen(true);
             return;
           }

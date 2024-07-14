@@ -10,9 +10,12 @@ interface LayoutProps {
 }
 
 async function getCat(catId: string) {
-  const response = await fetch(`${env.URL}/api/cats/${catId}`, {
-    cache: "no-store",
-  });
+  const response = await fetch(
+    `${env.NEXT_PUBLIC_SERVER_URL}/api/cats/${catId}`,
+    {
+      cache: "no-store",
+    }
+  );
   const result: BaseResponse<Cat> = await response.json();
   return result.data!;
 }

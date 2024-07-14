@@ -1,22 +1,20 @@
 interface Cat {
-  _id: string;
+  id: string;
   latitude: number;
   longitude: number;
   imageUrl: string;
-  liked: boolean;
-  totalLikes: number;
+  likedByUsers: string[];
 }
 
 interface CatDetail extends Cat {
-  uploader: Profile;
+  uploader: UserProfile;
   createdAt: string;
 }
 
 interface CatDto {
-  _id: string;
+  id: string;
   latitude: number;
   longitude: number;
   imageUrl: string;
-  liked: boolean;
-  totalLikes: number;
+  likedByUsers: string[];
 }

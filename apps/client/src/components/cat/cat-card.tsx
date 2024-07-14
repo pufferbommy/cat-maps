@@ -2,32 +2,29 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useStore } from "@nanostores/react";
 
 import { cn } from "@/lib/utils";
 import LikeButton from "./like-button";
-import { $focusedCatId } from "@/store/cats";
 import { Card, CardContent } from "../ui/card";
 
 interface CatCardProps {
-  cat: Cat;
+  cat: CatDto;
   inCatPage?: boolean;
 }
 
 const CatCard = ({ cat, inCatPage }: CatCardProps) => {
-  const focusedCatId = useStore($focusedCatId);
   const router = useRouter();
 
   return (
     <Card
       onClick={() => {
         if (inCatPage) return;
-        router.push(`/cats/${cat._id}`);
+        router.push(`/cats/${cat.id}`);
       }}
-      id={`cat-${cat._id}`}
+      id={`cat-${cat.id}`}
       className={cn(
         "ring-offset-2 shrink-0 w-full rounded-lg max-w-[300px] md:max-w-full shadow overflow-hidden relative transition-transform",
-        focusedCatId === cat._id && "ring-2 ring-offset-4 ring-orange-500",
+        // focusedCatId === cat.id && "ring-2 ring-offset-4 ring-orange-500",
         !inCatPage && "cursor-pointer",
         inCatPage && "max-w-full"
       )}

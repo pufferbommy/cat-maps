@@ -11,7 +11,7 @@ import CommentForm from "./_components/comment-form";
 import { Separator } from "@/components/ui/separator";
 
 async function getCat(catId: string) {
-  const response = await fetch(`${env.URL}/api/cats/${catId}`, {
+  const response = await fetch(`${env.SERVER_URL}/api/cats/${catId}`, {
     cache: "no-store",
   });
   const result: BaseResponse<CatDetail> = await response.json();
@@ -19,9 +19,12 @@ async function getCat(catId: string) {
 }
 
 async function getComments(catId: string) {
-  const response = await fetch(`${env.URL}/api/comments?catId=${catId}`, {
-    cache: "no-store",
-  });
+  const response = await fetch(
+    `${env.SERVER_URL}/api/comments?catId=${catId}`,
+    {
+      cache: "no-store",
+    }
+  );
   const result: BaseResponse<IComment[]> = await response.json();
   return result.data!;
 }

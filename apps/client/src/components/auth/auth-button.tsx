@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useStore } from "@nanostores/react";
+import { useContext, useState } from "react";
 
 import {
   Dialog,
@@ -13,15 +12,11 @@ import {
 } from "../ui/dialog";
 import LoginForm from "./login-form";
 import { Button } from "../ui/button";
-import { getCats } from "@/services/cats";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
-import { getProfile, login, register } from "@/services/auth";
 import { Register } from "@/schema/register.schema";
-import { $isLoadingProfile } from "@/store/profile";
-import { setFullLoader } from "@/store/full-loader";
-import { setCats } from "@/store/cats";
-import { AxiosResponse } from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { useUserQuery } from "@/hooks/use-user-query";
 
 const AuthButton = ({
   initialAction,
@@ -30,7 +25,7 @@ const AuthButton = ({
   initialAction: "login" | "register";
   variant?: "outline" | "default";
 }) => {
-  const isLoadingProfile = useStore($isLoadingProfile);
+  const { data: userProfile, isLoading } = useQuery(useUserQuery());
 
   const [action, setAction] = useState(initialAction);
   const [isActioning, setIsActioning] = useState(false);
@@ -50,36 +45,36 @@ const AuthButton = ({
   };
 
   const onSubmit = async (values: Login | Register) => {
-    try {
-      setFullLoader(true);
-      setIsActioning(true);
-      let response: AxiosResponse<BaseResponse<AuthUserResDto>>;
-      if (isLogin(action)) {
-        response = await login(values as Login);
-      } else {
-        response = await register(values as Register);
-      }
-      const { accessToken, refreshToken } = response.data.data!;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      setOpen(false);
-      await getProfile();
-      if (action === "login") {
-        const cats = await getCats();
-        setCats(cats || []);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setFullLoader(false);
-      setIsActioning(false);
-    }
+    // try {
+    //   setFullLoader(true);
+    //   setIsActioning(true);
+    //   let response: AxiosResponse<BaseResponse<AuthUserResDto>>;
+    //   if (isLogin(action)) {
+    //     response = await login(values as Login);
+    //   } else {
+    //     response = await register(values as Register);
+    //   }
+    //   const { accessToken, refreshToken } = response.data.data!;
+    //   localStorage.setItem("accessToken", accessToken);
+    //   localStorage.setItem("refreshToken", refreshToken);
+    //   setOpen(false);
+    //   await getProfile();
+    //   if (action === "login") {
+    //     const cats = await getCats();
+    //     setCats(cats || []);
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // } finally {
+    //   setFullLoader(false);
+    //   setIsActioning(false);
+    // }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button disabled={isLoadingProfile} variant={variant}>
+        <Button disabled={isLoading} variant={variant}>
           {title(initialAction)}
         </Button>
       </DialogTrigger>

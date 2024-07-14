@@ -1,13 +1,9 @@
-interface AuthUserResDto {
+interface UserTokens {
   accessToken: string;
   refreshToken: string;
 }
 
-interface UserProfileResDto {
+interface UserProfile {
   id: string;
   username: string;
-}
-
-interface AuthPayload {
-  userId: string;
 }

@@ -1,21 +1,19 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { useStore } from "@nanostores/react";
+import { useQuery } from "@tanstack/react-query";
 import { MapContainer, TileLayer, AttributionControl } from "react-leaflet";
 
-import { $cats } from "@/store/cats";
 import CatMarker from "@/components/cat/cat-marker";
 import MapControl from "@/components/map/map-control";
+import { useCatQuery } from "@/hooks/use-cat-query";
 
 const Map = () => {
-  const cats = useStore($cats);
+  const { data: cats } = useQuery(useCatQuery());
 
-  // Define the maximum bounds
   const maxBounds: any = [
-    // [South, West], [North, East]
-    [-90, -180], // South West
-    [90, 180], // North East
+    [-90, -180],
+    [90, 180],
   ];
 
   return (
@@ -39,9 +37,7 @@ const Map = () => {
       />
       <AttributionControl position="bottomleft" />
       <MapControl />
-      {cats.map((cat) => (
-        <CatMarker key={cat._id} cat={cat} />
-      ))}
+      {cats?.map((cat) => <CatMarker key={cat.id} cat={cat} />)}
     </MapContainer>
   );
 };

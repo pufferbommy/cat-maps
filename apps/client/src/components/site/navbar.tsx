@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { toast } from "sonner";
+import { useState } from "react";
 import Avatar from "boring-avatars";
-import { useEffect, useState } from "react";
-import { useStore } from "@nanostores/react";
 import { usePathname } from "next/navigation";
 import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 
@@ -20,17 +20,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "../ui/skeleton";
-import AuthButton from "../auth/auth-button";
-import { getProfile } from "@/services/auth";
-import { clearMyLikedCats } from "@/store/cats";
-import { setFullLoader } from "@/store/full-loader";
-import { $isLoadingProfile, $profile, clearProfile } from "@/store/profile";
-import Link from "next/link";
 import CameraButton from "./camera-button";
+import AuthButton from "../auth/auth-button";
+import { useQuery } from "@tanstack/react-query";
+import { useUserQuery } from "@/hooks/use-user-query";
 
 const Navbar = () => {
-  const profile = useStore($profile);
-  const isLoadingProfile = useStore($isLoadingProfile);
+  const { data: userProfile, isLoading } = useQuery(useUserQuery());
   const [open, setOpen] = useState(false);
 
   const pathname = usePathname();
@@ -38,30 +34,12 @@ const Navbar = () => {
   const isCatDetailPage = pathname.includes("/cats/");
 
   const logout = () => {
-    setFullLoader(true);
     setTimeout(() => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       toast.success("Log out successful");
-      clearMyLikedCats();
-      clearProfile();
-      setFullLoader(false);
     }, 250);
   };
-
-  useEffect(() => {
-    const getProfileAbortController = new AbortController();
-
-    (async () => {
-      setFullLoader(true);
-      await getProfile(getProfileAbortController.signal);
-      setFullLoader(false);
-    })();
-
-    return () => {
-      getProfileAbortController.abort();
-    };
-  }, []);
 
   return (
     <div className="border-b border-b-gray-100 h-[77px]">
@@ -79,10 +57,10 @@ const Navbar = () => {
             </h1>
           </Link>
         </div>
-        {!isLoadingProfile ? (
+        {!isLoading ? (
           <div className="flex gap-4 items-center">
             <CameraButton />
-            {!profile ? (
+            {!userProfile ? (
               <div className="flex gap-2">
                 <AuthButton variant="outline" initialAction="login" />
                 <AuthButton initialAction="register" />
@@ -94,8 +72,12 @@ const Navbar = () => {
                     variant={!open ? "ghost" : "secondary"}
                     className="gap-2 h-full"
                   >
-                    <Avatar variant="beam" size={28} name={profile?.username} />
-                    <span className="capitalize">{profile?.username}</span>
+                    <Avatar
+                      variant="beam"
+                      size={28}
+                      name={userProfile.username}
+                    />
+                    <span className="capitalize">{userProfile.username}</span>
                     <ChevronDown size={16} />
                   </Button>
                 </DropdownMenuTrigger>
