@@ -9,7 +9,7 @@ import { useUserQuery } from "@/hooks/use-user-query";
 import LoginRequiredAlertDialog from "../auth/login-required-dialog";
 
 interface LikeButtonProps {
-  cat: CatDto;
+  cat: Cat;
 }
 
 const LikeButton = ({ cat }: LikeButtonProps) => {

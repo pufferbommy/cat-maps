@@ -1,13 +1,17 @@
 "use client";
 
 import * as L from "leaflet";
+import { useContext } from "react";
 import { Marker, useMap } from "react-leaflet";
+
+import { ActiveCatContext } from "@/contexts/active-cat-context";
 
 const icon = L.divIcon({
   html: "<div class='text-4xl absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2'>🐱</div>",
 });
 
-const CatMarker = ({ cat }: { cat: CatDto }) => {
+const CatMarker = ({ cat }: { cat: Cat }) => {
+  const activeCatContext = useContext(ActiveCatContext);
   const map = useMap();
 
   const position = {
@@ -27,6 +31,7 @@ const CatMarker = ({ cat }: { cat: CatDto }) => {
             behavior: "smooth",
             block: "center",
           });
+          activeCatContext?.setId(cat.id);
         },
       }}
       icon={icon}

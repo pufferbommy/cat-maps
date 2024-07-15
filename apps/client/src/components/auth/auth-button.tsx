@@ -1,6 +1,7 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import {
   Dialog,
@@ -12,28 +13,30 @@ import {
 } from "../ui/dialog";
 import LoginForm from "./login-form";
 import { Button } from "../ui/button";
+import { login } from "@/mutations/login";
 import RegisterForm from "./register-form";
+import { queryClient } from "@/app/layout";
 import { Login } from "@/schema/login.schema";
+import { register } from "@/mutations/register";
 import { Register } from "@/schema/register.schema";
-import { useQuery } from "@tanstack/react-query";
 import { useUserQuery } from "@/hooks/use-user-query";
+
+type Action = "login" | "register";
 
 const AuthButton = ({
   initialAction,
   variant,
 }: {
-  initialAction: "login" | "register";
+  initialAction: Action;
   variant?: "outline" | "default";
 }) => {
-  const { data: userProfile, isLoading } = useQuery(useUserQuery());
-
+  const { isLoading } = useQuery(useUserQuery());
   const [action, setAction] = useState(initialAction);
-  const [isActioning, setIsActioning] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const isLogin = (action: typeof initialAction) => action === "login";
+  const isLogin = (action: Action) => action === "login";
 
-  const title = (action: typeof initialAction, inverse: boolean = false) => {
+  const title = (action: Action, inverse: boolean = false) => {
     if (inverse) {
       return isLogin(action) ? "Register" : "Log in";
     }
@@ -44,31 +47,26 @@ const AuthButton = ({
     setAction((prev) => (isLogin(prev) ? "register" : "login"));
   };
 
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    },
+  });
+
+  const registerMutation = useMutation({
+    mutationFn: register,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    },
+  });
+
   const onSubmit = async (values: Login | Register) => {
-    // try {
-    //   setFullLoader(true);
-    //   setIsActioning(true);
-    //   let response: AxiosResponse<BaseResponse<AuthUserResDto>>;
-    //   if (isLogin(action)) {
-    //     response = await login(values as Login);
-    //   } else {
-    //     response = await register(values as Register);
-    //   }
-    //   const { accessToken, refreshToken } = response.data.data!;
-    //   localStorage.setItem("accessToken", accessToken);
-    //   localStorage.setItem("refreshToken", refreshToken);
-    //   setOpen(false);
-    //   await getProfile();
-    //   if (action === "login") {
-    //     const cats = await getCats();
-    //     setCats(cats || []);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // } finally {
-    //   setFullLoader(false);
-    //   setIsActioning(false);
-    // }
+    if (isLogin(action)) {
+      loginMutation.mutate(values);
+    } else {
+      registerMutation.mutate(values);
+    }
   };
 
   return (
@@ -83,9 +81,12 @@ const AuthButton = ({
           <DialogTitle>{title(action)}</DialogTitle>
         </DialogHeader>
         {isLogin(action) ? (
-          <LoginForm isLoading={isActioning} onSubmit={onSubmit} />
+          <LoginForm isLoading={loginMutation.isPending} onSubmit={onSubmit} />
         ) : (
-          <RegisterForm isLoading={isActioning} onSubmit={onSubmit} />
+          <RegisterForm
+            isLoading={registerMutation.isPending}
+            onSubmit={onSubmit}
+          />
         )}
         <DialogFooter>
           <div className="flex items-center gap-2 text-sm justify-center">

@@ -14,6 +14,6 @@ export const refreshUserTokensQuery = async () => {
       }),
     }
   );
-  const result: BaseResponse<UserTokens> = await response.json();
+  const result: BaseResponse<AuthTokens> = await response.json();
   return result;
 };

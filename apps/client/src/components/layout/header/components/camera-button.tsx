@@ -2,20 +2,20 @@
 
 import Image from "next/image";
 import Webcam from "react-webcam";
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { CameraIcon, SwitchCamera } from "lucide-react";
 
-import { Button } from "../ui/button";
-import { Skeleton } from "../ui/skeleton";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Button } from "../../../ui/button";
+import { Skeleton } from "../../../ui/skeleton";
+import { Dialog, DialogContent } from "../../../ui/dialog";
 
-import LoginRequiredAlertDialog from "../auth/login-required-dialog";
+import LoginRequiredAlertDialog from "../../../auth/login-required-dialog";
 import whiteAndBrownCatLyingOnFloor from "@/images/white-and-brown-cat-lying-on-floor.jpg";
 import { useQuery } from "@tanstack/react-query";
 import { useUserQuery } from "@/hooks/use-user-query";
 
 const CameraButton = () => {
-  const { data: userProfile } = useQuery(useUserQuery());
+  const { data: userProfile, isLoading } = useQuery(useUserQuery());
 
   const [isUploading, setIsUploading] = useState(false);
 
@@ -98,11 +98,10 @@ const CameraButton = () => {
           }
           setOpen(true);
         }}
-        variant="secondary"
-        className="gap-2"
+        disabled={isLoading}
+        className="fixed size-14 right-4 bottom-4 z-50 rounded-full"
       >
-        <CameraIcon size={16} />
-        Snap
+        <CameraIcon size={20} />
       </Button>
       <DialogContent className="w-[75dvw] max-w-[500px] md:w-[50dvw]">
         <div

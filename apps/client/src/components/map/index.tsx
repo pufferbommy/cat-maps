@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MapContainer, TileLayer, AttributionControl } from "react-leaflet";
 
 import CatMarker from "@/components/cat/cat-marker";
-import MapControl from "@/components/map/map-control";
+import MapControl from "@/components/map/components/map-control";
 import { useCatQuery } from "@/hooks/use-cat-query";
 
 const Map = () => {
@@ -25,7 +25,7 @@ const Map = () => {
       zoom={2}
       minZoom={2}
       maxZoom={16}
-      className="z-[49] w-full h-full relative"
+      className="z-[49] relative h-full w-full"
       zoomControl={false}
       attributionControl={false}
       maxBounds={maxBounds}
