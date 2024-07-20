@@ -1,3 +1,0 @@
-interface Like {
-  liked: boolean;
-}

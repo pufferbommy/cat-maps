@@ -5,3 +5,7 @@ interface Cat {
   imageUrl: string;
   likedByUsers: string[];
 }
+
+interface ToggleLikeData {
+  catId: string;
+}
