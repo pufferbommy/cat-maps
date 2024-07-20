@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useUserQuery } from "@/hooks/use-user-query";
 import AuthButton from "@/components/auth/auth-button";
 import { LogoutButton } from "./components/logout-button";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const Navbar = () => {
   const { data: userProfile, isLoading } = useQuery(useUserQuery());
@@ -18,8 +19,8 @@ const Navbar = () => {
         <Link className="font-bold text-lg" href="/">
           Cat Maps
         </Link>
-        {!isLoading ? (
-          <>
+        <div className="flex gap-4">
+          {!isLoading ? (
             <div className="flex gap-4 items-center">
               {!userProfile ? (
                 <div className="flex gap-2">
@@ -40,14 +41,15 @@ const Navbar = () => {
                 </>
               )}
             </div>
-          </>
-        ) : (
-          <div className="flex gap-2 items-center *:rounded-full">
-            <Skeleton className="w-8 h-8" />
-            <Skeleton className="w-12 h-4" />
-            <Skeleton className="size-4" />
-          </div>
-        )}
+          ) : (
+            <div className="flex gap-2 items-center *:rounded-full">
+              <Skeleton className="w-8 h-8" />
+              <Skeleton className="w-12 h-4" />
+              <Skeleton className="size-4" />
+            </div>
+          )}
+          <ModeToggle />
+        </div>
       </div>
     </header>
   );

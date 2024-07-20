@@ -16,14 +16,10 @@ export const login = async (values: Login) => {
   const result: BaseResponse<AuthTokens> = await response.json();
   if (response.status === 200) {
     toast.success(result.message);
-    localStorage.setItem(
-      "accessToken",
-      JSON.stringify(result.data?.accessToken)
-    );
-    localStorage.setItem(
-      "refreshToken",
-      JSON.stringify(result.data?.refreshToken)
-    );
+    if (result.data) {
+      localStorage.setItem("accessToken", result.data.accessToken);
+      localStorage.setItem("refreshToken", result.data.refreshToken);
+    }
   } else {
     toast.error(result.message);
   }

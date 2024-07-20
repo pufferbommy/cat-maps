@@ -109,7 +109,7 @@ func (u *userUsecaseImpl) Refresh(m *models.RefreshTokensData) (*entities.AuthUs
 }
 
 func (u *userUsecaseImpl) generateTokens(userId string) *entities.AuthUserResDto {
-	accessToken := util.CreateToken(userId, time.Now().Add(time.Hour).Unix())        // 1 hour
+	accessToken := util.CreateToken(userId, time.Now().Add(time.Minute*15).Unix())   // 15 minutes
 	refreshToken := util.CreateToken(userId, time.Now().Add(time.Hour*24*15).Unix()) // 15 days
 	return &entities.AuthUserResDto{
 		AccessToken:  accessToken,

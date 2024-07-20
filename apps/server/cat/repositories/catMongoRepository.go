@@ -42,3 +42,20 @@ func (r *catMongoRepository) GetAll() ([]entities.CatDto, error) {
 	}
 	return results, nil
 }
+
+func (r *catMongoRepository) Get(filter interface{}) (*entities.Cat, error) {
+	result := new(entities.Cat)
+	err := r.db.GetDb().Database("catMaps").Collection("cats").FindOne(context.TODO(), filter).Decode(result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (r *catMongoRepository) Update(filter interface{}, update interface{}) error {
+	err := r.db.GetDb().Database("catMaps").Collection("cats").FindOneAndUpdate(context.TODO(), filter, update).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -51,8 +51,9 @@ func (e *echoServer) initializeUserHttpHandler() {
 	userGroup.POST("/refresh", userHandler.Refresh)
 
 	catRepository := catRepositories.NewCatMongoRepository(e.db)
-	catUsecase := catUsecases.NewCatUsecaseImpl(catRepository)
+	catUsecase := catUsecases.NewCatUsecaseImpl(catRepository, userRepository)
 	catHandlers := catHandlers.NewCatHttpHandler(catUsecase)
 	catGroup := e.app.Group("/api/v1/cat")
 	catGroup.GET("", catHandlers.GetAll)
+	catGroup.PATCH("/toggle-like", catHandlers.ToggleLike)
 }
