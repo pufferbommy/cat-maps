@@ -5,7 +5,7 @@ import (
 )
 
 type CatRepository interface {
-	GetAll() ([]entities.CatDto, error)
+	GetAll() ([]entities.Cat, error)
 	Get(filter interface{}) (*entities.Cat, error)
 	Update(filter interface{}, update interface{}) error
 	Add(data *entities.AddCatData) error

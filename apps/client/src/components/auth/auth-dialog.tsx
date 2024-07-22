@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 import {
   Dialog,
@@ -8,35 +6,30 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog";
-import {
-  useGetUserProfile,
-  useUserLogin,
-  useUserRegister,
-} from "@/hooks/use-user";
 import LoginForm from "./login-form";
 import { Button } from "../ui/button";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
 import { Register } from "@/schema/register.schema";
+import { useUserLogin, useUserRegister } from "@/hooks/use-user";
 
-type Action = "login" | "register";
+type AuthAction = "login" | "register";
 
-const AuthButton = ({
-  initialAction,
-  variant,
-}: {
-  initialAction: Action;
-  variant?: "outline" | "default";
-}) => {
-  const { isLoading } = useGetUserProfile();
+interface AuthDialogProps {
+  trigger?: ReactNode;
+  initialAction: AuthAction;
+}
+
+const AuthDialog = ({ trigger, initialAction }: AuthDialogProps) => {
   const [action, setAction] = useState(initialAction);
   const [open, setOpen] = useState(false);
+  const userLogin = useUserLogin();
+  const userRegister = useUserRegister();
 
-  const isLogin = (action: Action) => action === "login";
+  const isLogin = (action: AuthAction) => action === "login";
 
-  const title = (action: Action, inverse: boolean = false) => {
+  const title = (action: AuthAction, inverse: boolean = false) => {
     if (inverse) {
       return isLogin(action) ? "Register" : "Log in";
     }
@@ -47,34 +40,31 @@ const AuthButton = ({
     setAction((prev) => (isLogin(prev) ? "register" : "login"));
   };
 
-  const userLogin = useUserLogin();
-  const userRegister = useUserRegister();
-
-  const onSubmit = async (values: Login | Register) => {
+  const handleSubmit = (data: Login | Register) => {
     if (isLogin(action)) {
-      userLogin.mutate(values as Login);
+      userLogin.mutate(data as Login, {
+        onSuccess: () => setOpen(false),
+      });
     } else {
-      userRegister.mutate(values as Register);
+      userRegister.mutate(data as Register, {
+        onSuccess: () => setOpen(false),
+      });
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button disabled={isLoading} variant={variant}>
-          {title(initialAction)}
-        </Button>
-      </DialogTrigger>
+      {trigger}
       <DialogContent className="max-w-[400px]">
         <DialogHeader>
           <DialogTitle>{title(action)}</DialogTitle>
         </DialogHeader>
         {isLogin(action) ? (
-          <LoginForm isLoading={userLogin.isPending} onSubmit={onSubmit} />
+          <LoginForm isLoading={userLogin.isPending} onSubmit={handleSubmit} />
         ) : (
           <RegisterForm
             isLoading={userRegister.isPending}
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
           />
         )}
         <DialogFooter>
@@ -94,4 +84,4 @@ const AuthButton = ({
   );
 };
 
-export default AuthButton;
+export default AuthDialog;

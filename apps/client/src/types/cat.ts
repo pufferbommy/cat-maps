@@ -3,7 +3,8 @@ interface Cat {
   latitude: number;
   longitude: number;
   image: string;
-  likedByUsers: string[];
+  currentUserLiked: boolean;
+  totalLikes: number;
 }
 
 interface ToggleLikeData {

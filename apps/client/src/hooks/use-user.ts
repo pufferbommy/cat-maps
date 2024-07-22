@@ -4,8 +4,9 @@ import axiosInstance from "@/lib/axios";
 import { Login } from "@/schema/login.schema";
 import { queryClient } from "@/lib/react-query";
 import { Register } from "@/schema/register.schema";
+import { keys as catsKeys } from "./use-cats";
 
-const keys = {
+export const keys = {
   getUserProfile: ["user", "profile"],
 };
 
@@ -25,6 +26,7 @@ export const useUserLogin = () => {
         localStorage.setItem("refreshToken", result.refreshToken);
       }
       queryClient.invalidateQueries({ queryKey: keys.getUserProfile });
+      queryClient.invalidateQueries({ queryKey: catsKeys.getAllCats });
     },
   });
 };
@@ -45,6 +47,7 @@ export const useUserRegister = () => {
         localStorage.setItem("refreshToken", result.refreshToken);
       }
       queryClient.invalidateQueries({ queryKey: keys.getUserProfile });
+      queryClient.invalidateQueries({ queryKey: catsKeys.getAllCats });
     },
   });
 };

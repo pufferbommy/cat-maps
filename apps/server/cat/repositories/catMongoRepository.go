@@ -2,51 +2,40 @@ package repositories
 
 import (
 	"context"
-	"log"
 	"server/cat/entities"
+	"server/config"
 	"server/database"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type catMongoRepository struct {
-	db database.MongoDatabase
+	coll *mongo.Collection
 }
 
 func NewCatMongoRepository(db database.MongoDatabase) CatRepository {
 	return &catMongoRepository{
-		db: db,
+		coll: db.GetDb().Database(config.GetConfig().DbName).Collection("cats"),
 	}
 }
 
-func (r *catMongoRepository) GetAll() ([]entities.CatDto, error) {
+func (r *catMongoRepository) GetAll() ([]entities.Cat, error) {
 	filter := bson.M{}
-	cursor, err := r.db.GetDb().Database("catMaps").Collection("cats").Find(context.TODO(), filter)
+	cursor, err := r.coll.Find(context.TODO(), filter)
 	if err != nil {
 		panic(err)
 	}
-	var results []entities.CatDto
-	for cursor.Next(context.TODO()) {
-		var result entities.Cat
-		if err = cursor.Decode(&result); err != nil {
-			log.Fatal(err)
-		}
+	var results []entities.Cat
+	cursor.All(context.TODO(), &results)
 
-		results = append(results, entities.CatDto{
-			Id:           result.Id,
-			Latitude:     result.Latitude,
-			Longitude:    result.Longitude,
-			Image:        result.Image,
-			LikedByUsers: result.LikedByUsers,
-		})
-	}
 	return results, nil
 }
 
 func (r *catMongoRepository) Get(filter interface{}) (*entities.Cat, error) {
 	result := new(entities.Cat)
-	err := r.db.GetDb().Database("catMaps").Collection("cats").FindOne(context.TODO(), filter).Decode(result)
+	err := r.coll.FindOne(context.TODO(), filter).Decode(result)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +43,7 @@ func (r *catMongoRepository) Get(filter interface{}) (*entities.Cat, error) {
 }
 
 func (r *catMongoRepository) Update(filter interface{}, update interface{}) error {
-	err := r.db.GetDb().Database("catMaps").Collection("cats").FindOneAndUpdate(context.TODO(), filter, update).Err()
+	err := r.coll.FindOneAndUpdate(context.TODO(), filter, update).Err()
 	if err != nil {
 		return err
 	}
@@ -70,7 +59,7 @@ func (r *catMongoRepository) Add(data *entities.AddCatData) error {
 		LikedByUsers: []string{},
 		CreatedAt:    time.Now(),
 	}
-	_, err := r.db.GetDb().Database("catMaps").Collection("cats").InsertOne(context.TODO(), document)
+	_, err := r.coll.InsertOne(context.TODO(), document)
 	if err != nil {
 		return err
 	}

@@ -2,10 +2,12 @@
 
 import Avatar from "boring-avatars";
 
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserProfile } from "@/hooks/use-user";
 import { ModeToggle } from "@/components/mode-toggle";
-import AuthButton from "@/components/auth/auth-button";
+import AuthDialog from "@/components/auth/auth-dialog";
+import { DialogTrigger } from "@/components/ui/dialog";
 import { LogoutButton } from "./components/logout-button";
 
 const Navbar = () => {
@@ -20,8 +22,22 @@ const Navbar = () => {
             <div className="flex gap-4 items-center">
               {!userProfile ? (
                 <div className="flex gap-2">
-                  <AuthButton variant="outline" initialAction="login" />
-                  <AuthButton initialAction="register" />
+                  <AuthDialog
+                    initialAction="login"
+                    trigger={
+                      <DialogTrigger asChild>
+                        <Button variant="outline">Log in</Button>
+                      </DialogTrigger>
+                    }
+                  />
+                  <AuthDialog
+                    initialAction="register"
+                    trigger={
+                      <DialogTrigger asChild>
+                        <Button>Register</Button>
+                      </DialogTrigger>
+                    }
+                  />
                 </div>
               ) : (
                 <>

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"server/config"
 	"server/database"
+	"server/middleware"
 	userHandlers "server/user/handlers"
 	userRepositories "server/user/repositories"
 	userUsecases "server/user/usecases"
@@ -13,7 +14,7 @@ import (
 	catUsecases "server/cat/usecases"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 )
 
 type echoServer struct {
@@ -33,7 +34,7 @@ func NewEchoServer(config *config.Config, db database.MongoDatabase) Server {
 }
 
 func (e *echoServer) Start() {
-	e.app.Use(middleware.CORSWithConfig(middleware.CORSConfig{}))
+	e.app.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{}))
 
 	e.initializeUserHttpHandler()
 
@@ -47,14 +48,14 @@ func (e *echoServer) initializeUserHttpHandler() {
 	userGroup := e.app.Group("/api/v1/user")
 	userGroup.POST("/register", userHandler.Register)
 	userGroup.POST("/login", userHandler.Login)
-	userGroup.GET("/profile", userHandler.GetProfile)
+	userGroup.GET("/profile", userHandler.GetProfile, middleware.AuthenticationMiddleware)
 	userGroup.POST("/refresh", userHandler.Refresh)
 
 	catRepository := catRepositories.NewCatMongoRepository(e.db)
 	catUsecase := catUsecases.NewCatUsecaseImpl(catRepository, userRepository)
 	catHandlers := catHandlers.NewCatHttpHandler(catUsecase)
 	catGroup := e.app.Group("/api/v1/cat")
-	catGroup.GET("", catHandlers.GetAll)
-	catGroup.POST("", catHandlers.Add)
-	catGroup.PATCH("/toggle-like", catHandlers.ToggleLike)
+	catGroup.GET("", catHandlers.GetAll, middleware.AuthenticationMiddleware)
+	catGroup.POST("", catHandlers.Add, middleware.AuthenticationMiddleware)
+	catGroup.PATCH("/toggle-like", catHandlers.ToggleLike, middleware.AuthenticationMiddleware)
 }

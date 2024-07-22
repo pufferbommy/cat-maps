@@ -1,13 +1,10 @@
 package handlers
 
 import (
-	"errors"
 	"net/http"
 	"server/cat/entities"
 	"server/cat/models"
 	"server/cat/usecases"
-	"server/util"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -25,7 +22,7 @@ func NewCatHttpHandler(catUsecase usecases.CatUsecase) CatHandler {
 }
 
 func (h *catHttpHandler) GetAll(c echo.Context) error {
-	res, err := h.catUsecase.GetAll()
+	res, err := h.catUsecase.GetAll(c.Get("userId").(string))
 	if err != nil {
 		return response(c, http.StatusInternalServerError, err.Error(), nil)
 	}
@@ -41,24 +38,12 @@ func (h *catHttpHandler) ToggleLike(c echo.Context) error {
 		return response(c, http.StatusBadRequest, "bad request", nil)
 	}
 
-	token := strings.Split(c.Request().Header.Get("Authorization"), "Bearer ")[1]
-	if token == "" {
-		return response(c, http.StatusUnauthorized, "unauthorized", nil)
+	data := &entities.ToggleLikeData{
+		CatId:  reqBody.CatId,
+		UserId: c.Get("userId").(string),
 	}
 
-	claims, err := util.VerifyToken(token)
-	if err != nil {
-		return err
-	}
-
-	userId, ok := claims["userId"].(string)
-	if !ok {
-		return errors.New("failed to get user id")
-	}
-
-	reqBody.UserId = userId
-
-	toggleLikeErr := h.catUsecase.ToggleLike(reqBody)
+	toggleLikeErr := h.catUsecase.ToggleLike(data)
 	if toggleLikeErr != nil {
 		return response(c, http.StatusInternalServerError, toggleLikeErr.Error(), nil)
 	}
@@ -73,22 +58,7 @@ func (h *catHttpHandler) Add(c echo.Context) error {
 		return response(c, http.StatusBadRequest, "bad request", nil)
 	}
 
-	token := strings.Split(c.Request().Header.Get("Authorization"), "Bearer ")[1]
-	if token == "" {
-		return response(c, http.StatusUnauthorized, "unauthorized", nil)
-	}
-
-	claims, err := util.VerifyToken(token)
-	if err != nil {
-		return err
-	}
-
-	userId, ok := claims["userId"].(string)
-	if !ok {
-		return errors.New("failed to get user id")
-	}
-
-	userObjectId, _ := primitive.ObjectIDFromHex(userId)
+	userObjectId, _ := primitive.ObjectIDFromHex(c.Get("userId").(string))
 
 	data := &entities.AddCatData{
 		Latitude:  reqBody.Latitude,

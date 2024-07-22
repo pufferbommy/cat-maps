@@ -11,13 +11,8 @@ const icon = L.divIcon({
 });
 
 const CatMarker = ({ cat }: { cat: Cat }) => {
-  const activeCatContext = useContext(ActiveCatContext);
   const map = useMap();
-
-  const position = {
-    lat: cat.latitude,
-    lng: cat.longitude,
-  };
+  const activeCatContext = useContext(ActiveCatContext);
 
   return (
     <Marker
@@ -35,7 +30,7 @@ const CatMarker = ({ cat }: { cat: Cat }) => {
         },
       }}
       icon={icon}
-      position={position}
+      position={[cat.latitude, cat.longitude]}
     />
   );
 };

@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios";
 import { queryClient } from "@/lib/react-query";
 
-const keys = {
+export const keys = {
   getAllCats: ["cats"],
 };
 

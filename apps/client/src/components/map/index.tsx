@@ -1,5 +1,3 @@
-"use client";
-
 import "leaflet/dist/leaflet.css";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { MapContainer, TileLayer, AttributionControl } from "react-leaflet";

@@ -1,8 +1,7 @@
 package models
 
 type ToggleLikeData struct {
-	UserId string
-	CatId  string `json:"catId"`
+	CatId string `json:"catId"`
 }
 
 type AddCatData struct {

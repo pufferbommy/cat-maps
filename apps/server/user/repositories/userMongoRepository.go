@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"errors"
+	"server/config"
 	"server/database"
 	"server/user/entities"
 
@@ -12,22 +13,22 @@ import (
 )
 
 type userMongoRepository struct {
-	db database.MongoDatabase
+	coll *mongo.Collection
 }
 
 func NewUserMongoRepository(db database.MongoDatabase) UserRepository {
 	return &userMongoRepository{
-		db: db,
+		coll: db.GetDb().Database(config.GetConfig().DbName).Collection("users"),
 	}
 }
 
-func (u *userMongoRepository) CreateUserData(e *entities.CreateUserReqDto) (*entities.CreateUserResDto, error) {
+func (repo *userMongoRepository) CreateUserData(e *entities.CreateUserReqDto) (*entities.CreateUserResDto, error) {
 	user := &entities.User{
 		Username: e.Username,
 		Password: e.Password,
 	}
 
-	result, err := u.db.GetDb().Database("catMaps").Collection("users").InsertOne(context.TODO(), user)
+	result, err := repo.coll.InsertOne(context.TODO(), user)
 	if err != nil {
 		return nil, err
 	}
@@ -40,11 +41,11 @@ func (u *userMongoRepository) CreateUserData(e *entities.CreateUserReqDto) (*ent
 	return &entities.CreateUserResDto{Id: id}, nil
 }
 
-func (u *userMongoRepository) FindByUsername(username string) (*entities.User, error) {
+func (repo *userMongoRepository) FindByUsername(username string) (*entities.User, error) {
 	var user entities.User
 	filter := bson.M{"username": username}
 
-	err := u.db.GetDb().Database("catMaps").Collection("users").FindOne(context.TODO(), filter).Decode(&user)
+	err := repo.coll.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, nil
@@ -55,14 +56,14 @@ func (u *userMongoRepository) FindByUsername(username string) (*entities.User, e
 	return &user, nil
 }
 
-func (u *userMongoRepository) FindByUserId(userId string) (*entities.User, error) {
+func (repo *userMongoRepository) FindByUserId(userId string) (*entities.User, error) {
 	var user entities.User
 	objectId, err := primitive.ObjectIDFromHex(userId)
 	if err != nil {
 		return nil, err
 	}
 	filter := bson.M{"_id": objectId}
-	decodeErr := u.db.GetDb().Database("catMaps").Collection("users").FindOne(context.TODO(), filter).Decode(&user)
+	decodeErr := repo.coll.FindOne(context.TODO(), filter).Decode(&user)
 	if decodeErr != nil {
 		if errors.Is(decodeErr, mongo.ErrNoDocuments) {
 			return nil, nil

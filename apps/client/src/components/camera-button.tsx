@@ -8,7 +8,9 @@ import { Skeleton } from "./ui/skeleton";
 import { useAddCat } from "@/hooks/use-cats";
 import { Dialog, DialogContent } from "./ui/dialog";
 import { useGetUserProfile } from "@/hooks/use-user";
-import LoginRequiredAlertDialog from "./auth/login-required-dialog";
+import LoginRequiredAlertDialog, {
+  LoginRequiredAlertDialogHandle,
+} from "./auth/login-required-dialog";
 
 const CameraButton = () => {
   const { data: userProfile, isLoading } = useGetUserProfile();
@@ -16,8 +18,6 @@ const CameraButton = () => {
   const [image, setImage] = useState<string | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
-  const [isLoginRequiredDialogOpen, setIsLoginRequiredDialogOpen] =
-    useState(false);
 
   const cameraWrapperRef = useRef<HTMLDivElement>(null);
   const webcamRef = useRef<Webcam>(null);
@@ -43,25 +43,33 @@ const CameraButton = () => {
         image,
       };
       addCat.mutate(data);
+      setOpen(false);
     });
   };
 
+  const loginRequiredAlertDialogRef =
+    useRef<LoginRequiredAlertDialogHandle>(null);
+
+  const handleCameraClick = () => {
+    if (!userProfile) {
+      return loginRequiredAlertDialogRef.current?.open();
+    }
+    setOpen(true);
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open);
+    setImage(null);
+  };
+
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(open) => {
-        setOpen(open);
-        setImage(null);
-      }}
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <LoginRequiredAlertDialog
+        ref={loginRequiredAlertDialogRef}
+        description="You need to login to capture a cat"
+      />
       <Button
-        onClick={() => {
-          if (!userProfile) {
-            setIsLoginRequiredDialogOpen(true);
-            return;
-          }
-          setOpen(true);
-        }}
+        onClick={handleCameraClick}
         disabled={isLoading}
         className="fixed size-14 right-4 bottom-4 z-50 rounded-full"
       >
@@ -75,7 +83,7 @@ const CameraButton = () => {
           {!image ? (
             <>
               {!isCameraActive && <Skeleton className="w-full h-full" />}
-              <Webcam
+              {/* <Webcam
                 id="webcam"
                 onLoadedData={() => setIsCameraActive(true)}
                 audio={false}
@@ -87,7 +95,7 @@ const CameraButton = () => {
                   height: 500,
                 }}
                 screenshotFormat="image/jpeg"
-              />
+              /> */}
             </>
           ) : (
             <Image src={image} alt="" fill />
@@ -114,11 +122,6 @@ const CameraButton = () => {
           )}
         </div>
       </DialogContent>
-      <LoginRequiredAlertDialog
-        description="You need to login to upload a cat."
-        isAlertDialogOpen={isLoginRequiredDialogOpen}
-        setIsAlertDialogOpen={setIsLoginRequiredDialogOpen}
-      />
     </Dialog>
   );
 };

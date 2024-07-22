@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"server/cat/entities"
-	"server/cat/models"
 	catRepositories "server/cat/repositories"
 	userRepositories "server/user/repositories"
 
@@ -22,12 +21,37 @@ func NewCatUsecaseImpl(catRepository catRepositories.CatRepository, userReposito
 	}
 }
 
-func (u *catUsecaseImpl) GetAll() ([]entities.CatDto, error) {
-	return u.catRepository.GetAll()
+func (u *catUsecaseImpl) GetAll(currentUserId string) ([]entities.CatDto, error) {
+	cats, err := u.catRepository.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	catDtos := []entities.CatDto{}
+
+	for _, cat := range cats {
+		catDto := entities.CatDto{
+			Id:               cat.Id,
+			Latitude:         cat.Latitude,
+			Longitude:        cat.Longitude,
+			Image:            cat.Image,
+			TotalLikes:       len(cat.LikedByUsers),
+			CurrentUserLiked: false,
+		}
+		for _, likedByUser := range cat.LikedByUsers {
+			if currentUserId == likedByUser {
+				catDto.CurrentUserLiked = true
+				break
+			}
+		}
+		catDtos = append(catDtos, catDto)
+	}
+
+	return catDtos, nil
 }
 
-func (u *catUsecaseImpl) ToggleLike(m *models.ToggleLikeData) error {
-	id, _ := primitive.ObjectIDFromHex(m.CatId)
+func (u *catUsecaseImpl) ToggleLike(d *entities.ToggleLikeData) error {
+	id, _ := primitive.ObjectIDFromHex(d.CatId)
 	filter := bson.M{
 		"_id": id,
 	}
@@ -37,7 +61,7 @@ func (u *catUsecaseImpl) ToggleLike(m *models.ToggleLikeData) error {
 	}
 
 	for i, likedByUser := range cat.LikedByUsers {
-		if likedByUser == m.UserId {
+		if likedByUser == d.UserId {
 			update := bson.M{
 				"$set": bson.M{
 					"likedByUsers": append(cat.LikedByUsers[:i], cat.LikedByUsers[i+1:]...),
@@ -52,7 +76,7 @@ func (u *catUsecaseImpl) ToggleLike(m *models.ToggleLikeData) error {
 	}
 	update := bson.M{
 		"$set": bson.M{
-			"likedByUsers": append([]string{m.UserId}, cat.LikedByUsers...),
+			"likedByUsers": append([]string{d.UserId}, cat.LikedByUsers...),
 		},
 	}
 	updateErr := u.catRepository.Update(filter, update)

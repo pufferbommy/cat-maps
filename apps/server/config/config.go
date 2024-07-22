@@ -9,6 +9,7 @@ type Config struct {
 	DbUser       string `mapstructure:"DB_USER"`
 	DbPassword   string `mapstructure:"DB_PASSWORD"`
 	DbCluster    string `mapstructure:"DB_CLUSTER"`
+	DbName       string `mapstructure:"DB_NAME"`
 	JwtSecretKey string `mapstructure:"JWT_SECRET_KEY"`
 }
 

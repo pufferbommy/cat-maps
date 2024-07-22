@@ -2,11 +2,10 @@ package usecases
 
 import (
 	"server/cat/entities"
-	"server/cat/models"
 )
 
 type CatUsecase interface {
-	GetAll() ([]entities.CatDto, error)
-	ToggleLike(d *models.ToggleLikeData) error
-	Add(d *entities.AddCatData) error
+	GetAll(currentUserId string) ([]entities.CatDto, error)
+	ToggleLike(e *entities.ToggleLikeData) error
+	Add(e *entities.AddCatData) error
 }

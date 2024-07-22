@@ -67,17 +67,7 @@ func (u *userUsecaseImpl) Login(m *models.LoginUserData) (*entities.AuthUserResD
 	return u.generateTokens(existingUser.Id.Hex()), nil
 }
 
-func (u *userUsecaseImpl) GetProfile(accessToken string) (*entities.UserProfileResDto, error) {
-	claims, err := util.VerifyToken(accessToken)
-	if err != nil {
-		return nil, err
-	}
-
-	userId, ok := claims["userId"].(string)
-	if !ok {
-		return nil, errors.New("failed to get user id")
-	}
-
+func (u *userUsecaseImpl) GetProfile(userId string) (*entities.UserProfileResDto, error) {
 	existingUser, err := u.userRepo.FindByUserId(userId)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find user by user id: %w", err)
@@ -90,10 +80,7 @@ func (u *userUsecaseImpl) GetProfile(accessToken string) (*entities.UserProfileR
 }
 
 func (u *userUsecaseImpl) Refresh(m *models.RefreshTokensData) (*entities.AuthUserResDto, error) {
-	claims, err := util.VerifyToken(m.RefreshToken)
-	if err != nil {
-		return nil, err
-	}
+	claims := util.VerifyToken(m.RefreshToken)
 
 	userId, ok := claims["userId"].(string)
 	if !ok {

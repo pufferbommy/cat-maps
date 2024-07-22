@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"server/user/models"
 	"server/user/usecases"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
@@ -53,17 +52,11 @@ func (h userHttpHandler) Login(c echo.Context) error {
 }
 
 func (h userHttpHandler) GetProfile(c echo.Context) error {
-	authorization := c.Request().Header.Get("Authorization")
-	if authorization == "" {
+	if c.Get("userId") == nil {
 		return response(c, http.StatusOK, "", nil)
 	}
 
-	token := strings.Split(authorization, "Bearer ")[1]
-	if token == "" {
-		return response(c, http.StatusOK, "", nil)
-	}
-
-	res, err := h.UserUsecase.GetProfile(token)
+	res, err := h.UserUsecase.GetProfile(c.Get("userId").(string))
 	if err != nil {
 		if err.Error() == "Token is expired" {
 			return response(c, http.StatusUnauthorized, "", nil)
