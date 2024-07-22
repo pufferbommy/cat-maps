@@ -21,14 +21,12 @@ const CatCard = ({ cat }: CatCardProps) => {
     <Card
       id={`cat-${cat.id}`}
       className={cn(
-        "w-full aspect-square overflow-hidden relative transition-shadow",
-        isActiveCat && "ring-2 ring-offset-4 ring-orange-500"
+        "w-full ring-2 ring-offset-4 ring-transparent aspect-square overflow-hidden relative transition-shadow",
+        isActiveCat && "ring-primary"
       )}
     >
-      <CardContent>
-        <div className="aspect-square relative">
-          <Image sizes="100%" src={cat.imageUrl} alt="cat" fill />
-        </div>
+      <CardContent className="relative">
+        <Image src={cat.image} alt="cat" width={500} height={500} />
         <div className="bg-gradient-to-b pointer-events-none from-black/75 via-black/0 to-transparent absolute inset-0" />
         <LikeButton cat={cat} />
       </CardContent>

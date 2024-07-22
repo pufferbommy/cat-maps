@@ -2,12 +2,10 @@
 
 import { Heart } from "lucide-react";
 import { MouseEvent, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { cn } from "@/lib/utils";
-import { queryClient } from "@/app/layout";
-import { toggleLike } from "@/mutations/toggle-like";
-import { useUserQuery } from "@/hooks/use-user-query";
+import { useToggleLikeCat } from "@/hooks/use-cats";
+import { useGetUserProfile } from "@/hooks/use-user";
 import LoginRequiredAlertDialog from "../auth/login-required-dialog";
 
 interface LikeButtonProps {
@@ -15,20 +13,20 @@ interface LikeButtonProps {
 }
 
 const LikeButton = ({ cat }: LikeButtonProps) => {
-  const { data: userProfile } = useQuery(useUserQuery());
+  const { data: userProfile } = useGetUserProfile();
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleLikeMutation = useMutation({
-    mutationFn: toggleLike,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cat"] });
-    },
-  });
+  const toggleLikeCat = useToggleLikeCat();
 
   const handleToggleLike = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    toggleLikeMutation.mutate({ catId: cat.id });
+
+    if (!userProfile) {
+      setIsOpen(true);
+    }
+
+    toggleLikeCat.mutate({ catId: cat.id });
   };
 
   const isCurrentUserLiked =

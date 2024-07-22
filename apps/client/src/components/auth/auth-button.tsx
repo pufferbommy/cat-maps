@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
 
 import {
   Dialog,
@@ -11,15 +10,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import {
+  useGetUserProfile,
+  useUserLogin,
+  useUserRegister,
+} from "@/hooks/use-user";
 import LoginForm from "./login-form";
 import { Button } from "../ui/button";
-import { login } from "@/mutations/login";
 import RegisterForm from "./register-form";
-import { queryClient } from "@/app/layout";
 import { Login } from "@/schema/login.schema";
-import { register } from "@/mutations/register";
 import { Register } from "@/schema/register.schema";
-import { useUserQuery } from "@/hooks/use-user-query";
 
 type Action = "login" | "register";
 
@@ -30,7 +30,7 @@ const AuthButton = ({
   initialAction: Action;
   variant?: "outline" | "default";
 }) => {
-  const { isLoading } = useQuery(useUserQuery());
+  const { isLoading } = useGetUserProfile();
   const [action, setAction] = useState(initialAction);
   const [open, setOpen] = useState(false);
 
@@ -47,25 +47,14 @@ const AuthButton = ({
     setAction((prev) => (isLogin(prev) ? "register" : "login"));
   };
 
-  const loginMutation = useMutation({
-    mutationFn: login,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-    },
-  });
-
-  const registerMutation = useMutation({
-    mutationFn: register,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-    },
-  });
+  const userLogin = useUserLogin();
+  const userRegister = useUserRegister();
 
   const onSubmit = async (values: Login | Register) => {
     if (isLogin(action)) {
-      loginMutation.mutate(values);
+      userLogin.mutate(values as Login);
     } else {
-      registerMutation.mutate(values);
+      userRegister.mutate(values as Register);
     }
   };
 
@@ -81,10 +70,10 @@ const AuthButton = ({
           <DialogTitle>{title(action)}</DialogTitle>
         </DialogHeader>
         {isLogin(action) ? (
-          <LoginForm isLoading={loginMutation.isPending} onSubmit={onSubmit} />
+          <LoginForm isLoading={userLogin.isPending} onSubmit={onSubmit} />
         ) : (
           <RegisterForm
-            isLoading={registerMutation.isPending}
+            isLoading={userRegister.isPending}
             onSubmit={onSubmit}
           />
         )}

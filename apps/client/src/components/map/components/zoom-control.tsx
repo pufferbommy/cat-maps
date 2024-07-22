@@ -1,5 +1,3 @@
-"use client";
-
 import { useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
 import { ZoomIn, ZoomOut } from "lucide-react";

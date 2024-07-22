@@ -7,5 +7,6 @@ import (
 
 type CatUsecase interface {
 	GetAll() ([]entities.CatDto, error)
-	ToggleLike(m *models.ToggleLikeData) error
+	ToggleLike(d *models.ToggleLikeData) error
+	Add(d *entities.AddCatData) error
 }

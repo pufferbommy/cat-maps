@@ -2,9 +2,10 @@
 
 import { Toaster } from "sonner";
 import dynamic from "next/dynamic";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 
 import "./globals.css";
+import { queryClient } from "@/lib/react-query";
 import Header from "@/components/layout/header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -14,9 +15,7 @@ const Map = dynamic(() => import("@/components/map"), {
   loading: () => <Skeleton className="w-full h-full rounded-none" />,
 });
 import { ActiveCatContextProvider } from "@/contexts/active-cat-context";
-import CameraButton from "@/components/layout/header/components/camera-button";
-
-export const queryClient = new QueryClient();
+import CameraButton from "@/components/camera-button";
 
 export default function RootLayout() {
   return (

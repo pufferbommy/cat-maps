@@ -1,5 +1,3 @@
-"use client";
-
 import * as L from "leaflet";
 import { useState } from "react";
 import { Marker, useMap } from "react-leaflet";

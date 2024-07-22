@@ -55,5 +55,6 @@ func (e *echoServer) initializeUserHttpHandler() {
 	catHandlers := catHandlers.NewCatHttpHandler(catUsecase)
 	catGroup := e.app.Group("/api/v1/cat")
 	catGroup.GET("", catHandlers.GetAll)
+	catGroup.POST("", catHandlers.Add)
 	catGroup.PATCH("/toggle-like", catHandlers.ToggleLike)
 }

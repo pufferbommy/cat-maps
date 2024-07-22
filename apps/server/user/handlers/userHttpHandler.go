@@ -25,7 +25,7 @@ func (h userHttpHandler) Register(c echo.Context) error {
 
 	if err := c.Bind(reqBody); err != nil {
 		log.Errorf("Error binding request body: %v", err)
-		return response(c, http.StatusInternalServerError, "bad request", nil)
+		return response(c, http.StatusBadRequest, "bad request", nil)
 	}
 
 	res, err := h.UserUsecase.Register(reqBody)
@@ -41,7 +41,7 @@ func (h userHttpHandler) Login(c echo.Context) error {
 
 	if err := c.Bind(reqBody); err != nil {
 		log.Errorf("Error binding request body: %v", err)
-		return response(c, http.StatusInternalServerError, "bad request", nil)
+		return response(c, http.StatusBadRequest, "bad request", nil)
 	}
 
 	res, err := h.UserUsecase.Login(reqBody)
@@ -53,15 +53,20 @@ func (h userHttpHandler) Login(c echo.Context) error {
 }
 
 func (h userHttpHandler) GetProfile(c echo.Context) error {
-	token := strings.Split(c.Request().Header.Get("Authorization"), "Bearer ")[1]
+	authorization := c.Request().Header.Get("Authorization")
+	if authorization == "" {
+		return response(c, http.StatusOK, "", nil)
+	}
+
+	token := strings.Split(authorization, "Bearer ")[1]
 	if token == "" {
-		return response(c, http.StatusUnauthorized, "unauthorized", nil)
+		return response(c, http.StatusOK, "", nil)
 	}
 
 	res, err := h.UserUsecase.GetProfile(token)
 	if err != nil {
 		if err.Error() == "Token is expired" {
-			return response(c, http.StatusUnauthorized, err.Error(), nil)
+			return response(c, http.StatusUnauthorized, "", nil)
 		}
 		return response(c, http.StatusInternalServerError, err.Error(), nil)
 	}
@@ -74,7 +79,7 @@ func (h userHttpHandler) Refresh(c echo.Context) error {
 
 	if err := c.Bind(reqBody); err != nil {
 		log.Errorf("Error binding request body: %v", err)
-		return response(c, http.StatusInternalServerError, "bad request", nil)
+		return response(c, http.StatusBadRequest, "bad request", nil)
 	}
 
 	res, err := h.UserUsecase.Refresh(reqBody)

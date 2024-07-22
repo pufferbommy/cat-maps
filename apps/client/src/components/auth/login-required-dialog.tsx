@@ -23,6 +23,7 @@ import { Button } from "../ui/button";
 import RegisterForm from "./register-form";
 import { Login } from "@/schema/login.schema";
 import { Register } from "@/schema/register.schema";
+import { useUserLogin, useUserRegister } from "@/hooks/use-user";
 
 interface LoginRequiredAlertDialogProps {
   isAlertDialogOpen: boolean;
@@ -39,7 +40,6 @@ const LoginRequiredAlertDialog = ({
 
   const initialAction = "login";
   const [action, setAction] = useState<"login" | "register">(initialAction);
-  const [isActioning, setIsActioning] = useState(false);
 
   const isLogin = (action: "login" | "register") => action === "login";
 
@@ -56,31 +56,15 @@ const LoginRequiredAlertDialog = ({
     });
   };
 
+  const userLogin = useUserLogin();
+  const userRegister = useUserRegister();
+
   const onSubmit = async (values: Login | Register) => {
-    // try {
-    //   setFullLoader(true);
-    //   setIsActioning(true);
-    //   let response: AxiosResponse<BaseResponse<AuthUserResDto>>;
-    //   if (isLogin(action)) {
-    //     response = await login(values as Login);
-    //   } else {
-    //     response = await register(values as Register);
-    //   }
-    //   const { accessToken, refreshToken } = response.data.data!;
-    //   localStorage.setItem("accessToken", accessToken);
-    //   localStorage.setItem("refreshToken", refreshToken);
-    //   setOpen(false);
-    //   await getProfile();
-    //   if (action === "login") {
-    //     const cats = await getCats();
-    //     setCats(cats || []);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // } finally {
-    //   setFullLoader(false);
-    //   setIsActioning(false);
-    // }
+    if (isLogin(action)) {
+      userLogin.mutate(values as Login);
+    } else {
+      userRegister.mutate(values as Register);
+    }
   };
 
   return (
@@ -106,9 +90,12 @@ const LoginRequiredAlertDialog = ({
           <DialogTitle>{title(action)}</DialogTitle>
         </DialogHeader>
         {isLogin(action) ? (
-          <LoginForm isLoading={isActioning} onSubmit={onSubmit} />
+          <LoginForm isLoading={userLogin.isPending} onSubmit={onSubmit} />
         ) : (
-          <RegisterForm isLoading={isActioning} onSubmit={onSubmit} />
+          <RegisterForm
+            isLoading={userRegister.isPending}
+            onSubmit={onSubmit}
+          />
         )}
         <DialogFooter>
           <div className="flex items-center gap-2 text-sm justify-center">

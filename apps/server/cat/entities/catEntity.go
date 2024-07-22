@@ -16,7 +16,7 @@ type (
 		Id           primitive.ObjectID `json:"id"`
 		Latitude     float64            `json:"latitude"`
 		Longitude    float64            `json:"longitude"`
-		ImageUrl     string             `json:"imageUrl"`
+		Image        string             `json:"image"`
 		LikedByUsers []string           `json:"likedByUsers"`
 	}
 
@@ -24,9 +24,16 @@ type (
 		Id           primitive.ObjectID `bson:"_id,omitempty"`
 		Latitude     float64            `bson:"latitude"`
 		Longitude    float64            `bson:"longitude"`
-		ImageUrl     string             `bson:"imageUrl"`
+		Image        string             `bson:"image"`
 		Uploader     primitive.ObjectID `bson:"uploader"`
 		LikedByUsers []string           `bson:"likedByUsers"`
 		CreatedAt    time.Time          `bson:"createdAt"`
+	}
+
+	AddCatData struct {
+		Latitude  float64
+		Longitude float64
+		Image     string
+		Uploader  primitive.ObjectID
 	}
 )

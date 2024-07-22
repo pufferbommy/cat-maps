@@ -61,3 +61,11 @@ func (u *catUsecaseImpl) ToggleLike(m *models.ToggleLikeData) error {
 	}
 	return nil
 }
+
+func (u *catUsecaseImpl) Add(data *entities.AddCatData) error {
+	err := u.catRepository.Add(data)
+	if err != nil {
+		return err
+	}
+	return nil
+}

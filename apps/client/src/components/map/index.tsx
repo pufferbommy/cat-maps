@@ -1,34 +1,28 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { useQuery } from "@tanstack/react-query";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import { MapContainer, TileLayer, AttributionControl } from "react-leaflet";
 
+import { useGetAllCats } from "@/hooks/use-cats";
 import CatMarker from "@/components/cat/cat-marker";
 import MapControl from "@/components/map/components/map-control";
-import { useCatQuery } from "@/hooks/use-cat-query";
 
 const Map = () => {
-  const { data: cats } = useQuery(useCatQuery());
-
-  const maxBounds: any = [
-    [-90, -180],
-    [90, 180],
-  ];
+  const { data: cats = [] } = useGetAllCats();
 
   return (
     <MapContainer
-      center={{
-        lat: 0,
-        lng: 0,
-      }}
+      center={[0, 0]}
       zoom={2}
       minZoom={2}
-      maxZoom={16}
       className="z-[49] relative h-full w-full"
       zoomControl={false}
       attributionControl={false}
-      maxBounds={maxBounds}
+      maxBounds={[
+        [-90, -180],
+        [90, 180],
+      ]}
       maxBoundsViscosity={1}
     >
       <TileLayer
@@ -37,7 +31,11 @@ const Map = () => {
       />
       <AttributionControl position="bottomleft" />
       <MapControl />
-      {cats?.map((cat) => <CatMarker key={cat.id} cat={cat} />)}
+      <MarkerClusterGroup>
+        {cats.map((cat) => (
+          <CatMarker key={cat.id} cat={cat} />
+        ))}
+      </MarkerClusterGroup>
     </MapContainer>
   );
 };

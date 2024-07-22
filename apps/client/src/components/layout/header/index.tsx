@@ -1,24 +1,20 @@
 "use client";
 
-import Link from "next/link";
 import Avatar from "boring-avatars";
 
-import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUserQuery } from "@/hooks/use-user-query";
+import { useGetUserProfile } from "@/hooks/use-user";
+import { ModeToggle } from "@/components/mode-toggle";
 import AuthButton from "@/components/auth/auth-button";
 import { LogoutButton } from "./components/logout-button";
-import { ModeToggle } from "@/components/mode-toggle";
 
 const Navbar = () => {
-  const { data: userProfile, isLoading } = useQuery(useUserQuery());
+  const { data: userProfile, isLoading } = useGetUserProfile();
 
   return (
     <header className="border-b border-b-gray-100 h-[77px] flex-shrink-0">
       <div className="flex p-4 justify-between flex-shrink-0 gap-4 h-full items-center">
-        <Link className="font-bold text-lg" href="/">
-          Cat Maps
-        </Link>
+        <h1 className="font-bold">Cat Maps</h1>
         <div className="flex gap-4">
           {!isLoading ? (
             <div className="flex gap-4 items-center">

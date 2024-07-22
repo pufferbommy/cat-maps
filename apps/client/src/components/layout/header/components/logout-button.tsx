@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { LogOut } from "lucide-react";
 
-import { queryClient } from "@/app/layout";
+import { queryClient } from "@/lib/react-query";
 import { Button } from "@/components/ui/button";
 
 export function LogoutButton() {
