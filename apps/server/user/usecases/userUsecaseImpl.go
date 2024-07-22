@@ -68,6 +68,10 @@ func (u *userUsecaseImpl) Login(m *models.LoginUserData) (*entities.AuthUserResD
 }
 
 func (u *userUsecaseImpl) GetProfile(userId string) (*entities.UserProfileResDto, error) {
+	if userId == "" {
+		return nil, nil
+	}
+
 	existingUser, err := u.userRepo.FindByUserId(userId)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find user by user id: %w", err)
