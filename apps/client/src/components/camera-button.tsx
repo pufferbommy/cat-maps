@@ -83,7 +83,7 @@ const CameraButton = () => {
           {!image ? (
             <>
               {!isCameraActive && <Skeleton className="w-full h-full" />}
-              {/* <Webcam
+              <Webcam
                 id="webcam"
                 onLoadedData={() => setIsCameraActive(true)}
                 audio={false}
@@ -95,7 +95,7 @@ const CameraButton = () => {
                   height: 500,
                 }}
                 screenshotFormat="image/jpeg"
-              /> */}
+              />
             </>
           ) : (
             <Image src={image} alt="" fill />
