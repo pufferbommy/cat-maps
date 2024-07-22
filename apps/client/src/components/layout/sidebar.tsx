@@ -7,7 +7,7 @@ export const Sidebar = () => {
   const { data: cats = [], isLoading } = useGetAllCats();
 
   return (
-    <div className="p-4 w-[calc(77px*4)] space-y-4 flex-shrink-0 overflow-auto">
+    <div className="p-4 w-[calc(77px*4)] space-y-4 flex-shrink-0 overflow-auto border-r-gray-100 dark:border-r-gray-800">
       {isLoading
         ? Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={i} className="w-full aspect-square" />

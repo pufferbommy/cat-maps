@@ -16,9 +16,8 @@ export function LogoutButton() {
   };
 
   return (
-    <Button variant="outline" onClick={logout}>
-      <LogOut className="mr-2 h-4 w-4" />
-      <span>Log out</span>
+    <Button className="aspect-square p-0 inline-flex" onClick={logout}>
+      <LogOut className="size-4" />
     </Button>
   );
 }

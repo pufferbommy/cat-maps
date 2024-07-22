@@ -21,8 +21,8 @@ const CatCard = ({ cat }: CatCardProps) => {
     <Card
       id={`cat-${cat.id}`}
       className={cn(
-        "w-full ring-2 ring-offset-4 ring-transparent aspect-square overflow-hidden relative transition-shadow",
-        isActiveCat && "ring-primary"
+        "w-full ring-offset-4 ring-offset-primary-foreground ring-primary aspect-square overflow-hidden relative transition-shadow",
+        isActiveCat && "ring-2"
       )}
     >
       <CardContent className="relative">
