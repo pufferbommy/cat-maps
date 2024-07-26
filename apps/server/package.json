@@ -2,7 +2,7 @@
   "name": "server",
   "private": true,
   "scripts": {
-    "build": "go build .",
+    "build": "go build -o apiserver",
     "dev": "gow run ."
   }
 }

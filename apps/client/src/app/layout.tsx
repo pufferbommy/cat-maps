@@ -21,14 +21,9 @@ const Map = dynamic(() => import("@/components/map"), {
 
 export default function RootLayout() {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="font-lato h-screen">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class">
           <QueryClientProvider client={queryClient}>
             <ActiveCatContextProvider>
               <Toaster richColors position="top-center" />
